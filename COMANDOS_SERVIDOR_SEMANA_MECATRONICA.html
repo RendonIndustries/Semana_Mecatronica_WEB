@@ -203,11 +203,12 @@
             <span class="step-number">1</span>
             <strong>Conectar al servidor</strong>
             <div class="command-box copyable">
-                ssh [USUARIO]@[IP_SERVIDOR]
+                ssh rootupiiz@148.204.142.27
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
-            <div class="warning">
-                Reemplaza [USUARIO] y [IP_SERVIDOR] con las credenciales proporcionadas por el administrador
+            <div class="info-box">
+                Usuario del servidor: <strong>rootupiiz</strong><br>
+                El comando ya está listo para copiar y pegar directamente
             </div>
         </div>
 
@@ -422,7 +423,7 @@
 
         <div class="code-block">server {
     listen 80;
-    server_name [DOMINIO] [IP_SERVIDOR];
+    server_name semanameca.upiiz.ipn.mx 148.204.142.27;
     
     root /var/www/semana-mecatronica;
     index semana_mecatronica_2025.html;
@@ -517,7 +518,7 @@
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
-                sudo chown [USUARIO]:[USUARIO] semana-mecatronica
+                sudo chown rootupiiz:rootupiiz semana-mecatronica
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
@@ -525,7 +526,7 @@
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
-                sudo git clone https://github.com/RendonIndustries/Semana_Mecatronica_WebPage.git .
+                sudo git clone https://github.com/RendonIndustries/Semana_Mecatronica_WEB.git .
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
@@ -593,11 +594,11 @@
             <span class="step-number">29</span>
             <strong>Probar acceso al sitio web</strong>
             <div class="command-box copyable">
-                curl -I http://[DOMINIO]
+                curl -I http://semanameca.upiiz.ipn.mx
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
-                curl -I http://[IP_SERVIDOR]
+                curl -I http://148.204.142.27
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
         </div>
@@ -633,7 +634,7 @@
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
             <div class="command-box copyable">
-                curl http://[IP_SERVIDOR]
+                curl http://148.204.142.27
                 <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
             </div>
         </div>
