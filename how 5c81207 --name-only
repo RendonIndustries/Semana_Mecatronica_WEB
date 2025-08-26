@@ -1,0 +1,5 @@
+[33mce919fa[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m AGREGAR: Versión segura del documento de comandos sin credenciales
+[33m5c81207[m REMOVER: Archivo con credenciales de servidor por seguridad
+[33ma6a7e61[m Actualizar configuración de Nginx con versión simplificada
+[33m40f8919[m Eliminar configuración de webhooks y agregar actualizaciones manuales
+[33m9d94b2c[m Hacer texto del hero section blanco para mejor visibilidad

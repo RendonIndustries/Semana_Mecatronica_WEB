@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Semana de Mecatrónica 2025 - UPIIZ IPN</title>
+    <meta name="description" content="Semana de Mecatrónica 2025 en la UPIIZ IPN. Evento académico y tecnológico del 10 al 14 de noviembre.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css" rel="stylesheet">
+    
+    <!-- Estilos template IPN -->
+    <link rel="stylesheet" type="text/css" href="https://www.ipn.mx/assets/files/main/css/style-template.css">
+    
+    <!-- Estilos componentes IPN -->
+    <link rel="stylesheet" type="text/css" href="https://www.ipn.mx/assets/files/main/css/style.css">
+    
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            color: var(--ipn-blanco);
+            padding: 120px 0 80px 0;
+        }
+        
+        .text-guinda {
+            color: var(--ipn-guinda) !important;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .activity-card {
+            background: var(--ipn-blanco);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(106, 0, 50, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 2px solid transparent;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--ipn-guinda);
+        }
+        
+        .activity-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--ipn-guinda), #8B0040);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--ipn-blanco);
+            font-size: 2rem;
+        }
+        
+        .section-title {
+            color: var(--ipn-guinda);
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--ipn-guinda);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ipn-blanco);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            background: #8B0040;
+            color: var(--ipn-blanco);
+            transform: scale(1.1);
+        }
+        
+        .footer-mecatronica {
+            background: #343a40;
+            color: var(--ipn-blanco);
+            padding: 40px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar Gobierno de México -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-gob">
+        <div class="container p-0">
+            <a class="navbar-brand" href="https://www.gob.mx/">
+                <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="128" height="48" alt="Gobierno de México">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGobCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarGobCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.gob.mx/tramites">Trámites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.gob.mx/gobierno">Gobierno</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header IPN -->
+    <div class="container encabezado-ipn">
+        <div class="utilerias-header text-right">
+            <ul class="list-inline text-end utilerias-list">
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/directorio-telefonico.html">DIRECTORIO</a> |
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/correo-electronico.html">CORREO</a> |
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/calendario-academico.html">CALENDARIO</a>
+                </li>
+            </ul>
+        </div>
+        <div class="header-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="https://www.gob.mx/sep" class="d-inline enlace-educacion">
+                            <img src="https://www.ipn.mx/assets/files/main/img/template/header/pleca-educacion.svg" class="logo-educacion" alt="Logotipo de la Secretaría de Educación Pública">
+                        </a>
+                        <a href="https://ipn.mx/">
+                            <img src="https://www.ipn.mx/assets/files/main/img/template/header/logo-ipn-horizontal.svg" class="logo-ipn" alt="Logo IPN">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Principal -->
+    <div class="menu-principal sticky-top" id="menu-principal">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid p-0">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenuPrincipal" aria-controls="navbarMenuPrincipal" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarMenuPrincipal">
+                    <ul class="navbar-nav w-100 justify-content-center me-auto mb-2 mb-lg-0">
+                        <li>
+                            <div class="position-relative">
+                                <div class="position-absolute banderin">
+                                    <img src="https://www.ipn.mx/assets/files/upiiz/img/inicio/upiiz-icono.png" alt="upiiz" class="banderin-img">
+                                </div>
+                            </div>                        
+                        </li>
+                        <li class="px-xl-3 px-xxl-5"></li>
+                        <li class="px-xl-3 px-xxl-5"></li>
+                        <li>
+                            <ul class="navbar-nav w-100 d-flex justify-content-center me-auto mb-2 mb-lg-0">
+                                <li class="nav-item first active">
+                                    <a class="nav-link" href="#inicio" title="Semana de Mecatrónica 2025 - Inicio">Inicio</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" title="Actividades de la Semana de Mecatrónica" role="button" data-bs-toggle="dropdown" aria-expanded="false">Actividades</a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item first" href="#concursos" title="Concursos de Robótica y Programación">Concursos</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#conferencias" title="Conferencias con Expertos">Conferencias</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#talleres" title="Talleres Prácticos">Talleres</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#exposiciones" title="Exposiciones de Proyectos">Exposiciones</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#deportivas" title="Actividades Deportivas">Actividades Deportivas</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item last" href="#sorteos" title="Sorteos y Premios">Sorteos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#programa" title="Programa de la Semana de Mecatrónica">Programa</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#registro" title="Registro para la Semana de Mecatrónica">Registro</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" title="Información para Participantes" role="button" data-bs-toggle="dropdown" aria-expanded="false">Participantes</a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item first" href="#estudiantes" title="Información para Estudiantes">Estudiantes</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#docentes" title="Información para Docentes">Docentes</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#empresarios" title="Información para Empresarios">Empresarios</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item last" href="#publico" title="Información para Público General">Público General</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#colaboradores" title="Colaboradores de la Semana de Mecatrónica">Colaboradores</a>
+                                </li>
+                                <li class="nav-item last">
+                                    <a class="nav-link" href="#contacto" title="Contacto - Semana de Mecatrónica">Contacto</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="utilerias-box navbar-nav" role="search">
+                        <li class="utilerias-separador"></li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link utilerias-busqueda" data-bs-toggle="modal" data-bs-target="#modalBusqueda">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Título Unidad -->
+    <div id="tituloUnidad" class="titulo_unidad">
+        <div class="container p-0">
+            <h1 class="titulo_unidad_text text-center">Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="inicio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title text-white">Semana de Mecatrónica 2025</h1>
+                    <p class="lead fs-4 mb-4 text-white">Innovación • Tecnología • Desarrollo</p>
+                    <div class="bg-white bg-opacity-20 rounded-3 p-4 d-inline-block">
+                        <h3 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            10 - 14 de Noviembre, 2025
+                        </h3>
+                        <p class="mb-0 mt-2">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            UPIIZ - IPN Campus Zacatecas
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actividades Section -->
+    <section class="py-5" id="actividades">
+        <div class="container">
+            <h2 class="section-title">Actividades</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" id="concursos">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="text-guinda">Concursos</h3>
+                        <p>Participa en competencias de robótica, programación y proyectos innovadores.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" id="conferencias">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h3 class="text-guinda">Conferencias</h3>
+                        <p>Escucha a expertos en mecatrónica, automatización e inteligencia artificial.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" id="talleres">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="text-guinda">Talleres</h3>
+                        <p>Aprende con talleres prácticos de Arduino, programación y diseño 3D.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" id="deportivas">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3 class="text-guinda">Actividades Deportivas</h3>
+                        <p>Mantén el equilibrio entre mente y cuerpo con actividades recreativas.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" id="exposiciones">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3 class="text-guinda">Exposiciones</h3>
+                        <p>Explora proyectos innovadores y tecnologías de vanguardia.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" id="sorteos">
+                    <div class="activity-card">
+                        <div class="activity-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h3 class="text-guinda">Sorteos</h3>
+                        <p>Participa en emocionantes sorteos con premios tecnológicos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto Section -->
+    <section class="contact-section" id="contacto">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="activity-icon mx-auto">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Correo Electrónico</h3>
+                            <p class="mb-3">¿Tienes preguntas? Escríbenos</p>
+                            <a href="mailto:semana_meca_UPIIZ@ipn.mx" class="btn btn-outline-primary">
+                                semana_meca_UPIIZ@ipn.mx
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="activity-icon mx-auto">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <h3>Teléfono</h3>
+                            <p class="mb-3">Llámanos para más información</p>
+                            <a href="tel:4921240410" class="btn btn-outline-primary">
+                                (492) 124 0410
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Redes Sociales -->
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <h3 class="mb-4">Síguenos en Redes Sociales</h3>
+                                         <div class="d-flex justify-content-center gap-3">
+                         <a href="https://www.instagram.com/semana_de_mecatronica_upiiz" class="social-btn" target="_blank">
+                             <i class="fab fa-instagram"></i>
+                         </a>
+                         <a href="https://www.facebook.com/Mecatrónica-IPN-Zacatecas" class="social-btn" target="_blank">
+                             <i class="fab fa-facebook-f"></i>
+                         </a>
+                         <a href="https://www.tiktok.com/@semanademecatroni?_t=ZS-8zCpYqtDQsC&_r=1" class="social-btn" target="_blank">
+                             <i class="fab fa-tiktok"></i>
+                         </a>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Colaboradores Section -->
+    <section class="py-5" id="colaboradores">
+        <div class="container">
+            <h2 class="section-title">Colaboradores</h2>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="activity-icon mx-auto">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <h3>Consejo Zacatecano de Ciencia, Tecnología e Innovación</h3>
+                            <p>Promoviendo el desarrollo científico y tecnológico en Zacatecas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="activity-icon mx-auto">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <h3>Gobierno del Estado de Zacatecas</h3>
+                            <p>Apoyando la educación y el desarrollo tecnológico en nuestra región</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="mb-4 text-white">¡No te pierdas esta gran oportunidad!</h2>
+                    <p class="lead mb-4 text-white">Únete a la Semana de Mecatrónica 2025 y forma parte de la innovación tecnológica del futuro.</p>
+                    <a href="http://semanameca.upiiz.ipn.mx" class="btn btn-light btn-lg" target="_blank">
+                        <i class="fas fa-external-link-alt me-2"></i>
+                        Visitar Sitio Oficial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-mecatronica">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <p class="mb-2">
+                        <strong>Semana de Mecatrónica 2025</strong> - UPIIZ IPN Campus Zacatecas
+                    </p>
+                    <p class="mb-2">
+                        Sitio oficial: 
+                        <a href="http://semanameca.upiiz.ipn.mx" class="text-white text-decoration-none fw-bold" target="_blank">
+                            semanameca.upiiz.ipn.mx
+                        </a>
+                    </p>
+                    <p class="mb-0">
+                        © 2025 Instituto Politécnico Nacional. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Pie de página Gobernación -->
+    <footer class="footer-gob">
+        <div class="list-info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <a href="/">
+                            <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" alt="logo gobierno de méxico" class="logo_footer" style="max-width: 90%;">
+                        </a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 ps-0">
+                        <h5>Enlaces</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="https://datos.gob.mx/" target="_blank" rel="noopener">Datos</a></li>
+                            <li><a href="https://transparencia.gob.mx/home.html" target="_blank" rel="noopener">Transparencia</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <h5>¿Qué es gob.mx?</h5>
+                        <p>Es el portal único de trámites, información y participación ciudadana.</p>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 ps-0">
+                        <h5>Síguenos en</h5>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/gobmexico" target="_blank" rel="noopener" title="Facebook">
+                                    <img alt="Facebook" src="https://framework-gb.cdn.gob.mx/landing/img/facebook.png">
+                                </a>
+                            </li>
+                            <li class="list-inline-item mx-1">
+                                <a href="https://twitter.com/GobiernoMX" target="_blank" rel="noopener" title="Twitter">
+                                    <img alt="Twitter" src="https://framework-gb.cdn.gob.mx/landing/img/twitter.png">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de búsqueda -->
+    <div class="modal fade" id="modalBusqueda" tabindex="-1" aria-labelledby="modalBusqueda" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group input-group-lg">
+                        <input type="text" id="textoBusqueda" class="form-control" placeholder="¿Qué buscas en la Semana de Mecatrónica?" aria-label="Busqueda" aria-describedby="boton-busqueda" onkeypress="if(event.keyCode == 13){enviarBusqueda();}" />
+                        <button class="btn btn-primary btn-busqueda" type="button" id="boton-busqueda" onclick="enviarBusqueda();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts template IPN -->
+    <script src="https://www.ipn.mx/assets/files/main/js/index.js"></script>
+    
+    <!-- Script personalizado -->
+    <script>
+        function enviarBusqueda() {
+            const texto = document.getElementById('textoBusqueda').value;
+            if (texto.trim() !== '') {
+                // Aquí puedes implementar la lógica de búsqueda
+                alert('Búsqueda: ' + texto);
+            }
+        }
+        
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

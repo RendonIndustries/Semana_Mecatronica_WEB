@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos Servidor - Semana de Mecatrónica (Versión Segura)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        
+        .command-box {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #3498db;
+        }
+        
+        .command-box.copyable {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .command-box.copyable:hover {
+            background-color: #34495e;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+        
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .step {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .info-box {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-box:before {
+            content: "ℹ️ INFORMACIÓN: ";
+            font-weight: bold;
+            color: #0c5460;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning:before {
+            content: "⚠️ IMPORTANTE: ";
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .success:before {
+            content: "✅ ÉXITO: ";
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .security {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .security:before {
+            content: "🔒 SEGURIDAD: ";
+            font-weight: bold;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .command-box {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖥️ Comandos para Configurar Servidor - Semana de Mecatrónica</h1>
+        
+        <div class="security">
+            <strong>⚠️ VERSIÓN SEGURA:</strong><br>
+            • Este documento NO contiene credenciales de acceso<br>
+            • Las credenciales deben obtenerse del administrador del servidor<br>
+            • Por seguridad, las credenciales no se almacenan en repositorios públicos
+        </div>
+
+        <div class="info-box">
+            <strong>Instrucciones:</strong><br>
+            1. Obtén las credenciales de acceso del administrador del servidor<br>
+            2. Abre PowerShell en Windows<br>
+            3. Ejecuta los comandos en orden<br>
+            4. Si algún comando falla, continúa con el siguiente
+        </div>
+
+        <h2>1. 🔌 Conexión al Servidor</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Conectar al servidor</strong>
+            <div class="command-box copyable">
+                ssh [USUARIO]@[IP_SERVIDOR]
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="warning">
+                Reemplaza [USUARIO] y [IP_SERVIDOR] con las credenciales proporcionadas por el administrador
+            </div>
+        </div>
+
+        <h2>2. 🔍 Verificación del Sistema</h2>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Verificar versión del sistema operativo</strong>
+            <div class="command-box copyable">
+                lsb_release -a
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>3. ⬆️ Actualización del Sistema</h2>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Actualizar lista de paquetes</strong>
+            <div class="command-box copyable">
+                sudo apt update
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Actualizar sistema</strong>
+            <div class="command-box copyable">
+                sudo apt upgrade -y
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>4. 🟢 Instalación de Node.js</h2>
+        
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Agregar repositorio de Node.js</strong>
+            <div class="command-box copyable">
+                curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">6</span>
+            <strong>Instalar Node.js</strong>
+            <div class="command-box copyable">
+                sudo apt-get install -y nodejs
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">7</span>
+            <strong>Verificar instalación de Node.js</strong>
+            <div class="command-box copyable">
+                node --version
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                npm --version
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>5. 📦 Instalación de PM2</h2>
+        
+        <div class="step">
+            <span class="step-number">8</span>
+            <strong>Instalar PM2 globalmente</strong>
+            <div class="command-box copyable">
+                sudo npm install -g pm2
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">9</span>
+            <strong>Verificar instalación de PM2</strong>
+            <div class="command-box copyable">
+                pm2 --version
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>6. 🌐 Instalación de Nginx</h2>
+        
+        <div class="step">
+            <span class="step-number">10</span>
+            <strong>Instalar Nginx</strong>
+            <div class="command-box copyable">
+                sudo apt install nginx -y
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">11</span>
+            <strong>Habilitar y iniciar Nginx</strong>
+            <div class="command-box copyable">
+                sudo systemctl enable nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo systemctl start nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">12</span>
+            <strong>Verificar estado de Nginx</strong>
+            <div class="command-box copyable">
+                sudo systemctl status nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>7. 🔥 Configuración del Firewall</h2>
+        
+        <div class="step">
+            <span class="step-number">13</span>
+            <strong>Instalar UFW</strong>
+            <div class="command-box copyable">
+                sudo apt install ufw -y
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">14</span>
+            <strong>Configurar reglas del firewall</strong>
+            <div class="command-box copyable">
+                sudo ufw allow ssh
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo ufw allow 'Nginx Full'
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo ufw allow 3000
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">15</span>
+            <strong>Habilitar firewall</strong>
+            <div class="command-box copyable">
+                sudo ufw enable
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">16</span>
+            <strong>Verificar estado del firewall</strong>
+            <div class="command-box copyable">
+                sudo ufw status
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>8. 📁 Preparación del Proyecto</h2>
+        
+        <div class="step">
+            <span class="step-number">17</span>
+            <strong>Crear directorio del proyecto</strong>
+            <div class="command-box copyable">
+                sudo mkdir -p /var/www/semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo chown $USER:$USER /var/www/semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">18</span>
+            <strong>Navegar al directorio</strong>
+            <div class="command-box copyable">
+                cd /var/www/semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Nota sobre la estructura:</strong><br>
+            • No necesitas crear directorios manualmente<br>
+            • El repositorio ya viene con toda la estructura necesaria<br>
+            • Al clonar el repositorio, todos los archivos se copian automáticamente
+        </div>
+
+        <h2>9. ⚙️ Configuración de Nginx</h2>
+        
+        <div class="step">
+            <span class="step-number">19</span>
+            <strong>Crear archivo de configuración</strong>
+            <div class="command-box copyable">
+                sudo nano /etc/nginx/sites-available/semanameca.upiiz.ipn.mx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Contenido completo para pegar en el archivo nano:</strong>
+        </div>
+
+        <div class="code-block">server {
+    listen 80;
+    server_name [DOMINIO] [IP_SERVIDOR];
+    
+    root /var/www/semana-mecatronica;
+    index semana_mecatronica_2025.html;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}</div>
+
+        <div class="info-box">
+            <strong>Comandos de nano:</strong><br>
+            • Para guardar: <code>Ctrl + X</code>, luego <code>Y</code>, luego <code>Enter</code><br>
+            • Para salir sin guardar: <code>Ctrl + X</code>, luego <code>N</code>
+        </div>
+
+        <div class="info-box">
+            <strong>Configuración simplificada de Nginx:</strong><br>
+            • Configuración básica y funcional para servir archivos HTML estáticos<br>
+            • Sin webhooks, sin PHP, sin configuraciones complejas<br>
+            • Solo sirve la página web de la Semana de Mecatrónica 2025<br>
+            • Funciona perfectamente para el propósito del proyecto
+        </div>
+
+        <div class="step">
+            <span class="step-number">20</span>
+            <strong>Habilitar el sitio</strong>
+            <div class="command-box copyable">
+                sudo ln -s /etc/nginx/sites-available/semanameca.upiiz.ipn.mx /etc/nginx/sites-enabled/
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">21</span>
+            <strong>Verificar configuración</strong>
+            <div class="command-box copyable">
+                sudo nginx -t
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">22</span>
+            <strong>Recargar Nginx</strong>
+            <div class="command-box copyable">
+                sudo systemctl reload nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>10. 🔍 Verificación Inicial</h2>
+        
+        <div class="step">
+            <span class="step-number">23</span>
+            <strong>Verificar estado de servicios</strong>
+            <div class="command-box copyable">
+                sudo systemctl status nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">24</span>
+            <strong>Verificar puertos en uso</strong>
+            <div class="command-box copyable">
+                sudo ss -tulpn
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>11. 🔗 Configuración de GitHub (Repositorio Público)</h2>
+        
+        <div class="success">
+            <strong>¡Repositorio público configurado!</strong><br>
+            El repositorio es público, por lo que no necesitas tokens de autenticación.<br>
+            Las actualizaciones se harán manualmente para mayor seguridad.
+        </div>
+
+        <div class="step">
+            <span class="step-number">25</span>
+            <strong>Limpiar directorio y clonar el repositorio público</strong>
+            <div class="command-box copyable">
+                cd /var/www
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo rm -rf semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo mkdir semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo chown [USUARIO]:[USUARIO] semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                cd semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo git clone https://github.com/RendonIndustries/Semana_Mecatronica_WebPage.git .
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                ls -la
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Nota sobre la limpieza:</strong><br>
+            • Eliminamos completamente el directorio y lo recreamos para evitar conflictos con Git<br>
+            • Esto es necesario si el directorio ya existe y tiene archivos o repositorio Git<br>
+            • Si hay archivos importantes, puedes hacer backup antes: <code>sudo cp -r /var/www/semana-mecatronica /var/www/semana-mecatronica-backup</code>
+        </div>
+
+        <div class="step">
+            <span class="step-number">26</span>
+            <strong>Configurar Git para el servidor</strong>
+            <div class="command-box copyable">
+                sudo git config --global --add safe.directory /var/www/semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                git config --global user.name "Semana Mecatronica Server"
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                git config --global user.email "server@semana-mecatronica.upiiz.ipn.mx"
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Configuración de Git:</strong><br>
+            • No necesitas tokens ni credenciales para repositorios públicos<br>
+            • Configuramos el directorio como seguro para evitar problemas de permisos<br>
+            • Solo configuramos el nombre y email para los logs de Git
+        </div>
+
+        <div class="step">
+            <span class="step-number">27</span>
+            <strong>Verificar y recargar Nginx</strong>
+            <div class="command-box copyable">
+                sudo nginx -t
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo systemctl reload nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <h2>12. 🔍 Verificación Final</h2>
+        
+        <div class="step">
+            <span class="step-number">28</span>
+            <strong>Verificar estado de todos los servicios</strong>
+            <div class="command-box copyable">
+                sudo systemctl status nginx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">29</span>
+            <strong>Probar acceso al sitio web</strong>
+            <div class="command-box copyable">
+                curl -I http://[DOMINIO]
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                curl -I http://[IP_SERVIDOR]
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>¡Configuración completada!</strong><br>
+            El servidor está conectado al repositorio público de GitHub.<br>
+            Las actualizaciones se harán manualmente para mayor seguridad.<br>
+            <strong>Ventajas:</strong> Control total, sin automatización no deseada, más seguro.
+        </div>
+
+        <h2>13. 🔄 Actualizaciones Manuales</h2>
+        
+        <div class="info-box">
+            <strong>Proceso de actualización manual:</strong><br>
+            • Cada vez que hagas cambios en el repositorio de GitHub<br>
+            • Ejecuta estos comandos en el servidor para actualizar el sitio
+        </div>
+
+        <div class="step">
+            <span class="step-number">30</span>
+            <strong>Actualizar el sitio web</strong>
+            <div class="command-box copyable">
+                cd /var/www/semana-mecatronica
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo git stash
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo git pull origin main
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                curl http://[IP_SERVIDOR]
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Ventajas de las actualizaciones manuales:</strong><br>
+            • 🔒 Mayor control sobre cuándo se actualiza el sitio<br>
+            • 🛡️ Evitas cambios automáticos no deseados<br>
+            • 👀 Puedes revisar los cambios antes de aplicarlos<br>
+            • 🚫 No hay riesgo de que se suban cosas indebidas<br>
+            • ⚡ Proceso simple y directo
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #3498db;">
+
+        <div style="text-align: center; color: #7f8c8d; font-size: 14px;">
+            <strong>Fecha de creación:</strong> $(date)<br>
+            <strong>Versión:</strong> 1.0 (Segura)<br>
+            <strong>Autor:</strong> Equipo de Desarrollo Semana de Mecatrónica<br>
+            <strong>Nota:</strong> Este documento NO contiene credenciales de acceso
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(button) {
+            const commandBox = button.parentElement;
+            const command = commandBox.textContent.replace('Copiar', '').trim();
+            
+            navigator.clipboard.writeText(command).then(function() {
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.style.background = '#27ae60';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = '#3498db';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar: ', err);
+                alert('Error al copiar el comando');
+            });
+        }
+    </script>
+</body>
+</html>
