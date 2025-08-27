@@ -126,6 +126,67 @@
                 height: auto;
             }
         }
+        
+        .clickable-poster:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
+        }
+        
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .fullscreen-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .fullscreen-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .close-fullscreen {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+        }
+        
+        .close-fullscreen:hover,
+        .close-fullscreen:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -230,7 +291,7 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#poster" title="Poster Oficial de la Semana de Mecatrónica">Poster</a>
+                                    <a class="nav-link" href="#poster" title="Posters Oficiales de la Semana de Mecatrónica">Posters</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#programa" title="Programa de la Semana de Mecatrónica">Programa</a>
@@ -311,29 +372,22 @@
     <!-- Poster Section -->
     <section class="py-5" id="poster">
         <div class="container">
-            <h2 class="section-title">Poster Oficial</h2>
+            <h2 class="section-title">Posters Oficiales</h2>
             <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="card text-center">
+                <div class="col-lg-6 mb-4">
+                    <div class="card text-center h-100">
                         <div class="card-body">
-                            <h3 class="text-guinda mb-4">Poster Semana de Mecatrónica 2025</h3>
-                            <div class="poster-container mb-4">
-                                <img src="Poster.png" alt="Poster Semana de Mecatrónica 2025" class="img-fluid poster-image" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            <div class="poster-container mb-3">
+                                <img src="Poster.png" alt="Poster Semana de Mecatrónica 2025 - Versión 1" class="img-fluid poster-image clickable-poster" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="openFullscreen('Poster.png', 'Poster Semana de Mecatrónica 2025 - Versión 1')">
                             </div>
-                            <p class="mb-4">Comparte el poster oficial del evento en redes sociales y difunde la Semana de Mecatrónica.</p>
-                            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                                <a href="Poster.png" class="btn btn-primary btn-lg" download>
-                                    <i class="fas fa-download me-2"></i>
-                                    Descargar Imagen
-                                </a>
-                                <a href="Poster semana mecatronica 2025 C_.pdf" class="btn btn-outline-primary btn-lg" download>
-                                    <i class="fas fa-file-pdf me-2"></i>
-                                    Descargar PDF
-                                </a>
-                                <button class="btn btn-outline-secondary btn-lg" onclick="compartirPoster()">
-                                    <i class="fas fa-share-alt me-2"></i>
-                                    Compartir
-                                </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <div class="poster-container mb-3">
+                                <img src="poster2.png" alt="Poster Semana de Mecatrónica 2025 - Versión 2" class="img-fluid poster-image clickable-poster" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="openFullscreen('poster2.png', 'Poster Semana de Mecatrónica 2025 - Versión 2')">
                             </div>
                         </div>
                     </div>
@@ -591,6 +645,15 @@
         </div>
     </div>
 
+    <!-- Modal de pantalla completa para posters -->
+    <div id="fullscreenModal" class="fullscreen-modal">
+        <span class="close-fullscreen" onclick="closeFullscreen()">&times;</span>
+        <div class="fullscreen-content">
+            <h2 class="fullscreen-title" id="fullscreenTitle"></h2>
+            <img id="fullscreenImage" class="fullscreen-image" src="" alt="">
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -621,29 +684,43 @@
             });
         });
         
-        // Función para compartir el poster
-        function compartirPoster() {
-            const url = window.location.href;
-            const texto = "¡Mira el poster oficial de la Semana de Mecatrónica 2025! 🚀🤖 #SemanaMecatronica #UPIIZ #IPN";
+        // Funciones para vista de pantalla completa de posters
+        function openFullscreen(imageSrc, title) {
+            const modal = document.getElementById('fullscreenModal');
+            const image = document.getElementById('fullscreenImage');
+            const titleElement = document.getElementById('fullscreenTitle');
             
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Poster Semana de Mecatrónica 2025',
-                    text: texto,
-                    url: url
-                });
-            } else {
-                // Fallback para navegadores que no soportan Web Share API
-                const urlCompleta = `${url}#poster`;
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(urlCompleta).then(() => {
-                        alert('¡Enlace copiado al portapapeles! Compártelo en tus redes sociales.');
-                    });
-                } else {
-                    prompt('Copia este enlace para compartir:', urlCompleta);
-                }
-            }
+            image.src = imageSrc;
+            titleElement.textContent = title;
+            modal.style.display = 'block';
+            
+            // Prevenir scroll del body
+            document.body.style.overflow = 'hidden';
         }
+        
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.style.display = 'none';
+            
+            // Restaurar scroll del body
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Cerrar modal al hacer clic fuera de la imagen
+        document.getElementById('fullscreenModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFullscreen();
+            }
+        });
+        
+        // Cerrar modal con la tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreen();
+            }
+        });
+        
+
     </script>
 </body>
 </html>
