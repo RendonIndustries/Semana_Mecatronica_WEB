@@ -105,6 +105,27 @@
             padding: 40px 0;
             text-align: center;
         }
+        
+        .poster-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        .poster-image {
+            transition: transform 0.3s ease;
+        }
+        
+        .poster-image:hover {
+            transform: scale(1.02);
+        }
+        
+        @media (max-width: 768px) {
+            .poster-image {
+                max-width: 100%;
+                height: auto;
+            }
+        }
     </style>
 </head>
 
@@ -209,6 +230,9 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" href="#poster" title="Poster Oficial de la Semana de Mecatrónica">Poster</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="#programa" title="Programa de la Semana de Mecatrónica">Programa</a>
                                 </li>
                                 <li class="nav-item">
@@ -278,6 +302,40 @@
                             <i class="fas fa-map-marker-alt me-2"></i>
                             UPIIZ - IPN Campus Zacatecas
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Poster Section -->
+    <section class="py-5" id="poster">
+        <div class="container">
+            <h2 class="section-title">Poster Oficial</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-guinda mb-4">Poster Semana de Mecatrónica 2025</h3>
+                            <div class="poster-container mb-4">
+                                <img src="Poster.png" alt="Poster Semana de Mecatrónica 2025" class="img-fluid poster-image" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            </div>
+                            <p class="mb-4">Comparte el poster oficial del evento en redes sociales y difunde la Semana de Mecatrónica.</p>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <a href="Poster.png" class="btn btn-primary btn-lg" download>
+                                    <i class="fas fa-download me-2"></i>
+                                    Descargar Imagen
+                                </a>
+                                <a href="Poster semana mecatronica 2025 C_.pdf" class="btn btn-outline-primary btn-lg" download>
+                                    <i class="fas fa-file-pdf me-2"></i>
+                                    Descargar PDF
+                                </a>
+                                <button class="btn btn-outline-secondary btn-lg" onclick="compartirPoster()">
+                                    <i class="fas fa-share-alt me-2"></i>
+                                    Compartir
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -562,6 +620,30 @@
                 }
             });
         });
+        
+        // Función para compartir el poster
+        function compartirPoster() {
+            const url = window.location.href;
+            const texto = "¡Mira el poster oficial de la Semana de Mecatrónica 2025! 🚀🤖 #SemanaMecatronica #UPIIZ #IPN";
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Poster Semana de Mecatrónica 2025',
+                    text: texto,
+                    url: url
+                });
+            } else {
+                // Fallback para navegadores que no soportan Web Share API
+                const urlCompleta = `${url}#poster`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(urlCompleta).then(() => {
+                        alert('¡Enlace copiado al portapapeles! Compártelo en tus redes sociales.');
+                    });
+                } else {
+                    prompt('Copia este enlace para compartir:', urlCompleta);
+                }
+            }
+        }
     </script>
 </body>
 </html>

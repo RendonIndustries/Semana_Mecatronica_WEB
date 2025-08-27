@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concursos - Semana de Mecatrónica 2025</title>
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(106, 0, 50, 0.2);
+            margin: 20px 0;
+        }
+        
+        h1 {
+            color: var(--ipn-guinda);
+            border-bottom: 4px solid var(--ipn-guinda);
+            padding-bottom: 15px;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: var(--ipn-guinda);
+            border-left: 5px solid var(--ipn-guinda);
+            padding-left: 20px;
+            margin-top: 40px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        
+        .contest-category {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .contest-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contest-item {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid var(--ipn-guinda);
+            box-shadow: 0 4px 6px rgba(106, 0, 50, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .contest-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(106, 0, 50, 0.15);
+        }
+        
+        .contest-title {
+            color: var(--ipn-guinda);
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contest-icon {
+            font-size: 1.8em;
+            margin-right: 15px;
+        }
+        
+        .contest-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .contest-details {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .contest-details h4 {
+            color: var(--ipn-guinda);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .contest-details ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .contest-details li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .register-btn {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .register-btn:hover {
+            background: linear-gradient(135deg, #8B0040 0%, #6A0032 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 0, 50, 0.4);
+        }
+        
+        .robotics {
+            border-left-color: var(--ipn-guinda);
+        }
+        
+        .robotics .contest-icon {
+            color: var(--ipn-guinda);
+        }
+        
+        .academic {
+            border-left-color: var(--ipn-guinda);
+        }
+        
+        .academic .contest-icon {
+            color: var(--ipn-guinda);
+        }
+        
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid var(--ipn-guinda);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .info-box:before {
+            content: "ℹ️ INFORMACIÓN: ";
+            font-weight: bold;
+            color: var(--ipn-guinda);
+        }
+        
+        .prize-section {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid var(--ipn-guinda);
+        }
+        
+        .prize-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .prize-section p {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .schedule {
+            background-color: #f8f9fa;
+            border: 1px solid var(--ipn-guinda);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .schedule:before {
+            content: "📅 CRONOGRAMA: ";
+            font-weight: bold;
+            color: var(--ipn-guinda);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .contest-category {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Concursos - Semana de Mecatrónica 2025</h1>
+        
+        <div class="info-box">
+            <strong>¡Demuestra tus habilidades y compite por grandes premios!</strong><br>
+            Los concursos están diseñados para poner a prueba tus conocimientos en robótica, 
+            programación y cultura general de la UPIIZ. ¡Participa y gana!
+        </div>
+
+        <h2>🤖 Competencias de Robótica</h2>
+        
+        <div class="contest-category">
+            <div class="contest-item robotics">
+                <div class="contest-title">
+                    <span class="contest-icon">🥋</span>
+                    Mini Sumo
+                </div>
+                <div class="contest-description">
+                    ¡Construye tu robot luchador y compite en el dohyo! Los robots deben 
+                    empujar a su oponente fuera del círculo de combate. Una competencia 
+                    emocionante que combina mecánica, electrónica y estrategia.
+                </div>
+                <div class="contest-details">
+                    <h4>📋 Especificaciones del Robot:</h4>
+                    <ul>
+                        <li><strong>Dimensiones máximas:</strong> 10cm x 10cm x 10cm</li>
+                        <li><strong>Peso máximo:</strong> 500 gramos</li>
+                        <li><strong>Energía:</strong> Baterías recargables permitidas</li>
+                        <li><strong>Sensores:</strong> Infrarrojos, ultrasónicos, táctiles</li>
+                        <li><strong>Material:</strong> Cualquier material no peligroso</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Premios:</h4>
+                    <ul>
+                        <li><strong>1er Lugar:</strong> Kit de desarrollo Arduino + $2,000 MXN</li>
+                        <li><strong>2do Lugar:</strong> Kit de sensores + $1,000 MXN</li>
+                        <li><strong>3er Lugar:</strong> Kit básico de robótica + $500 MXN</li>
+                    </ul>
+                </div>
+                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+            </div>
+
+            <div class="contest-item robotics">
+                <div class="contest-title">
+                    <span class="contest-icon">🛤️</span>
+                    Seguidor de Línea
+                </div>
+                <div class="contest-description">
+                    Diseña y programa un robot autónomo que siga una línea negra sobre 
+                    fondo blanco. La competencia evalúa velocidad, precisión y la 
+                    capacidad de tu robot para completar el circuito sin salirse del camino.
+                </div>
+                <div class="contest-details">
+                    <h4>📋 Especificaciones del Robot:</h4>
+                    <ul>
+                        <li><strong>Dimensiones máximas:</strong> 15cm x 10cm x 8cm</li>
+                        <li><strong>Peso máximo:</strong> 1 kilogramo</li>
+                        <li><strong>Energía:</strong> Baterías recargables permitidas</li>
+                        <li><strong>Sensores:</strong> Mínimo 2 sensores de línea</li>
+                        <li><strong>Control:</strong> Microcontrolador (Arduino, ESP32, etc.)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Premios:</h4>
+                    <ul>
+                        <li><strong>1er Lugar:</strong> Kit completo de robótica + $1,500 MXN</li>
+                        <li><strong>2do Lugar:</strong> Kit de sensores avanzados + $800 MXN</li>
+                        <li><strong>3er Lugar:</strong> Kit básico de electrónica + $400 MXN</li>
+                    </ul>
+                </div>
+                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+            </div>
+        </div>
+
+        <h2>🎓 Competencias Académicas</h2>
+        
+        <div class="contest-category">
+            <div class="contest-item academic">
+                <div class="contest-title">
+                    <span class="contest-icon">🧠</span>
+                    "100 Burros Dijeron" - Trivia UPIIZ
+                </div>
+                <div class="contest-description">
+                    ¡Demuestra cuánto sabes sobre la UPIIZ! Una competencia de trivia 
+                    donde responderás preguntas sobre la historia, tradiciones, 
+                    profesores, eventos y curiosidades de nuestra querida institución.
+                </div>
+                <div class="contest-details">
+                    <h4>📋 Formato de la Competencia:</h4>
+                    <ul>
+                        <li><strong>Modalidad:</strong> Individual o equipos de 2 personas</li>
+                        <li><strong>Rondas:</strong> 3 rondas eliminatorias + final</li>
+                        <li><strong>Preguntas:</strong> Múltiple opción y verdadero/falso</li>
+                        <li><strong>Tiempo:</strong> 30 segundos por pregunta</li>
+                        <li><strong>Temas:</strong> Historia, tradiciones, eventos, personal</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Premios:</h4>
+                    <ul>
+                        <li><strong>1er Lugar:</strong> Laptop + $3,000 MXN</li>
+                        <li><strong>2do Lugar:</strong> Tablet + $1,500 MXN</li>
+                        <li><strong>3er Lugar:</strong> Smartphone + $800 MXN</li>
+                    </ul>
+                </div>
+                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+            </div>
+        </div>
+
+        <div class="schedule">
+            <strong>Cronograma de Competencias:</strong><br>
+            • <strong>Lunes 17 de Marzo:</strong> Inscripciones y verificación de robots<br>
+            • <strong>Martes 18 de Marzo:</strong> Competencia de Mini Sumo<br>
+            • <strong>Miércoles 19 de Marzo:</strong> Competencia de Seguidor de Línea<br>
+            • <strong>Jueves 20 de Marzo:</strong> Trivia "100 Burros Dijeron"<br>
+            • <strong>Viernes 21 de Marzo:</strong> Ceremonia de premiación
+        </div>
+
+        <div class="prize-section">
+            <h3>🏆 Premio Especial</h3>
+            <p>¡El participante con mejor desempeño en todas las competencias recibirá una beca completa para el próximo semestre!</p>
+        </div>
+
+        <div class="info-box">
+            <strong>Información Importante:</strong><br>
+            • Las inscripciones se abrirán 2 semanas antes del evento<br>
+            • Los equipos pueden participar en múltiples competencias<br>
+            • Se proporcionará material de apoyo y capacitación previa<br>
+            • Los premios están sujetos a disponibilidad y pueden cambiar<br>
+            • Para más información, contacta a la coordinación de eventos
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar información adicional de cada concurso
+        function showContestInfo(contestName) {
+            const info = {
+                'Mini Sumo': 'El robot debe detectar al oponente y empujarlo fuera del dohyo (círculo de combate). Se permiten estrategias ofensivas y defensivas.',
+                'Seguidor de Línea': 'El robot debe seguir una línea negra de 2cm de ancho sobre fondo blanco. El circuito incluye curvas, cruces y obstáculos.',
+                'Trivia UPIIZ': 'Preguntas sobre la historia de la UPIIZ, tradiciones como el "Burro", eventos importantes, profesores destacados y curiosidades institucionales.'
+            };
+            
+            alert(`${contestName}\n\n${info[contestName] || 'Información no disponible'}`);
+        }
+    </script>
+</body>
+</html>
