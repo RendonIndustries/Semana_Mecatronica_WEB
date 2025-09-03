@@ -579,10 +579,248 @@
             </div>
         </div>
 
-        <h2>12. 🔍 Verificación Final</h2>
+        <h2>12. 🌐 Configuración de BIND9 (Servidor DNS)</h2>
         
+        <div class="info-box">
+            <strong>Propósito de BIND9:</strong><br>
+            • Configurar el servidor DNS para resolver semanameca.upiiz.ipn.mx<br>
+            • Permitir que el dominio apunte correctamente a la IP 148.204.142.27<br>
+            • Configurar zona DNS para el dominio de la Semana de Mecatrónica
+        </div>
+
         <div class="step">
             <span class="step-number">28</span>
+            <strong>Instalar BIND9</strong>
+            <div class="command-box copyable">
+                sudo apt install bind9 bind9utils bind9-doc -y
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">29</span>
+            <strong>Verificar instalación de BIND9</strong>
+            <div class="command-box copyable">
+                sudo systemctl status bind9
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">30</span>
+            <strong>Crear directorio para zonas DNS</strong>
+            <div class="command-box copyable">
+                sudo mkdir -p /etc/bind/zones
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">31</span>
+            <strong>Configurar archivo principal de BIND9</strong>
+            <div class="command-box copyable">
+                sudo nano /etc/bind/named.conf.local
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Contenido para pegar en named.conf.local:</strong>
+        </div>
+
+        <div class="code-block">// Zona para semanameca.upiiz.ipn.mx
+zone "semanameca.upiiz.ipn.mx" {
+    type master;
+    file "/etc/bind/zones/semanameca.upiiz.ipn.mx.db";
+    allow-transfer { none; };
+    allow-query { any; };
+};
+
+// Zona para upiiz.ipn.mx (si es necesario)
+zone "upiiz.ipn.mx" {
+    type master;
+    file "/etc/bind/zones/upiiz.ipn.mx.db";
+    allow-transfer { none; };
+    allow-query { any; };
+};</div>
+
+        <div class="step">
+            <span class="step-number">32</span>
+            <strong>Crear archivo de zona para semanameca.upiiz.ipn.mx</strong>
+            <div class="command-box copyable">
+                sudo nano /etc/bind/zones/semanameca.upiiz.ipn.mx.db
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Contenido para pegar en semanameca.upiiz.ipn.mx.db:</strong>
+        </div>
+
+        <div class="code-block">$TTL    86400
+@       IN      SOA     semanameca.upiiz.ipn.mx. admin.semanameca.upiiz.ipn.mx. (
+                        2025010101      ; Serial
+                        3600            ; Refresh
+                        1800            ; Retry
+                        1209600         ; Expire
+                        86400 )         ; Negative Cache TTL
+
+@       IN      NS      ns1.semanameca.upiiz.ipn.mx.
+@       IN      A       148.204.142.27
+ns1     IN      A       148.204.142.27
+www     IN      A       148.204.142.27
+*       IN      A       148.204.142.27</div>
+
+        <div class="step">
+            <span class="step-number">33</span>
+            <strong>Crear archivo de zona para upiiz.ipn.mx</strong>
+            <div class="command-box copyable">
+                sudo nano /etc/bind/zones/upiiz.ipn.mx.db
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Contenido para pegar en upiiz.ipn.mx.db:</strong>
+        </div>
+
+        <div class="code-block">$TTL    86400
+@       IN      SOA     upiiz.ipn.mx. admin.upiiz.ipn.mx. (
+                        2025010101      ; Serial
+                        3600            ; Refresh
+                        1800            ; Retry
+                        1209600         ; Expire
+                        86400 )         ; Negative Cache TTL
+
+@       IN      NS      ns1.upiiz.ipn.mx.
+@       IN      A       148.204.142.27
+ns1     IN      A       148.204.142.27
+semanameca IN   A       148.204.142.27
+www     IN      A       148.204.142.27</div>
+
+        <div class="step">
+            <span class="step-number">34</span>
+            <strong>Configurar opciones de BIND9</strong>
+            <div class="command-box copyable">
+                sudo nano /etc/bind/named.conf.options
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Contenido para pegar en named.conf.options:</strong>
+        </div>
+
+        <div class="code-block">options {
+    directory "/var/cache/bind";
+    
+    // Escuchar en todas las interfaces
+    listen-on { any; };
+    listen-on-v6 { any; };
+    
+    // Permitir consultas desde cualquier IP
+    allow-query { any; };
+    
+    // Recursión habilitada
+    recursion yes;
+    
+    // Forwarders para consultas externas
+    forwarders {
+        8.8.8.8;
+        8.8.4.4;
+        1.1.1.1;
+    };
+    
+    // Configuración de seguridad
+    allow-recursion { any; };
+    allow-transfer { none; };
+    
+    // Logs
+    version "DNS Server Semana Mecatrónica";
+};</div>
+
+        <div class="step">
+            <span class="step-number">35</span>
+            <strong>Verificar sintaxis de configuración</strong>
+            <div class="command-box copyable">
+                sudo named-checkconf
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">36</span>
+            <strong>Verificar archivos de zona</strong>
+            <div class="command-box copyable">
+                sudo named-checkzone semanameca.upiiz.ipn.mx /etc/bind/zones/semanameca.upiiz.ipn.mx.db
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                sudo named-checkzone upiiz.ipn.mx /etc/bind/zones/upiiz.ipn.mx.db
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">37</span>
+            <strong>Reiniciar BIND9</strong>
+            <div class="command-box copyable">
+                sudo systemctl restart bind9
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">38</span>
+            <strong>Verificar estado de BIND9</strong>
+            <div class="command-box copyable">
+                sudo systemctl status bind9
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">39</span>
+            <strong>Configurar firewall para DNS</strong>
+            <div class="command-box copyable">
+                sudo ufw allow 53
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">40</span>
+            <strong>Probar resolución DNS local</strong>
+            <div class="command-box copyable">
+                nslookup semanameca.upiiz.ipn.mx 127.0.0.1
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+            <div class="command-box copyable">
+                dig @127.0.0.1 semanameca.upiiz.ipn.mx
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">41</span>
+            <strong>Verificar puertos DNS</strong>
+            <div class="command-box copyable">
+                sudo ss -tulpn | grep :53
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>¡BIND9 configurado exitosamente!</strong><br>
+            El servidor DNS está funcionando y puede resolver semanameca.upiiz.ipn.mx<br>
+            <strong>IP del servidor:</strong> 148.204.142.27<br>
+            <strong>Dominio configurado:</strong> semanameca.upiiz.ipn.mx
+        </div>
+
+        <h2>13. 🔍 Verificación Final</h2>
+        
+        <div class="step">
+            <span class="step-number">42</span>
             <strong>Verificar estado de todos los servicios</strong>
             <div class="command-box copyable">
                 sudo systemctl status nginx
@@ -591,7 +829,7 @@
         </div>
 
         <div class="step">
-            <span class="step-number">29</span>
+            <span class="step-number">43</span>
             <strong>Probar acceso al sitio web</strong>
             <div class="command-box copyable">
                 curl -I http://semanameca.upiiz.ipn.mx
@@ -610,7 +848,7 @@
             <strong>Ventajas:</strong> Control total, sin automatización no deseada, más seguro.
         </div>
 
-        <h2>13. 🔄 Actualizaciones Manuales</h2>
+        <h2>14. 🔄 Actualizaciones Manuales</h2>
         
         <div class="info-box">
             <strong>Proceso de actualización manual:</strong><br>
@@ -619,7 +857,7 @@
         </div>
 
         <div class="step">
-            <span class="step-number">30</span>
+            <span class="step-number">44</span>
             <strong>Actualizar el sitio web</strong>
             <div class="command-box copyable">
                 cd /var/www/semana-mecatronica
