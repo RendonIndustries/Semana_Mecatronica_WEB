@@ -1,0 +1,68 @@
+{
+    "week": "Semana de Mecatrónica",
+    "dates": {
+        "monday": "10 de Noviembre",
+        "tuesday": "11 de Noviembre",
+        "wednesday": "12 de Noviembre",
+        "thursday": "13 de Noviembre",
+        "friday": "14 de Noviembre"
+    },
+    "schedule": [
+        {
+            "time": "8:00 am - 8:30 am",
+            "monday": "Inauguración STAFF",
+            "tuesday": "STAFF",
+            "wednesday": "STAFF",
+            "thursday": "STAFF",
+            "friday": ""
+        },
+        {
+            "time": "9:30 am - 10:00 am",
+            "monday": "Descanso",
+            "tuesday": "Descanso",
+            "wednesday": "Descanso",
+            "thursday": "Descanso",
+            "friday": ""
+        },
+        {
+            "time": "10:00 am - 10:30 am",
+            "monday": "Descanso",
+            "tuesday": "Panel de Mujeres en la Industria Mecatrónica",
+            "wednesday": "",
+            "thursday": "",
+            "friday": ""
+        },
+        {
+            "time": "1:30 pm - 2:00 pm",
+            "monday": "Entrevista al Dr. Tupak",
+            "tuesday": "Entrevista al Dr. José María Celaya",
+            "wednesday": "",
+            "thursday": "",
+            "friday": ""
+        },
+        {
+            "time": "7:00 pm",
+            "monday": "Callejoneada",
+            "tuesday": "Foro Egresados",
+            "wednesday": "Finales robótica",
+            "thursday": "\"101 Burros dijeron\" - Mtro. Alberto Córdoba",
+            "friday": "Conferencia Magistral, Premiación, Rifa, Clausura / comida"
+        },
+        {
+            "time": "Events",
+            "monday": "Seguidor de línea femenil / eventos deportivos",
+            "tuesday": "Eventos deportivos",
+            "wednesday": "Conferencia por Confirmar",
+            "thursday": "Conferencia \"Sistema de navegación para aeronaves basado en anomalías del campo magnético de la tierra\" - PhD Humberto Ramos (9:15)",
+            "friday": "Exhibición de Empresas Visitantes, Exhibición y Presentación de Pósters, Rally, Talleres"
+        },
+        {
+            "time": "Workshops",
+            "monday": "Plática SIP, Dirección de Investigación",
+            "tuesday": "Taller - Costeo de proyectos mecatrónicos",
+            "wednesday": "Inicio talleres",
+            "thursday": "Conferencia \"El papel de la inteligencia artificial en la industria 4.0\" - Dr. Juan Humberto Sossa Azuela",
+            "friday": "Conferencia \"Consideraciones para el desarrollo de proyectos basados en la metodología de diseño mecatrónico\" - M. en C. Omar Désiga Orenday, Seguidor de línea femenil, Eliminatorias seguidor PRO"
+        }
+    ]
+}
