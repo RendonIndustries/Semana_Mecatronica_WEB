@@ -481,18 +481,46 @@
                     Mini Sumo
                 </div>
                 <div class="contest-description">
-                    ¡Construye tu robot luchador y compite en el dohyo! Los robots deben 
-                    empujar a su oponente fuera del círculo de combate. Una competencia 
-                    emocionante que combina mecánica, electrónica y estrategia.
+                    Un mini sumo autónomo es un robot móvil de pequeñas dimensiones diseñado para competir en un dohyo o ring, similar al sumo japonés. Su objetivo es detectar al oponente y sacarlo del área de combate sin intervención humana, utilizando sensores que le permiten percibir el entorno y ejecutar estrategias rápidas de empuje y evasión.
                 </div>
                 <div class="contest-details">
                     <h4>📋 Especificaciones del Robot:</h4>
                     <ul>
-                        <li><strong>Dimensiones máximas:</strong> 10cm x 10cm x 10cm</li>
+                        <li><strong>Dimensiones máximas:</strong> 10cm × 10cm (altura no restringida)</li>
                         <li><strong>Peso máximo:</strong> 500 gramos</li>
-                        <li><strong>Energía:</strong> Baterías recargables permitidas</li>
-                        <li><strong>Sensores:</strong> Infrarrojos, ultrasónicos, táctiles</li>
-                        <li><strong>Material:</strong> Cualquier material no peligroso</li>
+                        <li><strong>Autonomía:</strong> Completamente autónomo</li>
+                        <li><strong>Sensor obligatorio:</strong> IR de arranque/parada</li>
+                        <li><strong>Expansión:</strong> Puede expandirse durante el combate</li>
+                        <li><strong>Número:</strong> Debe portar número asignado por organizadores</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏟️ Especificaciones del Dohyo:</h4>
+                    <ul>
+                        <li><strong>Forma:</strong> Circular de madera, diámetro 77cm</li>
+                        <li><strong>Color:</strong> Interior negro, línea de borde blanca (2.5cm)</li>
+                        <li><strong>Altura:</strong> Elevado 70-100cm del suelo</li>
+                        <li><strong>Líneas de salida:</strong> 10cm × 1cm</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚔️ Reglas de Combate:</h4>
+                    <ul>
+                        <li><strong>Duración:</strong> 3 rondas de máximo 3 minutos cada una</li>
+                        <li><strong>Objetivo:</strong> Primero en obtener 2 puntos Yohkoh gana</li>
+                        <li><strong>Punto Yohkoh:</strong> Cuando se expulsa al contrario del dohyo</li>
+                        <li><strong>Espera:</strong> 5 segundos tras activación antes de moverse</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚠️ Limitaciones y Restricciones:</h4>
+                    <ul>
+                        <li><strong>Prohibido:</strong> Robots comerciales profesionales</li>
+                        <li><strong>Prohibido:</strong> Dispositivos de interferencia o piezas dañinas</li>
+                        <li><strong>Prohibido:</strong> Sustancias pegajosas o imanes</li>
+                        <li><strong>Máximo:</strong> Dos banderas por robot</li>
+                        <li><strong>Restricción:</strong> Cuchilla o extensiones no podrán ser blancas</li>
+                        <li><strong>Obligatorio:</strong> Funcionamiento correcto del módulo IR</li>
                     </ul>
                 </div>
                 <div class="contest-details">
@@ -505,7 +533,7 @@
                 </div>
                 <div class="contest-details">
                     <h4>📄 Reglamento:</h4>
-                    <a href="Docs/Sumo.pdf" class="btn btn-outline-primary" target="_blank" download>
+                    <a href="Docs/Reglaamentos Finales/Bases y Reglamento Mini Sumo Autónomo.pdf" class="btn btn-outline-primary" target="_blank" download>
                         <i class="fas fa-download"></i> Descargar Reglamento Mini Sumo
                     </a>
                 </div>
@@ -518,18 +546,49 @@
                     Seguidor de Línea
                 </div>
                 <div class="contest-description">
-                    Diseña y programa un robot autónomo que siga una línea negra sobre 
-                    fondo blanco. La competencia evalúa velocidad, precisión y la 
-                    capacidad de tu robot para completar el circuito sin salirse del camino.
+                    Seguidor de Línea Velocista es un reto en el que el robot autónomo equipado con sensores debe navegar por una vía marcada con una línea continua sin la intervención directa del operario. El objetivo es que el robot siga dicha línea en el menor tiempo posible, respetando las reglas de la competencia.
                 </div>
                 <div class="contest-details">
                     <h4>📋 Especificaciones del Robot:</h4>
                     <ul>
-                        <li><strong>Dimensiones máximas:</strong> 15cm x 10cm x 8cm</li>
-                        <li><strong>Peso máximo:</strong> 1 kilogramo</li>
-                        <li><strong>Energía:</strong> Baterías recargables permitidas</li>
-                        <li><strong>Sensores:</strong> Mínimo 2 sensores de línea</li>
-                        <li><strong>Control:</strong> Microcontrolador (Arduino, ESP32, etc.)</li>
+                        <li><strong>Dimensiones máximas:</strong> 25cm × 25cm (250mm × 250mm)</li>
+                        <li><strong>Peso máximo:</strong> 1 kg (1000g)</li>
+                        <li><strong>Autonomía:</strong> Completamente autónomo</li>
+                        <li><strong>Sensores:</strong> Ópticos para distinguir blanco y negro</li>
+                        <li><strong>Recomendado:</strong> Sensores modulados/filtrados para evitar interferencias</li>
+                        <li><strong>Número:</strong> Debe mostrar visiblemente el número asignado</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏁 Especificaciones de la Pista:</h4>
+                    <ul>
+                        <li><strong>Superficie:</strong> Rectángulo de 2.75m × 1.54m (madera negra)</li>
+                        <li><strong>Línea:</strong> Blanca de 15mm de ancho</li>
+                        <li><strong>Características:</strong> Curvas, ángulos agudos, rectos y anchos</li>
+                        <li><strong>Radio mínimo:</strong> 7.5cm en curvas</li>
+                        <li><strong>Ángulo mínimo:</strong> 70° en ángulos agudos</li>
+                        <li><strong>Separación:</strong> 15cm mínimo entre líneas adyacentes</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⏱️ Reglas de Competencia:</h4>
+                    <ul>
+                        <li><strong>Intentos:</strong> 3 intentos por robot</li>
+                        <li><strong>Reinicio:</strong> 1 reinicio si sale de la pista</li>
+                        <li><strong>Límite por intento:</strong> 3 minutos máximo</li>
+                        <li><strong>Límite total:</strong> 60 minutos para la competencia</li>
+                        <li><strong>Medición:</strong> Sistema electrónico de puertas</li>
+                        <li><strong>Clasificación:</strong> Mejor tiempo de cada robot</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚠️ Limitaciones y Restricciones:</h4>
+                    <ul>
+                        <li><strong>Prohibido:</strong> Robots profesionales de venta (solo kits educativos)</li>
+                        <li><strong>Prohibido:</strong> Sustancias pegajosas en neumáticos</li>
+                        <li><strong>Prohibido:</strong> Dispositivos externos conectados al robot</li>
+                        <li><strong>Prueba tracción:</strong> No debe sostener papel A4 por más de 2 segundos</li>
+                        <li><strong>Permitido:</strong> Turbina (EDF) en el robot</li>
                     </ul>
                 </div>
                 <div class="contest-details">
@@ -542,8 +601,185 @@
                 </div>
                 <div class="contest-details">
                     <h4>📄 Reglamento:</h4>
-                    <a href="Docs/Seguidor_Linea.pdf" class="btn btn-outline-primary" target="_blank" download>
+                    <a href="Docs/Reglaamentos Finales/Bases y Reglamento Seguidor de Línea Velocista.pdf" class="btn btn-outline-primary" target="_blank" download>
                         <i class="fas fa-download"></i> Descargar Reglamento Seguidor de Línea
+                    </a>
+                </div>
+                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+            </div>
+
+            <div class="contest-item robotics">
+                <div class="contest-title">
+                    <span class="contest-icon">🥊</span>
+                    Boxeo Humanoide
+                </div>
+                <div class="contest-description">
+                    Esta categoría tiene el propósito de construir un robot humanoide capaz de caminar de forma autónoma y enfrentarse a otro robot en un ring. El robot debe golpear y empujar para derribar a su oponente, siguiendo reglas similares a un combate de boxeo pero adaptadas a la robótica. Gana el robot que logre tumbar al contrario o mantener el equilibrio por más tiempo.
+                </div>
+                <div class="contest-details">
+                    <h4>📋 Categoría Básica (Nivel Medio Superior):</h4>
+                    <ul>
+                        <li><strong>Estructura:</strong> Robot bípedo humanoide</li>
+                        <li><strong>Servomotores:</strong> 16-18 servos MG995/MG996R o equivalentes</li>
+                        <li><strong>Altura:</strong> 25-45cm (de pie a cabeza)</li>
+                        <li><strong>Largo:</strong> Máximo 27cm (hombro a hombro)</li>
+                        <li><strong>Ancho:</strong> 7-14cm (pecho a espalda)</li>
+                        <li><strong>Pie:</strong> Máximo 10cm de largo</li>
+                        <li><strong>Control:</strong> Tele-operado durante el combate</li>
+                        <li><strong>Alimentación:</strong> Baterías integradas (7 minutos mínimo)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Categoría Avanzada (Homologación Robo-One):</h4>
+                    <ul>
+                        <li><strong>Estructura:</strong> Bípedo con cabeza, torso, brazos y piernas</li>
+                        <li><strong>Peso:</strong> Máximo 3kg</li>
+                        <li><strong>Brazos:</strong> Al menos un eje de movimiento funcional</li>
+                        <li><strong>Pies:</strong> Largo máximo 55% del largo de la pierna</li>
+                        <li><strong>Seguridad:</strong> Batería protegida e interruptor de emergencia</li>
+                        <li><strong>Control:</strong> Inalámbrico (radio, Bluetooth, etc.)</li>
+                        <li><strong>Prohibido:</strong> Partes dañinas, materiales adhesivos, vuelo</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚔️ Reglas de Combate:</h4>
+                    <ul>
+                        <li><strong>Duración:</strong> 5 minutos (Básica) / 3 minutos (Avanzada)</li>
+                        <li><strong>Victoria:</strong> Mayor número de derribos (Básica) / KO o decisión (Avanzada)</li>
+                        <li><strong>Punto:</strong> Se otorga cuando un robot derriba al oponente</li>
+                        <li><strong>KO:</strong> 3 "Downs" = Knockout técnico (Avanzada)</li>
+                        <li><strong>Tiempo extra:</strong> 2 minutos en caso de empate (Avanzada)</li>
+                        <li><strong>Tiempos fuera:</strong> 3 por combate de 40 segundos (Básica)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏟️ Área de Combate:</h4>
+                    <ul>
+                        <li><strong>Básica:</strong> Ring cuadrado de 2m × 2m</li>
+                        <li><strong>Avanzada:</strong> Ring octagonal similar a Robo-One</li>
+                        <li><strong>Superficie:</strong> Lisa y uniforme</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚠️ Restricciones:</h4>
+                    <ul>
+                        <li><strong>Básica:</strong> No contrapesos mecánicos, solo acelerómetro/giroscopio</li>
+                        <li><strong>Avanzada:</strong> No ataques laterales (45°), no agacharse >3 segundos</li>
+                        <li><strong>Prohibido:</strong> Atacar oponente caído, conducta antideportiva</li>
+                        <li><strong>Tarjetas:</strong> Amarilla (faltas leves), Roja (faltas graves)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Premios:</h4>
+                    <ul>
+                        <li><strong>1er Lugar</strong></li>
+                        <li><strong>2do Lugar</strong></li>
+                        <li><strong>3er Lugar</strong></li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>📄 Reglamento:</h4>
+                    <a href="Docs/Reglaamentos Finales/Bases y Reglamento Boxeo Humanoide.pdf" class="btn btn-outline-primary" target="_blank" download>
+                        <i class="fas fa-download"></i> Descargar Reglamento Boxeo Humanoide
+                    </a>
+                </div>
+                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+            </div>
+
+            <div class="contest-item robotics">
+                <div class="contest-title">
+                    <span class="contest-icon">⚔️</span>
+                    Robot de Combate 3 lb
+                </div>
+                <div class="contest-description">
+                    Los robots de combate son robots controlados remotamente o de forma autónoma, diseñados específicamente para luchar contra otros robots en una arena controlada. Estos robots están diseñados para incapacitar, destruir o inmovilizar a sus oponentes mediante diversas armas, como cuchillas giratorias, martillos, aletas o cuñas. Siguen los principios básicos del boxeo con combates cuerpo a cuerpo.
+                </div>
+                <div class="contest-details">
+                    <h4>📋 Especificaciones del Robot:</h4>
+                    <ul>
+                        <li><strong>Peso máximo:</strong> 1500g (3 lb)</li>
+                        <li><strong>Peso sin ruedas:</strong> 2250g (bonificación 50%)</li>
+                        <li><strong>Tamaño:</strong> Debe pasar por abertura de 80cm × 70cm</li>
+                        <li><strong>Control:</strong> Teleoperado (radio 2.4 GHz)</li>
+                        <li><strong>Autonomía:</strong> No permitida</li>
+                        <li><strong>Número:</strong> Visible en la carcasa (asignado por organizadores)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🔧 Tipos de Movimiento:</h4>
+                    <ul>
+                        <li><strong>Rodillo:</strong> Ruedas o componentes con rotación completa</li>
+                        <li><strong>No-Rodillo:</strong> Shufflers, walkers, hovercrafts, bristle bots</li>
+                        <li><strong>Con patas:</strong> Patas independientes (horizontal/vertical)</li>
+                        <li><strong>Giroscópicos:</strong> Efecto giroscópico para movimiento</li>
+                        <li><strong>Aerodeslizadores:</strong> Permitidos</li>
+                        <li><strong>Saltos:</strong> Permitidos (no vuelo)</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🔋 Sistemas Permitidos:</h4>
+                    <ul>
+                        <li><strong>Baterías:</strong> NiCad, NiMH, Li-ion, LiPo (no derramables)</li>
+                        <li><strong>Neumática:</strong> CO2, aire comprimido, nitrógeno</li>
+                        <li><strong>Hidráulica:</strong> Permitida (precalificación requerida)</li>
+                        <li><strong>Resortes/Volantes:</strong> Permitidos con restricciones</li>
+                        <li><strong>Prohibido:</strong> Motores de combustión interna</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚔️ Armas Prohibidas:</h4>
+                    <ul>
+                        <li><strong>Eléctricas:</strong> Armas eléctricas, bloqueo RF</li>
+                        <li><strong>Líquidas:</strong> Agua, espumas, gases licuados</li>
+                        <li><strong>Proyectiles:</strong> Polvos, arena, rodamientos</li>
+                        <li><strong>Incendiarias:</strong> Fuego, explosivos, calor</li>
+                        <li><strong>Visuales:</strong> Humo, láser, luces cegadoras</li>
+                        <li><strong>Enredo:</strong> Redes, cintas, cuerdas</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏟️ Área de Combate:</h4>
+                    <ul>
+                        <li><strong>Dimensiones:</strong> 200cm × 200cm (altura 100cm)</li>
+                        <li><strong>Paredes:</strong> Policarbonato 8mm</li>
+                        <li><strong>Piso:</strong> Madera 3cm</li>
+                        <li><strong>Protecciones:</strong> Acero 5mm en paredes</li>
+                        <li><strong>Marco:</strong> Aluminio 40mm × 40mm</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚔️ Reglas de Combate:</h4>
+                    <ul>
+                        <li><strong>Duración:</strong> 3 minutos por combate</li>
+                        <li><strong>Victoria:</strong> KO, inmovilización, decisión de árbitros</li>
+                        <li><strong>KO:</strong> Sin movimiento controlado (cuenta de 10s)</li>
+                        <li><strong>Agarre:</strong> Máximo 10 segundos</li>
+                        <li><strong>Pinchazos:</strong> Máximo 10 segundos de inmovilización</li>
+                        <li><strong>Rendición:</strong> Permitida en medio del combate</li>
+                        <li><strong>Frecuencia:</strong> 20 minutos entre combates del mismo robot</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>⚠️ Equipo de Protección:</h4>
+                    <ul>
+                        <li><strong>Obligatorio:</strong> Guantes y gafas protectoras</li>
+                        <li><strong>Operador:</strong> Máximo 1 operador y 1 asistente</li>
+                        <li><strong>Área segura:</strong> Solo operador y asistente en área de juego</li>
+                        <li><strong>Dispositivos de seguridad:</strong> Sistema de parada obligatorio</li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>🏆 Premios:</h4>
+                    <ul>
+                        <li><strong>1er Lugar</strong></li>
+                        <li><strong>2do Lugar</strong></li>
+                        <li><strong>3er Lugar</strong></li>
+                    </ul>
+                </div>
+                <div class="contest-details">
+                    <h4>📄 Reglamento:</h4>
+                    <a href="Docs/Reglaamentos Finales/Bases y Reglamento Robot de combate 3 lb.pdf" class="btn btn-outline-primary" target="_blank" download>
+                        <i class="fas fa-download"></i> Descargar Reglamento Robot de Combate 3 lb
                     </a>
                 </div>
                 <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
