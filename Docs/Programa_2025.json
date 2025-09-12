@@ -9,60 +9,64 @@
     },
     "schedule": [
         {
-            "time": "8:00 am - 8:30 am",
-            "monday": "Inauguración STAFF",
-            "tuesday": "STAFF",
-            "wednesday": "STAFF",
-            "thursday": "STAFF",
-            "friday": ""
+            "day": "Lunes",
+            "activities": [
+                {"time": "8:00 am - 8:30 am", "event": "Inauguración"},
+                {"time": "8:30 am - 9:30 am", "event": "Plática SIP, DIRECCIÓN DE INVESTIGACIÓN"},
+                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
+                {"time": "10:00 am - 12:30 pm", "event": "Inicio talleres"},
+                {"time": "12:00 pm - 1:30 pm", "event": "Taller - Costeo de proyectos mecatrónicos"},
+                {"time": "1:30 pm - 2:00 pm", "event": "Entrevista al Dr. Tupak"},
+                {"time": "2:00 pm - 3:00 pm", "event": "Eventos deportivos"}
+            ]
         },
         {
-            "time": "9:30 am - 10:00 am",
-            "monday": "Descanso",
-            "tuesday": "Descanso",
-            "wednesday": "Descanso",
-            "thursday": "Descanso",
-            "friday": ""
+            "day": "Martes",
+            "activities": [
+                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
+                {"time": "8:30 am - 9:30 am", "event": "Conferencia \"El papel de la inteligencia artificial en la industria 4.0\" - Dr. Juan Humberto Sossa Azuela"},
+                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
+                {"time": "10:00 am - 1:30 pm", "event": "Talleres"},
+                {"time": "1:30 pm - 2:00 pm", "event": "Entrevista al Dr. José María Celaya"},
+                {"time": "2:00 pm - 3:00 pm", "event": "Eventos deportivos"}
+            ]
         },
         {
-            "time": "10:00 am - 10:30 am",
-            "monday": "Descanso",
-            "tuesday": "Panel de Mujeres en la Industria Mecatrónica",
-            "wednesday": "",
-            "thursday": "",
-            "friday": ""
+            "day": "Miércoles",
+            "activities": [
+                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
+                {"time": "8:30 am - 9:30 am", "event": "Conferencia \"Consideraciones para el desarrollo de proyectos basados en la metodología de diseño mecatrónico\" - M. en C. Omar Désiga Orenday"},
+                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
+                {"time": "10:00 am - 12:30 pm", "event": "Talleres"},
+                {"time": "1:00 pm - 2:00 pm", "event": "Seguidor de línea femenil"},
+                {"time": "2:00 pm - 3:00 pm", "event": "Seguidor de línea femenil / eventos deportivos"}
+            ]
         },
         {
-            "time": "1:30 pm - 2:00 pm",
-            "monday": "Entrevista al Dr. Tupak",
-            "tuesday": "Entrevista al Dr. José María Celaya",
-            "wednesday": "",
-            "thursday": "",
-            "friday": ""
+            "day": "Jueves",
+            "activities": [
+                {"time": "8:00 am - 9:00 am", "event": "Conferencia por Confirmar"},
+                {"time": "9:00 am - 10:00 am", "event": "Conferencia \"Sistema de navegación para aeronaves basado en anomalías del campo magnético de la tierra\" - PhD in Aerosp. Humberto Ramos (9:15)"},
+                {"time": "10:00 am - 10:30 am", "event": "Descanso"},
+                {"time": "10:30 am - 11:30 am", "event": "Eliminatorias seguidor PRO"},
+                {"time": "11:30 am - 12:30 pm", "event": "Foro Egresados"},
+                {"time": "12:30 pm - 1:00 pm", "event": "Finales Robótica"},
+                {"time": "1:00 pm - 3:00 pm", "event": "Exhibición de Empresas Visitantes, Exhibición y Presentación de Pósters, Rally"}
+            ]
         },
         {
-            "time": "7:00 pm",
-            "monday": "Callejoneada",
-            "tuesday": "Foro Egresados",
-            "wednesday": "Finales robótica",
-            "thursday": "\"101 Burros dijeron\" - Mtro. Alberto Córdoba",
-            "friday": "Conferencia Magistral, Premiación, Rifa, Clausura / comida"
-        },
-        {
-            "time": "Events",
-            "monday": "Seguidor de línea femenil / eventos deportivos",
-            "tuesday": "Eventos deportivos",
-            "wednesday": "Conferencia por Confirmar",
-            "thursday": "Conferencia \"Sistema de navegación para aeronaves basado en anomalías del campo magnético de la tierra\" - PhD Humberto Ramos (9:15)",
-            "friday": "Exhibición de Empresas Visitantes, Exhibición y Presentación de Pósters, Rally, Talleres"
-        },
-        {
-            "time": "Workshops",
-            "monday": "Plática SIP, Dirección de Investigación",
-            "tuesday": "Taller - Costeo de proyectos mecatrónicos",
-            "wednesday": "Inicio talleres",
-            "thursday": "Conferencia \"El papel de la inteligencia artificial en la industria 4.0\" - Dr. Juan Humberto Sossa Azuela",
-            "friday": "Conferencia \"Consideraciones para el desarrollo de proyectos basados en la metodología de diseño mecatrónico\" - M. en C. Omar Désiga Orenday, Seguidor de línea femenil, Eliminatorias seguidor PRO"
+            "day": "Viernes",
+            "activities": [
+                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
+                {"time": "8:30 am - 9:30 am", "event": "Conferencia Magistral"},
+                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
+                {"time": "10:00 am - 10:30 am", "event": "Panel de Mujeres en la Industria Mecatrónica"},
+                {"time": "10:30 am - 12:00 pm", "event": "\"101 Burros dijeron\" - Mtro. Alberto Córdoba"},
+                {"time": "12:00 pm - 12:30 pm", "event": "Premiación"},
+                {"time": "12:30 pm - 1:30 pm", "event": "Rifa"},
+                {"time": "1:30 pm - 3:00 pm", "event": "Clausura / Comida"},
+                {"time": "7:00 pm", "event": "Callejoneada"}
+            ]
         }
     ]
 }
