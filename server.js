@@ -5,7 +5,7 @@ const path = require('path');
 const QRCode = require('qrcode');
 
 const app = express();
-const PORT = 8000;
+const PORT = 3000;
 
 // Middleware
 app.use(cors());
