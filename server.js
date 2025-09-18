@@ -584,6 +584,141 @@ app.get('/api/asistencias', (req, res) => {
     }
 });
 
+// API para actualizar datos de un usuario
+app.put('/api/registro/:id', (req, res) => {
+    try {
+        const id = req.params.id;
+        const nuevosDatos = req.body;
+        
+        const registrosData = cargarRegistros();
+        const indice = registrosData.registros.findIndex(r => r.id === id);
+        
+        if (indice === -1) {
+            return res.status(404).json({
+                error: 'Registro no encontrado',
+                message: 'El ID proporcionado no existe'
+            });
+        }
+        
+        // Actualizar datos del participante
+        const registro = registrosData.registros[indice];
+        Object.keys(nuevosDatos).forEach(key => {
+            if (nuevosDatos[key] !== undefined && nuevosDatos[key] !== '') {
+                registro.participante[key] = nuevosDatos[key];
+            }
+        });
+        
+        registro.metadata.ultimaModificacion = new Date().toISOString();
+        
+        if (guardarRegistros(registrosData)) {
+            res.json({
+                success: true,
+                message: 'Datos actualizados exitosamente',
+                registro: registro
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error interno del servidor',
+                message: 'Error al guardar los cambios'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al actualizar registro:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para eliminar un registro
+app.delete('/api/registro/:id', (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        const registrosData = cargarRegistros();
+        const indice = registrosData.registros.findIndex(r => r.id === id);
+        
+        if (indice === -1) {
+            return res.status(404).json({
+                error: 'Registro no encontrado',
+                message: 'El ID proporcionado no existe'
+            });
+        }
+        
+        const registroEliminado = registrosData.registros[indice];
+        registrosData.registros.splice(indice, 1);
+        
+        if (guardarRegistros(registrosData)) {
+            res.json({
+                success: true,
+                message: 'Registro eliminado exitosamente',
+                registroEliminado: registroEliminado
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error interno del servidor',
+                message: 'Error al eliminar el registro'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al eliminar registro:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para obtener estadísticas
+app.get('/api/estadisticas', (req, res) => {
+    try {
+        const registrosData = cargarRegistros();
+        const asistenciasData = cargarAsistencias();
+        
+        const estadisticas = {
+            totalRegistros: registrosData.registros.length,
+            porTipo: {
+                ipn: registrosData.registros.filter(r => r.participante.tipoParticipante === 'ipn').length,
+                externo: registrosData.registros.filter(r => r.participante.tipoParticipante === 'externo').length
+            },
+            porPaquete: {
+                paquete1: registrosData.registros.filter(r => r.participante.paquete === 'paquete1').length,
+                paquete2: registrosData.registros.filter(r => r.participante.paquete === 'paquete2').length,
+                ninguno: registrosData.registros.filter(r => r.participante.paquete === 'ninguno').length
+            },
+            porTaller: {
+                taller1: registrosData.registros.filter(r => r.participante.taller === 'taller1').length,
+                taller2: registrosData.registros.filter(r => r.participante.taller === 'taller2').length,
+                taller3: registrosData.registros.filter(r => r.participante.taller === 'taller3').length,
+                taller4: registrosData.registros.filter(r => r.participante.taller === 'taller4').length,
+                taller5: registrosData.registros.filter(r => r.participante.taller === 'taller5').length,
+                taller6: registrosData.registros.filter(r => r.participante.taller === 'taller6').length
+            },
+            asistencias: {
+                conferencias: asistenciasData.asistencias.conferencias.length,
+                talleres: asistenciasData.asistencias.talleres.length
+            },
+            entregas: {
+                kits: asistenciasData.entregas.kits.length,
+                comida: asistenciasData.entregas.comida.length
+            },
+            fechaConsulta: new Date().toISOString()
+        };
+        
+        res.json(estadisticas);
+        
+    } catch (error) {
+        console.error('Error al obtener estadísticas:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor de la Semana de Mecatrónica 2025 corriendo en:`);

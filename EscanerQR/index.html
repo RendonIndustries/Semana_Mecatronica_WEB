@@ -293,6 +293,17 @@
                     <p class="menu-description">Control de entrega de comida (una vez por persona)</p>
                 </div>
             </div>
+            
+            <!-- Administración de Usuarios -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="abrirAdministracion()">
+                    <div class="menu-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h5 class="menu-title">Administración</h5>
+                    <p class="menu-description">Gestionar usuarios, ver estadísticas y administrar registros</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -326,6 +337,173 @@
                 <button class="btn btn-primary" onclick="cerrarResultado()">
                     <i class="fas fa-check me-2"></i>Continuar
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Administración Modal -->
+    <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="adminModalLabel">
+                        <i class="fas fa-users-cog me-2"></i>Administración de Usuarios
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Navegación de pestañas -->
+                    <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
+                                <i class="fas fa-users me-2"></i>Usuarios
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="estadisticas-tab" data-bs-toggle="tab" data-bs-target="#estadisticas" type="button" role="tab">
+                                <i class="fas fa-chart-bar me-2"></i>Estadísticas
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Contenido de pestañas -->
+                    <div class="tab-content" id="adminTabContent">
+                        <!-- Pestaña Usuarios -->
+                        <div class="tab-pane fade show active" id="usuarios" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="buscarUsuario" placeholder="Buscar por nombre, email o ID...">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="buscarUsuarios()">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-success" onclick="actualizarListaUsuarios()">
+                                        <i class="fas fa-sync-alt me-2"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Tipo</th>
+                                            <th>Paquete</th>
+                                            <th>Taller</th>
+                                            <th>Talla</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaUsuarios">
+                                        <!-- Se llena dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Pestaña Estadísticas -->
+                        <div class="tab-pane fade" id="estadisticas" role="tabpanel">
+                            <div class="row" id="estadisticasContainer">
+                                <!-- Se llena dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edición de Usuario -->
+    <div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-labelledby="editarUsuarioModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editarUsuarioModalLabel">
+                        <i class="fas fa-edit me-2"></i>Editar Usuario
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarUsuarioForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editNombre" class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="editNombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmail" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editTelefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="editTelefono">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTipo" class="form-label">Tipo de Participante</label>
+                                <select class="form-select" id="editTipo">
+                                    <option value="ipn">Estudiante del IPN</option>
+                                    <option value="externo">Externo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editPaquete" class="form-label">Paquete</label>
+                                <select class="form-select" id="editPaquete">
+                                    <option value="paquete1">Paquete 1</option>
+                                    <option value="paquete2">Paquete 2</option>
+                                    <option value="ninguno">Ninguno</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTaller" class="form-label">Taller</label>
+                                <select class="form-select" id="editTaller">
+                                    <option value="taller1">Taller 1</option>
+                                    <option value="taller2">Taller 2</option>
+                                    <option value="taller3">Taller 3</option>
+                                    <option value="taller4">Taller 4</option>
+                                    <option value="taller5">Taller 5</option>
+                                    <option value="taller6">Taller 6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editTalla" class="form-label">Talla de Playera</label>
+                                <select class="form-select" id="editTalla">
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" id="editIPNFields" style="display: none;">
+                                <label for="editBoleta" class="form-label">Número de Boleta</label>
+                                <input type="text" class="form-control" id="editBoleta">
+                            </div>
+                        </div>
+                        <input type="hidden" id="editUsuarioId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger me-2" onclick="eliminarUsuario()">
+                        <i class="fas fa-trash me-2"></i>Eliminar
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="guardarCambiosUsuario()">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -400,6 +578,230 @@
                 localStorage.removeItem(CONFIG.session.timestampKey);
                 window.location.href = 'login.html';
             }
+        }
+
+        // Funciones de administración
+        function abrirAdministracion() {
+            const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+            modal.show();
+            
+            // Cargar datos iniciales
+            actualizarListaUsuarios();
+            cargarEstadisticas();
+        }
+
+        async function actualizarListaUsuarios() {
+            try {
+                const response = await fetch('/api/registros');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('tablaUsuarios');
+                tbody.innerHTML = '';
+                
+                data.registros.forEach(registro => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><small>${registro.id.substring(0, 8)}...</small></td>
+                        <td>${registro.participante.nombre}</td>
+                        <td>${registro.participante.email}</td>
+                        <td><span class="badge ${registro.participante.tipoParticipante === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${registro.participante.tipoParticipante === 'ipn' ? 'IPN' : 'Externo'}</span></td>
+                        <td><span class="badge ${registro.participante.paquete === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${registro.participante.paquete}</span></td>
+                        <td><span class="badge bg-info">${registro.participante.taller}</span></td>
+                        <td>${registro.participante.tallaPlayera || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editarUsuario('${registro.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+                alert('Error al cargar la lista de usuarios');
+            }
+        }
+
+        async function cargarEstadisticas() {
+            try {
+                const response = await fetch('/api/estadisticas');
+                const stats = await response.json();
+                
+                const container = document.getElementById('estadisticasContainer');
+                container.innerHTML = `
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-users me-2"></i>Total de Registros</h5>
+                                <h2>${stats.totalRegistros}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-chalkboard-teacher me-2"></i>Asistencias a Conferencias</h5>
+                                <h2>${stats.asistencias.conferencias}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-tools me-2"></i>Asistencias a Talleres</h5>
+                                <h2>${stats.asistencias.talleres}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-warning text-dark">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-gift me-2"></i>Kits Entregados</h5>
+                                <h2>${stats.entregas.kits}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-utensils me-2"></i>Comidas Entregadas</h5>
+                                <h2>${stats.entregas.comida}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-secondary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-graduation-cap me-2"></i>Estudiantes IPN</h5>
+                                <h2>${stats.porTipo.ipn}</h2>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error al cargar estadísticas:', error);
+                alert('Error al cargar las estadísticas');
+            }
+        }
+
+        async function editarUsuario(id) {
+            try {
+                const response = await fetch(`/api/qr-data/${id}`);
+                const data = await response.json();
+                
+                // Llenar formulario
+                document.getElementById('editUsuarioId').value = id;
+                document.getElementById('editNombre').value = data.nombre;
+                document.getElementById('editEmail').value = data.email;
+                document.getElementById('editTelefono').value = data.telefono || '';
+                document.getElementById('editTipo').value = data.tipo;
+                document.getElementById('editPaquete').value = data.paquete;
+                document.getElementById('editTaller').value = data.taller;
+                document.getElementById('editTalla').value = data.tallaPlayera || '';
+                
+                // Mostrar campos IPN si es necesario
+                const ipnFields = document.getElementById('editIPNFields');
+                if (data.tipo === 'ipn') {
+                    ipnFields.style.display = 'block';
+                    document.getElementById('editBoleta').value = data.boleta || '';
+                } else {
+                    ipnFields.style.display = 'none';
+                }
+                
+                // Mostrar modal
+                const modal = new bootstrap.Modal(document.getElementById('editarUsuarioModal'));
+                modal.show();
+                
+            } catch (error) {
+                console.error('Error al cargar datos del usuario:', error);
+                alert('Error al cargar los datos del usuario');
+            }
+        }
+
+        async function guardarCambiosUsuario() {
+            const id = document.getElementById('editUsuarioId').value;
+            const datos = {
+                nombre: document.getElementById('editNombre').value,
+                email: document.getElementById('editEmail').value,
+                telefono: document.getElementById('editTelefono').value,
+                tipoParticipante: document.getElementById('editTipo').value,
+                paquete: document.getElementById('editPaquete').value,
+                taller: document.getElementById('editTaller').value,
+                tallaPlayera: document.getElementById('editTalla').value
+            };
+            
+            // Agregar datos IPN si es necesario
+            if (datos.tipoParticipante === 'ipn') {
+                datos.boleta = document.getElementById('editBoleta').value;
+            }
+            
+            try {
+                const response = await fetch(`/api/registro/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datos)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Usuario actualizado exitosamente');
+                    bootstrap.Modal.getInstance(document.getElementById('editarUsuarioModal')).hide();
+                    actualizarListaUsuarios();
+                    cargarEstadisticas();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+                
+            } catch (error) {
+                console.error('Error al actualizar usuario:', error);
+                alert('Error al actualizar el usuario');
+            }
+        }
+
+        async function eliminarUsuario() {
+            const id = document.getElementById('editUsuarioId').value;
+            
+            if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
+                try {
+                    const response = await fetch(`/api/registro/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('Usuario eliminado exitosamente');
+                        bootstrap.Modal.getInstance(document.getElementById('editarUsuarioModal')).hide();
+                        actualizarListaUsuarios();
+                        cargarEstadisticas();
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error al eliminar usuario:', error);
+                    alert('Error al eliminar el usuario');
+                }
+            }
+        }
+
+        function buscarUsuarios() {
+            const termino = document.getElementById('buscarUsuario').value.toLowerCase();
+            const filas = document.querySelectorAll('#tablaUsuarios tr');
+            
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(termino)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
