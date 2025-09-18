@@ -593,21 +593,36 @@
         async function actualizarListaUsuarios() {
             try {
                 const response = await fetch('../api/registros');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('Datos recibidos:', data);
                 
                 const tbody = document.getElementById('tablaUsuarios');
                 tbody.innerHTML = '';
                 
+                if (!data.registros || !Array.isArray(data.registros)) {
+                    console.error('Estructura de datos inválida:', data);
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No hay registros disponibles</td></tr>';
+                    return;
+                }
+                
                 data.registros.forEach(registro => {
+                    // Verificar si la estructura es la esperada
+                    const participante = registro.participante || registro;
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><small>${registro.id.substring(0, 8)}...</small></td>
-                        <td>${registro.participante.nombre}</td>
-                        <td>${registro.participante.email}</td>
-                        <td><span class="badge ${registro.participante.tipoParticipante === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${registro.participante.tipoParticipante === 'ipn' ? 'IPN' : 'Externo'}</span></td>
-                        <td><span class="badge ${registro.participante.paquete === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${registro.participante.paquete}</span></td>
-                        <td><span class="badge bg-info">${registro.participante.taller}</span></td>
-                        <td>${registro.participante.tallaPlayera || 'N/A'}</td>
+                        <td>${participante.nombre || 'N/A'}</td>
+                        <td>${participante.email || 'N/A'}</td>
+                        <td><span class="badge ${participante.tipoParticipante === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${participante.tipoParticipante === 'ipn' ? 'IPN' : 'Externo'}</span></td>
+                        <td><span class="badge ${participante.paquete === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${participante.paquete || 'N/A'}</span></td>
+                        <td><span class="badge bg-info">${participante.taller || 'N/A'}</span></td>
+                        <td>${participante.tallaPlayera || 'N/A'}</td>
                         <td>
                             <button class="btn btn-sm btn-warning" onclick="editarUsuario('${registro.id}')">
                                 <i class="fas fa-edit"></i>
@@ -619,7 +634,9 @@
                 
             } catch (error) {
                 console.error('Error al cargar usuarios:', error);
-                alert('Error al cargar la lista de usuarios');
+                const tbody = document.getElementById('tablaUsuarios');
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error al cargar usuarios: ${error.message}</td></tr>`;
+                alert(`Error al cargar la lista de usuarios: ${error.message}`);
             }
         }
 
