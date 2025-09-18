@@ -965,7 +965,7 @@
         // Función auxiliar para obtener la URL base de la API
         function getApiUrl(endpoint) {
             const isProduction = window.location.hostname === 'semanameca.upiiz.ipn.mx';
-            const baseUrl = isProduction ? 'https://semanameca.upiiz.ipn.mx:8000' : '';
+            const baseUrl = isProduction ? 'https://semanameca.upiiz.ipn.mx' : '';
             return `${baseUrl}/api/${endpoint}`;
         }
         
