@@ -420,6 +420,17 @@ app.post('/api/asistencia', (req, res) => {
                 });
             }
             
+            // Validar que el participante esté inscrito en el taller correcto
+            const tallerInscrito = registro.participante.taller;
+            if (tallerInscrito !== taller) {
+                return res.status(400).json({
+                    error: 'Taller incorrecto',
+                    message: `Este participante no está inscrito en el ${taller}. Su taller asignado es: ${tallerInscrito}`,
+                    tallerCorrecto: tallerInscrito,
+                    tallerIntentado: taller
+                });
+            }
+            
             yaRegistrado = asistenciasData.asistencias.talleres.some(a => a.id === id && a.taller === taller);
             if (!yaRegistrado) {
                 asistenciasData.asistencias.talleres.push({

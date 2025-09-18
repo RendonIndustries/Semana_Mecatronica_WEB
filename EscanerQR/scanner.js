@@ -192,7 +192,13 @@ class QRScanner {
                         `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
                 }
             } else {
-                this.handleError('Error del Servidor', result.message || 'Error desconocido');
+                // Manejar error específico de taller incorrecto
+                if (result.error === 'Taller incorrecto') {
+                    this.showResult('error', 'Taller Incorrecto', 
+                        `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}\n\nPor favor, dirígete al taller correcto.`);
+                } else {
+                    this.handleError('Error del Servidor', result.message || 'Error desconocido');
+                }
             }
             
         } catch (error) {
