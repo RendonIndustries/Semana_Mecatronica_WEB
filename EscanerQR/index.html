@@ -592,7 +592,7 @@
 
         async function actualizarListaUsuarios() {
             try {
-                const response = await fetch('/api/registros');
+                const response = await fetch('../api/registros');
                 const data = await response.json();
                 
                 const tbody = document.getElementById('tablaUsuarios');
@@ -625,7 +625,7 @@
 
         async function cargarEstadisticas() {
             try {
-                const response = await fetch('/api/estadisticas');
+                const response = await fetch('../api/estadisticas');
                 const stats = await response.json();
                 
                 const container = document.getElementById('estadisticasContainer');
@@ -688,7 +688,7 @@
 
         async function editarUsuario(id) {
             try {
-                const response = await fetch(`/api/qr-data/${id}`);
+                const response = await fetch(`../api/qr-data/${id}`);
                 const data = await response.json();
                 
                 // Llenar formulario
@@ -738,7 +738,7 @@
             }
             
             try {
-                const response = await fetch(`/api/registro/${id}`, {
+                const response = await fetch(`../api/registro/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -768,7 +768,7 @@
             
             if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
                 try {
-                    const response = await fetch(`/api/registro/${id}`, {
+                    const response = await fetch(`../api/registro/${id}`, {
                         method: 'DELETE'
                     });
                     

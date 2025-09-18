@@ -105,7 +105,7 @@ class QRScanner {
             let registro = this.registros.get(registroId);
             
             if (!registro) {
-                const response = await fetch(`/api/qr-data/${registroId}`);
+                const response = await fetch(`../api/qr-data/${registroId}`);
                 registro = await response.json();
                 
                 if (registro.error) {
@@ -139,7 +139,7 @@ class QRScanner {
             
             switch (this.currentMode) {
                 case 'conferencias':
-                    endpoint = '/api/asistencia';
+                    endpoint = '../api/asistencia';
                     body = { id: id, tipo: 'conferencias' };
                     break;
                     
@@ -148,17 +148,17 @@ class QRScanner {
                         this.handleError('Error', 'No se especificó el taller');
                         return;
                     }
-                    endpoint = '/api/asistencia';
+                    endpoint = '../api/asistencia';
                     body = { id: id, tipo: 'talleres', taller: this.currentOptions.taller };
                     break;
                     
                 case 'kits':
-                    endpoint = '/api/entrega';
+                    endpoint = '../api/entrega';
                     body = { id: id, tipo: 'kit' };
                     break;
                     
                 case 'comida':
-                    endpoint = '/api/entrega';
+                    endpoint = '../api/entrega';
                     body = { id: id, tipo: 'comida' };
                     break;
                     
