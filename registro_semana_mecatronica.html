@@ -885,7 +885,7 @@
                                 <div class="mb-3">
                                     <h6 class="text-guinda">Código QR para Entrada Rápida</h6>
                                     <div class="qr-container p-3 border rounded">
-                                        <img id="qrImage" src="${data.qrUrl}" alt="Código QR" class="img-fluid" style="max-width: 250px;">
+                                        <img id="qrImage" src="${data.qrUrl.startsWith('http') ? data.qrUrl : getApiUrl(data.qrUrl.replace('/api/', ''))}" alt="Código QR" class="img-fluid" style="max-width: 250px;">
                                     </div>
                                     <small class="text-muted">Guarda este código QR en tu teléfono para agilizar tu entrada al evento</small>
                                 </div>
@@ -932,7 +932,9 @@
         // Función para descargar QR
         function descargarQR(qrUrl, id) {
             const link = document.createElement('a');
-            link.href = qrUrl;
+            // Asegurar que la URL sea absoluta para producción
+            const fullUrl = qrUrl.startsWith('http') ? qrUrl : getApiUrl(qrUrl.replace('/api/', ''));
+            link.href = fullUrl;
             link.download = `qr_registro_${id}.png`;
             document.body.appendChild(link);
             link.click();
@@ -960,9 +962,18 @@
             document.getElementById('emailHelp').style.display = 'none';
         }
         
+        // Función auxiliar para obtener la URL base de la API
+        function getApiUrl(endpoint) {
+            const isProduction = window.location.hostname === 'semanameca.upiiz.ipn.mx';
+            const baseUrl = isProduction ? 'https://semanameca.upiiz.ipn.mx:8000' : '';
+            return `${baseUrl}/api/${endpoint}`;
+        }
+        
         // Función para enviar datos al servidor
         function enviarDatosAlServidor(datos, submitBtn, originalText) {
-            fetch('/api/registro', {
+            const apiUrl = getApiUrl('registro');
+            
+            fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
