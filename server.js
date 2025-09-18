@@ -21,6 +21,9 @@ if (!fs.existsSync(registrosDir)) {
 // Archivo único para todos los registros
 const archivoRegistros = path.join(registrosDir, 'registros_semana_mecatronica_2025.json');
 
+// Archivo para asistencias y entregas
+const archivoAsistencias = path.join(registrosDir, 'asistencias_entregas_2025.json');
+
 // Función para cargar registros existentes
 function cargarRegistros() {
     try {
@@ -53,6 +56,49 @@ function guardarRegistros(datos) {
         return true;
     } catch (error) {
         console.error('Error al guardar registros:', error);
+        return false;
+    }
+}
+
+// Función para cargar asistencias y entregas
+function cargarAsistencias() {
+    try {
+        if (fs.existsSync(archivoAsistencias)) {
+            const contenido = fs.readFileSync(archivoAsistencias, 'utf8');
+            return JSON.parse(contenido);
+        }
+    } catch (error) {
+        console.error('Error al cargar asistencias:', error);
+    }
+    
+    // Estructura inicial si no existe el archivo
+    return {
+        metadata: {
+            version: "1.0",
+            evento: "Semana de Mecatrónica 2025",
+            fechaCreacion: new Date().toISOString(),
+            ultimaActualizacion: new Date().toISOString()
+        },
+        asistencias: {
+            conferencias: [],
+            talleres: []
+        },
+        entregas: {
+            kits: [],
+            comida: []
+        }
+    };
+}
+
+// Función para guardar asistencias y entregas
+function guardarAsistencias(datos) {
+    try {
+        datos.metadata.ultimaActualizacion = new Date().toISOString();
+        const jsonData = JSON.stringify(datos, null, 2);
+        fs.writeFileSync(archivoAsistencias, jsonData, 'utf8');
+        return true;
+    } catch (error) {
+        console.error('Error al guardar asistencias:', error);
         return false;
     }
 }
@@ -316,6 +362,212 @@ app.get('/api/qr-data/:id', (req, res) => {
         console.error('Error al obtener datos del QR:', error);
         res.status(500).json({
             error: 'Error al obtener datos del QR',
+            message: error.message
+        });
+    }
+});
+
+// API para registrar asistencia
+app.post('/api/asistencia', (req, res) => {
+    try {
+        const { id, tipo, taller } = req.body;
+        
+        if (!id || !tipo) {
+            return res.status(400).json({
+                error: 'Datos incompletos',
+                message: 'Se requiere ID y tipo de asistencia'
+            });
+        }
+
+        // Verificar que el registro existe
+        const registrosData = cargarRegistros();
+        const registro = registrosData.registros.find(r => r.id === id);
+        
+        if (!registro) {
+            return res.status(404).json({
+                error: 'Registro no encontrado',
+                message: 'El ID proporcionado no existe'
+            });
+        }
+
+        // Cargar asistencias existentes
+        const asistenciasData = cargarAsistencias();
+        const ahora = new Date().toISOString();
+        
+        // Verificar si ya existe la asistencia
+        let yaRegistrado = false;
+        let mensaje = '';
+        
+        if (tipo === 'conferencias') {
+            yaRegistrado = asistenciasData.asistencias.conferencias.some(a => a.id === id);
+            if (!yaRegistrado) {
+                asistenciasData.asistencias.conferencias.push({
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    email: registro.participante.email,
+                    fecha: ahora,
+                    tipo: 'conferencias'
+                });
+                mensaje = 'Asistencia a conferencias registrada exitosamente';
+            } else {
+                mensaje = 'Ya se había registrado la asistencia a conferencias';
+            }
+        } else if (tipo === 'talleres') {
+            if (!taller) {
+                return res.status(400).json({
+                    error: 'Taller requerido',
+                    message: 'Se debe especificar el taller para registrar asistencia'
+                });
+            }
+            
+            yaRegistrado = asistenciasData.asistencias.talleres.some(a => a.id === id && a.taller === taller);
+            if (!yaRegistrado) {
+                asistenciasData.asistencias.talleres.push({
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    email: registro.participante.email,
+                    taller: taller,
+                    fecha: ahora,
+                    tipo: 'talleres'
+                });
+                mensaje = `Asistencia al taller ${taller} registrada exitosamente`;
+            } else {
+                mensaje = `Ya se había registrado la asistencia al taller ${taller}`;
+            }
+        }
+
+        // Guardar asistencias
+        if (guardarAsistencias(asistenciasData)) {
+            res.json({
+                success: true,
+                message: mensaje,
+                yaRegistrado: yaRegistrado,
+                datos: {
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    tipo: tipo,
+                    taller: taller || null,
+                    fecha: ahora
+                }
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error interno del servidor',
+                message: 'Error al guardar la asistencia'
+            });
+        }
+
+    } catch (error) {
+        console.error('Error al registrar asistencia:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para registrar entrega
+app.post('/api/entrega', (req, res) => {
+    try {
+        const { id, tipo } = req.body;
+        
+        if (!id || !tipo) {
+            return res.status(400).json({
+                error: 'Datos incompletos',
+                message: 'Se requiere ID y tipo de entrega'
+            });
+        }
+
+        // Verificar que el registro existe
+        const registrosData = cargarRegistros();
+        const registro = registrosData.registros.find(r => r.id === id);
+        
+        if (!registro) {
+            return res.status(404).json({
+                error: 'Registro no encontrado',
+                message: 'El ID proporcionado no existe'
+            });
+        }
+
+        // Cargar entregas existentes
+        const asistenciasData = cargarAsistencias();
+        const ahora = new Date().toISOString();
+        
+        // Verificar si ya existe la entrega
+        let yaEntregado = false;
+        let mensaje = '';
+        
+        if (tipo === 'kit') {
+            yaEntregado = asistenciasData.entregas.kits.some(e => e.id === id);
+            if (!yaEntregado) {
+                asistenciasData.entregas.kits.push({
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    email: registro.participante.email,
+                    fecha: ahora,
+                    tipo: 'kit'
+                });
+                mensaje = 'Kit entregado exitosamente';
+            } else {
+                mensaje = 'Ya se había entregado el kit a este participante';
+            }
+        } else if (tipo === 'comida') {
+            yaEntregado = asistenciasData.entregas.comida.some(e => e.id === id);
+            if (!yaEntregado) {
+                asistenciasData.entregas.comida.push({
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    email: registro.participante.email,
+                    fecha: ahora,
+                    tipo: 'comida'
+                });
+                mensaje = 'Comida entregada exitosamente';
+            } else {
+                mensaje = 'Ya se había entregado la comida a este participante';
+            }
+        }
+
+        // Guardar entregas
+        if (guardarAsistencias(asistenciasData)) {
+            res.json({
+                success: true,
+                message: mensaje,
+                yaEntregado: yaEntregado,
+                datos: {
+                    id: id,
+                    nombre: registro.participante.nombre,
+                    tipo: tipo,
+                    fecha: ahora
+                }
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error interno del servidor',
+                message: 'Error al guardar la entrega'
+            });
+        }
+
+    } catch (error) {
+        console.error('Error al registrar entrega:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para obtener asistencias y entregas
+app.get('/api/asistencias', (req, res) => {
+    try {
+        const asistenciasData = cargarAsistencias();
+        res.json({
+            ...asistenciasData,
+            fecha_consulta: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error al obtener asistencias:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
             message: error.message
         });
     }

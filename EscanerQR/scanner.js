@@ -11,8 +11,9 @@ class QRScanner {
     }
     
     // Inicializar escáner
-    async init(mode) {
+    async init(mode, options = {}) {
         this.currentMode = mode;
+        this.currentOptions = options;
         this.isScanning = true;
         
         try {
@@ -129,40 +130,74 @@ class QRScanner {
         const nombre = registro.nombre;
         const paquete = registro.paquete;
         const tipo = registro.tipo;
+        const id = registro.id;
         
-        // Log de actividad
-        this.logActivity(registro, this.currentMode);
-        
-        switch (this.currentMode) {
-            case 'conferencias':
-                this.showResult('success', 'Asistencia Registrada', 
-                    `${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
-                break;
+        try {
+            let response;
+            let endpoint;
+            let body;
+            
+            switch (this.currentMode) {
+                case 'conferencias':
+                    endpoint = '/api/asistencia';
+                    body = { id: id, tipo: 'conferencias' };
+                    break;
+                    
+                case 'talleres':
+                    if (!this.currentOptions.taller) {
+                        this.handleError('Error', 'No se especificó el taller');
+                        return;
+                    }
+                    endpoint = '/api/asistencia';
+                    body = { id: id, tipo: 'talleres', taller: this.currentOptions.taller };
+                    break;
+                    
+                case 'kits':
+                    endpoint = '/api/entrega';
+                    body = { id: id, tipo: 'kit' };
+                    break;
+                    
+                case 'comida':
+                    endpoint = '/api/entrega';
+                    body = { id: id, tipo: 'comida' };
+                    break;
+                    
+                default:
+                    this.showResult('info', 'Registro Válido', 
+                        `${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
+                    return;
+            }
+            
+            // Enviar datos al servidor
+            response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Log de actividad
+                this.logActivity(registro, this.currentMode);
                 
-            case 'talleres':
-                this.showResult('success', 'Asistencia Registrada', 
-                    `${nombre}\nTaller: ${registro.taller}\nPaquete: ${paquete}`);
-                break;
-                
-            case 'kits':
-                if (paquete === 'paquete2') {
-                    this.showResult('success', 'Kit Entregado', 
-                        `${nombre}\nKit entregado correctamente\nPaquete: ${paquete}`);
+                // Mostrar resultado según el tipo
+                if (result.yaRegistrado || result.yaEntregado) {
+                    this.showResult('warning', 'Ya Procesado', 
+                        `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
                 } else {
-                    this.showResult('warning', 'Sin Kit', 
-                        `${nombre}\nNo tiene paquete con kit\nPaquete: ${paquete}`);
+                    this.showResult('success', 'Procesado Exitosamente', 
+                        `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
                 }
-                break;
-                
-            case 'comida':
-                if (paquete !== 'ninguno') {
-                    this.showResult('success', 'Comida Entregada', 
-                        `${nombre}\nComida entregada correctamente\nPaquete: ${paquete}`);
-                } else {
-                    this.showResult('warning', 'Sin Comida', 
-                        `${nombre}\nNo tiene paquete con comida\nPaquete: ${paquete}`);
-                }
-                break;
+            } else {
+                this.handleError('Error del Servidor', result.message || 'Error desconocido');
+            }
+            
+        } catch (error) {
+            console.error('Error al procesar registro:', error);
+            this.handleError('Error de Conexión', 'No se pudo conectar con el servidor');
         }
     }
     
@@ -240,7 +275,86 @@ const qrScanner = new QRScanner();
 
 // Funciones globales para compatibilidad
 function iniciarEscaneo(mode) {
-    qrScanner.init(mode);
+    if (mode === 'talleres') {
+        mostrarSeleccionTaller();
+    } else {
+        qrScanner.init(mode);
+    }
+}
+
+// Función para mostrar selección de taller
+function mostrarSeleccionTaller() {
+    const modalHTML = `
+        <div class="modal fade" id="tallerModal" tabindex="-1" aria-labelledby="tallerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="tallerModalLabel">
+                            <i class="fas fa-tools me-2"></i>Seleccionar Taller
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3">Selecciona el taller para el cual vas a registrar asistencias:</p>
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller1')">
+                                    <i class="fas fa-cog me-2"></i>Taller 1
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller2')">
+                                    <i class="fas fa-cog me-2"></i>Taller 2
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller3')">
+                                    <i class="fas fa-cog me-2"></i>Taller 3
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller4')">
+                                    <i class="fas fa-cog me-2"></i>Taller 4
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller5')">
+                                    <i class="fas fa-cog me-2"></i>Taller 5
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller6')">
+                                    <i class="fas fa-cog me-2"></i>Taller 6
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Agregar modal al DOM
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('tallerModal'));
+    modal.show();
+    
+    // Limpiar modal cuando se cierre
+    document.getElementById('tallerModal').addEventListener('hidden.bs.modal', function () {
+        this.remove();
+    });
+}
+
+// Función para seleccionar taller y iniciar escaneo
+function seleccionarTaller(taller) {
+    // Cerrar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('tallerModal'));
+    modal.hide();
+    
+    // Iniciar escaneo con el taller seleccionado
+    qrScanner.init('talleres', { taller: taller });
 }
 
 function cerrarScanner() {
