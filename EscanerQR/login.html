@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Escáner QR - Semana de Mecatrónica 2025</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="mobile.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6A0032 0%, #8B0040 100%);
+            background-image: url('logo_semana_meca.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(106, 0, 50, 0.8) 0%, rgba(139, 0, 64, 0.8) 100%);
+            z-index: 0;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(106, 0, 50, 0.3);
+        }
+        
+        .login-title {
+            color: #6A0032;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #6A0032;
+            box-shadow: 0 0 0 0.2rem rgba(106, 0, 50, 0.25);
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #6A0032, #8B0040);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 0, 50, 0.4);
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .tech-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        /* Mejorar la visibilidad del logo de fondo */
+        @media (max-width: 768px) {
+            body {
+                background-size: contain;
+                background-position: center top;
+            }
+        }
+        
+        /* Ajustar opacidad del overlay para mejor legibilidad */
+        @media (max-width: 480px) {
+            body::before {
+                background: linear-gradient(135deg, rgba(106, 0, 50, 0.9) 0%, rgba(139, 0, 64, 0.9) 100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="Mi_Logo.png" alt="Rendón Industries" class="img-fluid">
+        </div>
+        
+        <h2 class="login-title">
+            <i class="fas fa-qrcode me-2"></i>Escáner QR
+        </h2>
+        <p class="login-subtitle">Portal de Administración - Semana de Mecatrónica 2025</p>
+        
+        <div id="errorAlert" class="alert alert-danger" style="display: none;">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span id="errorMessage"></span>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
+                <label for="username">
+                    <i class="fas fa-user me-2"></i>Usuario
+                </label>
+            </div>
+            
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                <label for="password">
+                    <i class="fas fa-lock me-2"></i>Contraseña
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login">
+                <i class="fas fa-sign-in-alt me-2"></i>Acceder
+            </button>
+        </form>
+        
+        <div class="footer-text">
+            <div class="tech-badge">
+                <i class="fas fa-cog me-1"></i>Usando la tecnología de Rendón Industries
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Usar credenciales de configuración
+            const validCredentials = CONFIG.credentials;
+            
+            if (username === validCredentials.username && password === validCredentials.password) {
+                // Guardar sesión en localStorage usando configuración
+                localStorage.setItem(CONFIG.session.storageKey, 'true');
+                localStorage.setItem(CONFIG.session.userKey, username);
+                localStorage.setItem(CONFIG.session.timestampKey, Date.now().toString());
+                
+                // Redirigir al escáner
+                window.location.href = CONFIG.urls.scanner;
+            } else {
+                errorMessage.textContent = 'Usuario o contraseña incorrectos';
+                errorAlert.style.display = 'block';
+                
+                // Ocultar error después de 5 segundos
+                setTimeout(() => {
+                    errorAlert.style.display = 'none';
+                }, 5000);
+            }
+        });
+        
+        // Verificar si ya está autenticado
+        if (localStorage.getItem(CONFIG.session.storageKey) === 'true') {
+            const timestamp = parseInt(localStorage.getItem(CONFIG.session.timestampKey));
+            const now = Date.now();
+            
+            if (now - timestamp < CONFIG.session.timeout) {
+                window.location.href = CONFIG.urls.scanner;
+            } else {
+                // Sesión expirada - limpiar datos
+                localStorage.removeItem(CONFIG.session.storageKey);
+                localStorage.removeItem(CONFIG.session.userKey);
+                localStorage.removeItem(CONFIG.session.timestampKey);
+            }
+        }
+    </script>
+</body>
+</html>

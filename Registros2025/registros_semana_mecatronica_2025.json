@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "evento": "Semana de Mecatrónica 2025",
+    "fechaCreacion": "2025-09-17T21:19:49.304Z",
+    "ultimaActualizacion": "2025-09-17T21:19:49.304Z"
+  },
+  "registros": [
+    {
+      "id": "1758143989304wh2uhf108",
+      "metadata": {
+        "fechaRegistro": "2025-09-17T21:19:49.287Z",
+        "version": "1.0",
+        "evento": "Semana de Mecatrónica 2025"
+      },
+      "participante": {
+        "nombre": "Miguel Angel Rendón Díaz",
+        "email": "miguecraft89@gmail.com",
+        "telefono": "4781089695",
+        "tipoParticipante": "ipn",
+        "boleta": "2020670183",
+        "carrera": "mecatronica",
+        "paquete": "paquete2",
+        "tallaPlayera": "L",
+        "taller": "taller1",
+        "terminos": "on"
+      },
+      "fechaGuardado": "2025-09-17T21:19:49.304Z"
+    }
+  ]
+}

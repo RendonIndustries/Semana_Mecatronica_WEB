@@ -1,0 +1,109 @@
+/* Estilos específicos para móviles */
+@media (max-width: 768px) {
+    .menu-card {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .menu-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .menu-title {
+        font-size: 1rem;
+    }
+    
+    .menu-description {
+        font-size: 0.8rem;
+    }
+    
+    .scanner-overlay {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .result-content {
+        margin: 0.5rem;
+        padding: 1.5rem;
+    }
+    
+    .splash-logo {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .splash-logo img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.menu-card:hover {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Efectos de carga */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--ipn-guinda);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mejoras de accesibilidad */
+.menu-card:focus {
+    outline: 3px solid var(--ipn-guinda);
+    outline-offset: 2px;
+}
+
+/* Modo oscuro para el scanner */
+.scanner-container {
+    background: #000;
+}
+
+.scanner-overlay {
+    border-color: #fff;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.7);
+}
+
+/* Responsive para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+    }
+    
+    .menu-card {
+        padding: 1.25rem;
+    }
+    
+    .scanner-overlay {
+        width: 300px;
+        height: 300px;
+    }
+}

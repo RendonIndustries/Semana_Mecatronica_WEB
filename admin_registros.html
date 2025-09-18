@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administración de Registros - Semana de Mecatrónica 2025</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        .text-guinda {
+            color: var(--ipn-guinda) !important;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--ipn-guinda), #8B0040);
+            color: var(--ipn-blanco);
+            padding: 2rem 0;
+        }
+        
+        .stats-card {
+            background: var(--ipn-blanco);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(106, 0, 50, 0.1);
+            border-left: 4px solid var(--ipn-guinda);
+        }
+        
+        .registro-item {
+            background: var(--ipn-blanco);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 3px solid var(--ipn-guinda);
+        }
+        
+        .badge-ipn {
+            background-color: var(--ipn-guinda);
+        }
+        
+        .badge-externo {
+            background-color: #6c757d;
+        }
+        
+        .qr-container {
+            background: #f8f9fa;
+            border: 2px dashed var(--ipn-guinda) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .qr-container:hover {
+            background: #e9ecef;
+            border-color: #8B0040 !important;
+        }
+        
+        .modal-header.bg-success {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1><i class="fas fa-users me-2"></i>Administración de Registros</h1>
+                    <p class="lead">Semana de Mecatrónica 2025 - UPIIZ IPN</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="container mt-4">
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 class="text-guinda" id="totalRegistros">0</h3>
+                    <p class="mb-0">Total Registros</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 class="text-guinda" id="estudiantesIPN">0</h3>
+                    <p class="mb-0">Estudiantes IPN</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 class="text-guinda" id="externos">0</h3>
+                    <p class="mb-0">Externos</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 class="text-guinda" id="conPaquetes">0</h3>
+                    <p class="mb-0">Con Paquetes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5 class="mb-0">Registros de la Semana de Mecatrónica 2025</h5>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a href="../EscanerQR/" class="btn btn-warning me-2" target="_blank">
+                                    <i class="fas fa-qrcode me-2"></i>Escáner QR
+                                </a>
+                                <button class="btn btn-outline-primary me-2" onclick="cargarRegistros()">
+                                    <i class="fas fa-sync-alt me-2"></i>Actualizar
+                                </button>
+                                <button class="btn btn-success" onclick="exportarCSV()">
+                                    <i class="fas fa-download me-2"></i>Exportar CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Registros -->
+        <div class="row">
+            <div class="col-12">
+                <div id="loadingRegistros" class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x text-guinda"></i>
+                    <p class="mt-2">Cargando registros...</p>
+                </div>
+                <div id="listaRegistros"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Cargar registros al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarRegistros();
+        });
+
+        function cargarRegistros() {
+            const loadingDiv = document.getElementById('loadingRegistros');
+            const listaDiv = document.getElementById('listaRegistros');
+            
+            loadingDiv.style.display = 'block';
+            listaDiv.innerHTML = '';
+
+            fetch('/api/registros')
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+                    
+                    if (data.error) {
+                        listaDiv.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error: ${data.message}
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Actualizar estadísticas
+                    actualizarEstadisticas(data.registros);
+                    
+                    // Mostrar registros
+                    if (data.registros.length === 0) {
+                        listaDiv.innerHTML = `
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No hay registros disponibles.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let html = '';
+                    data.registros.forEach(registro => {
+                        const tipoBadge = registro.tipo === 'ipn' ? 'badge-ipn' : 'badge-externo';
+                        const tipoTexto = registro.tipo === 'ipn' ? 'Estudiante IPN' : 'Externo';
+                        
+                        html += `
+                            <div class="registro-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <h6 class="mb-1">${registro.nombre}</h6>
+                                        <small class="text-muted">${registro.email}</small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge ${tipoBadge}">${tipoTexto}</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small><strong>Paquete:</strong> ${registro.paquete}</small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small><strong>Taller:</strong> ${registro.taller}</small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-muted">${new Date(registro.fecha).toLocaleDateString('es-MX')}</small>
+                                    </div>
+                                    <div class="col-md-1 text-end">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="verDetalles('${registro.id}')" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" onclick="verQR('${registro.id}')" title="Ver código QR">
+                                                <i class="fas fa-qrcode"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    listaDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    listaDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error al cargar los registros: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+
+        function actualizarEstadisticas(registros) {
+            const total = registros.length;
+            const estudiantesIPN = registros.filter(r => r.tipo === 'ipn').length;
+            const externos = registros.filter(r => r.tipo === 'externo').length;
+            const conPaquetes = registros.filter(r => r.paquete !== 'ninguno').length;
+
+            document.getElementById('totalRegistros').textContent = total;
+            document.getElementById('estudiantesIPN').textContent = estudiantesIPN;
+            document.getElementById('externos').textContent = externos;
+            document.getElementById('conPaquetes').textContent = conPaquetes;
+        }
+
+        function verDetalles(id) {
+            // Cargar detalles del registro
+            fetch(`/api/registro/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.message);
+                        return;
+                    }
+                    
+                    // Mostrar detalles en un modal o alert
+                    const participante = data.participante || {};
+                    const metadata = data.metadata || {};
+                    
+                    let detalles = `DETALLES DEL REGISTRO\n\n`;
+                    detalles += `ID: ${data.id}\n`;
+                    detalles += `Nombre: ${participante.nombre}\n`;
+                    detalles += `Email: ${participante.email}\n`;
+                    detalles += `Teléfono: ${participante.telefono}\n`;
+                    detalles += `Tipo: ${participante.tipoParticipante === 'ipn' ? 'Estudiante IPN' : 'Externo'}\n`;
+                    
+                    if (participante.tipoParticipante === 'ipn') {
+                        detalles += `Boleta: ${participante.boleta}\n`;
+                        detalles += `Carrera: ${participante.carrera}\n`;
+                    }
+                    
+                    detalles += `Paquete: ${participante.paquete}\n`;
+                    if (participante.paquete !== 'ninguno') {
+                        detalles += `Talla Playera: ${participante.tallaPlayera}\n`;
+                    }
+                    detalles += `Taller: ${participante.taller}\n`;
+                    detalles += `Fecha Registro: ${new Date(metadata.fechaRegistro).toLocaleString('es-MX')}\n`;
+                    detalles += `Fecha Guardado: ${new Date(data.fechaGuardado).toLocaleString('es-MX')}\n`;
+                    
+                    alert(detalles);
+                })
+                .catch(error => {
+                    console.error('Error al cargar detalles:', error);
+                    alert('Error al cargar los detalles del registro');
+                });
+        }
+
+        function verQR(id) {
+            // Crear modal para mostrar el QR
+            const modalHTML = `
+                <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="qrModalLabel">
+                                    <i class="fas fa-qrcode me-2"></i>Código QR de Registro
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <div class="mb-3">
+                                    <h6 class="text-guinda">ID de Registro: ${id}</h6>
+                                    <div class="qr-container p-3 border rounded">
+                                        <img id="qrImage" src="/api/qr/${id}" alt="Código QR" class="img-fluid" style="max-width: 250px;">
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary" onclick="descargarQR('/api/qr/${id}', '${id}')">
+                                        <i class="fas fa-download me-2"></i>Descargar Código QR
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Agregar modal al DOM
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+            modal.show();
+            
+            // Limpiar modal cuando se cierre
+            document.getElementById('qrModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+        
+        function descargarQR(qrUrl, id) {
+            const link = document.createElement('a');
+            link.href = qrUrl;
+            link.download = `qr_registro_${id}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportarCSV() {
+            // Crear enlace para descargar CSV
+            const link = document.createElement('a');
+            link.href = '/api/exportar-csv';
+            link.download = 'registros_semana_mecatronica_2025.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

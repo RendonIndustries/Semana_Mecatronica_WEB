@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escáner QR - Semana de Mecatrónica 2025</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css" rel="stylesheet">
+    
+    <!-- Mobile CSS -->
+    <link href="mobile.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        
+        .header-scanner {
+            background: linear-gradient(135deg, var(--ipn-guinda), #8B0040);
+            color: var(--ipn-blanco);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(106, 0, 50, 0.3);
+        }
+        
+        .menu-card {
+            background: var(--ipn-blanco);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(106, 0, 50, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--ipn-guinda);
+            box-shadow: 0 10px 25px rgba(106, 0, 50, 0.2);
+        }
+        
+        .menu-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--ipn-guinda), #8B0040);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ipn-blanco);
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+        
+        .menu-title {
+            color: var(--ipn-guinda);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        
+        .footer-brand {
+            background: #343a40;
+            color: var(--ipn-blanco);
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--ipn-guinda);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: var(--ipn-blanco);
+        }
+        
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            background: var(--ipn-blanco);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .splash-logo img {
+            max-width: 120px;
+            max-height: 120px;
+        }
+        
+        .splash-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .splash-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+        
+        .scanner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: none;
+        }
+        
+        .scanner-header {
+            background: var(--ipn-guinda);
+            color: var(--ipn-blanco);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .scanner-video {
+            width: 100%;
+            height: calc(100vh - 120px);
+            object-fit: cover;
+        }
+        
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            border: 3px solid var(--ipn-blanco);
+            border-radius: 15px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+        }
+        
+        .scanner-instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--ipn-blanco);
+            text-align: center;
+            background: rgba(0,0,0,0.7);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-content {
+            background: var(--ipn-blanco);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .result-success {
+            color: #28a745;
+        }
+        
+        .result-error {
+            color: #dc3545;
+        }
+        
+        .result-warning {
+            color: #ffc107;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-logo">
+            <img src="Mi_Logo.png" alt="Rendón Industries" id="splashLogo">
+        </div>
+        <div class="splash-text">
+            Escáner QR
+            <div class="splash-subtitle">Semana de Mecatrónica 2025</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header-scanner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 text-center">
+                    <h1 class="mb-0">
+                        <i class="fas fa-qrcode me-2"></i>
+                        Escáner QR
+                    </h1>
+                    <p class="mb-0">Semana de Mecatrónica 2025 - UPIIZ IPN</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Principal -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-4" style="color: var(--ipn-guinda);">
+                    <i class="fas fa-tasks me-2"></i>Menú de Administración
+                </h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Auditorio - Pase de Lista -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="iniciarEscaneo('conferencias')">
+                    <div class="menu-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h5 class="menu-title">Auditorio - Pase de Lista</h5>
+                    <p class="menu-description">Conferencias - Control de asistencia a conferencias</p>
+                </div>
+            </div>
+            
+            <!-- Talleres - Pase de Lista -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="iniciarEscaneo('talleres')">
+                    <div class="menu-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h5 class="menu-title">Talleres - Pase de Lista</h5>
+                    <p class="menu-description">Control de asistencia a talleres</p>
+                </div>
+            </div>
+            
+            <!-- Entrega de Kits -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="iniciarEscaneo('kits')">
+                    <div class="menu-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h5 class="menu-title">Entrega de Kits</h5>
+                    <p class="menu-description">Control de entrega de kits (una vez por persona)</p>
+                </div>
+            </div>
+            
+            <!-- Comida de Clausura -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="iniciarEscaneo('comida')">
+                    <div class="menu-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h5 class="menu-title">Comida de Clausura</h5>
+                    <p class="menu-description">Control de entrega de comida (una vez por persona)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanner Container -->
+    <div id="scannerContainer" class="scanner-container">
+        <div class="scanner-header">
+            <h5 class="mb-0" id="scannerTitle">
+                <i class="fas fa-qrcode me-2"></i>Escaneando...
+            </h5>
+            <button class="btn btn-outline-light btn-sm" onclick="cerrarScanner()">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
+        </div>
+        <video id="scannerVideo" class="scanner-video" autoplay></video>
+        <div class="scanner-overlay"></div>
+        <div class="scanner-instructions">
+            <i class="fas fa-qrcode fa-2x mb-2"></i>
+            <p class="mb-0">Apunta la cámara al código QR</p>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="result-modal">
+        <div class="result-content">
+            <div id="resultIcon" class="mb-3">
+                <i class="fas fa-check-circle fa-3x result-success"></i>
+            </div>
+            <h4 id="resultTitle" class="mb-3">Resultado</h4>
+            <p id="resultMessage" class="mb-3">Mensaje</p>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" onclick="cerrarResultado()">
+                    <i class="fas fa-check me-2"></i>Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-brand mt-5">
+        <div class="container">
+            <p class="mb-0">
+                Powered by <strong>Rendón Industries</strong> - Tecnología de vanguardia
+            </p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- QR Scanner Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    
+    <!-- Scanner Logic -->
+    <script src="config.js"></script>
+    <script src="scanner.js"></script>
+    
+    <script>
+        // Verificar autenticación al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = localStorage.getItem(CONFIG.session.storageKey) === 'true';
+            const timestamp = parseInt(localStorage.getItem(CONFIG.session.timestampKey));
+            const now = Date.now();
+            
+            if (!isAuthenticated || (now - timestamp > CONFIG.session.timeout)) {
+                // No autenticado o sesión expirada - limpiar datos
+                localStorage.removeItem(CONFIG.session.storageKey);
+                localStorage.removeItem(CONFIG.session.userKey);
+                localStorage.removeItem(CONFIG.session.timestampKey);
+                window.location.href = CONFIG.urls.login;
+                return;
+            }
+            
+            // Mostrar usuario actual
+            const currentUser = localStorage.getItem(CONFIG.session.userKey);
+            if (currentUser) {
+                const userInfo = document.createElement('div');
+                userInfo.className = 'user-info';
+                userInfo.innerHTML = `
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i>${currentUser} | 
+                                    <a href="#" onclick="cerrarSesion()" class="text-danger">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                                    </a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.header-scanner').insertBefore(userInfo, document.querySelector('.header-scanner .container'));
+            }
+            
+            // Mostrar splash screen por 2 segundos
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+            }, 2000);
+        });
+        
+        function cerrarSesion() {
+            if (confirm('¿Estás seguro de que quieres cerrar la sesión?')) {
+                localStorage.removeItem(CONFIG.session.storageKey);
+                localStorage.removeItem(CONFIG.session.userKey);
+                localStorage.removeItem(CONFIG.session.timestampKey);
+                window.location.href = CONFIG.urls.logout;
+            }
+        }
+    </script>
+</body>
+</html>
