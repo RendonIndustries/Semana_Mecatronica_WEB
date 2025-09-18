@@ -62,13 +62,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'semana_mecatronica_2025.html'));
 });
 
-// Ruta para el escáner QR
+// Ruta para el escáner QR - redirigir a login
 app.get('/EscanerQR', (req, res) => {
-    res.redirect('/EscanerQR/');
+    res.redirect('/EscanerQR/login.html');
 });
 
 app.get('/EscanerQR/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'EscanerQR', 'login.html'));
+    res.redirect('/EscanerQR/login.html');
 });
 
 // Ruta para el escáner principal (después del login)
@@ -328,10 +328,10 @@ app.listen(PORT, () => {
     console.log(`   📝 Registro: http://localhost:${PORT}/registro_semana_mecatronica.html`);
     console.log(`   🏆 Concursos: http://localhost:${PORT}/concursos_semana_mecatronica.html`);
     console.log(`   👥 Administración: http://localhost:${PORT}/admin_registros.html`);
-    console.log(`   📱 Escáner QR: http://localhost:${PORT}/EscanerQR/`);
+    console.log(`   📱 Escáner QR: http://localhost:${PORT}/EscanerQR/index.html`);
     console.log(`   📊 API Registros: http://localhost:${PORT}/api/registros`);
     console.log(`\n📁 Registros se guardan en: ${registrosDir}`);
     console.log(`\n🔗 Enlaces de Acceso:`);
-    console.log(`   • Desarrollo: http://localhost:${PORT}/EscanerQR/`);
-    console.log(`   • Producción: https://semanameca.upiiz.ipn.mx/EscanerQR/`);
+    console.log(`   • Desarrollo: http://localhost:${PORT}/EscanerQR/index.html`);
+    console.log(`   • Producción: https://semanameca.upiiz.ipn.mx/EscanerQR/index.html`);
 });
