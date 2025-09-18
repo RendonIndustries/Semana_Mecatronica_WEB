@@ -209,7 +209,7 @@
                 localStorage.setItem(CONFIG.session.timestampKey, Date.now().toString());
                 
                 // Redirigir al escáner
-                window.location.href = CONFIG.urls.scanner;
+                window.location.href = 'index.html';
             } else {
                 errorMessage.textContent = 'Usuario o contraseña incorrectos';
                 errorAlert.style.display = 'block';
@@ -227,7 +227,7 @@
             const now = Date.now();
             
             if (now - timestamp < CONFIG.session.timeout) {
-                window.location.href = CONFIG.urls.scanner;
+                window.location.href = 'index.html';
             } else {
                 // Sesión expirada - limpiar datos
                 localStorage.removeItem(CONFIG.session.storageKey);

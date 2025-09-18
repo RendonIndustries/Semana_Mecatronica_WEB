@@ -19,7 +19,7 @@ const CONFIG = {
     // URLs de redirección
     urls: {
         login: 'login.html',
-        scanner: 'scanner',
+        scanner: 'index.html',
         logout: 'login.html'
     },
     

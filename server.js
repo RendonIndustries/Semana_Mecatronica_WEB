@@ -72,7 +72,7 @@ app.get('/EscanerQR/', (req, res) => {
 });
 
 // Ruta para el escáner principal (después del login)
-app.get('/EscanerQR/scanner', (req, res) => {
+app.get('/EscanerQR/index.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'EscanerQR', 'index.html'));
 });
 
