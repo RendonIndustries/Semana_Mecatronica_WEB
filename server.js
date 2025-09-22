@@ -24,6 +24,9 @@ const archivoRegistros = path.join(registrosDir, 'registros_semana_mecatronica_2
 // Archivo para asistencias y entregas
 const archivoAsistencias = path.join(registrosDir, 'asistencias_entregas_2025.json');
 
+// Archivo para pagos
+const archivoPagos = path.join(registrosDir, 'pagos_semana_mecatronica_2025.json');
+
 // Función para cargar registros existentes
 function cargarRegistros() {
     try {
@@ -103,6 +106,42 @@ function guardarAsistencias(datos) {
     }
 }
 
+// Función para cargar pagos
+function cargarPagos() {
+    try {
+        if (fs.existsSync(archivoPagos)) {
+            const contenido = fs.readFileSync(archivoPagos, 'utf8');
+            return JSON.parse(contenido);
+        }
+    } catch (error) {
+        console.error('Error al cargar pagos:', error);
+    }
+    
+    // Estructura inicial si no existe el archivo
+    return {
+        metadata: {
+            version: "1.0",
+            evento: "Semana de Mecatrónica 2025",
+            fechaCreacion: new Date().toISOString(),
+            ultimaActualizacion: new Date().toISOString()
+        },
+        pagos: []
+    };
+}
+
+// Función para guardar pagos
+function guardarPagos(data) {
+    try {
+        data.metadata.ultimaActualizacion = new Date().toISOString();
+        const jsonData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(archivoPagos, jsonData, 'utf8');
+        return true;
+    } catch (error) {
+        console.error('Error al guardar pagos:', error);
+        return false;
+    }
+}
+
 // Ruta principal - servir la página principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'semana_mecatronica_2025.html'));
@@ -138,6 +177,42 @@ app.post('/api/registro', (req, res) => {
             });
         }
 
+        // Verificar pago si se seleccionó un paquete
+        if (data.participante.paquete && data.participante.paquete !== 'ninguno') {
+            if (!data.participante.idPago) {
+                return res.status(400).json({
+                    error: 'ID de pago requerido',
+                    message: 'Debe proporcionar un ID de pago para el paquete seleccionado'
+                });
+            }
+
+            // Verificar que el pago existe y está disponible
+            const pagosData = cargarPagos();
+            const pago = pagosData.pagos.find(p => p.idPago === data.participante.idPago);
+            
+            if (!pago) {
+                return res.status(404).json({
+                    error: 'Pago no encontrado',
+                    message: 'El ID de pago no existe en nuestros registros'
+                });
+            }
+            
+            if (pago.estado === 'usado') {
+                return res.status(400).json({
+                    error: 'Pago ya utilizado',
+                    message: 'Este ID de pago ya ha sido utilizado en otro registro'
+                });
+            }
+            
+            // Verificar que el tipo de paquete coincida
+            if (pago.tipoPaquete !== data.participante.paquete) {
+                return res.status(400).json({
+                    error: 'Tipo de paquete incorrecto',
+                    message: `El pago corresponde a ${pago.tipoPaquete}, pero seleccionaste ${data.participante.paquete}`
+                });
+            }
+        }
+
         // Cargar registros existentes
         const registrosData = cargarRegistros();
         
@@ -153,6 +228,18 @@ app.post('/api/registro', (req, res) => {
         
         // Guardar todos los registros
         if (guardarRegistros(registrosData)) {
+            // Marcar pago como usado si se seleccionó un paquete
+            if (data.participante.paquete && data.participante.paquete !== 'ninguno' && data.participante.idPago) {
+                const pagosData = cargarPagos();
+                const pagoIndex = pagosData.pagos.findIndex(p => p.idPago === data.participante.idPago);
+                if (pagoIndex !== -1) {
+                    pagosData.pagos[pagoIndex].estado = 'usado';
+                    pagosData.pagos[pagoIndex].idRegistro = nuevoRegistro.id;
+                    pagosData.pagos[pagoIndex].fechaUso = new Date().toISOString();
+                    guardarPagos(pagosData);
+                }
+            }
+            
             res.json({
                 success: true,
                 message: 'Registro guardado exitosamente',
@@ -712,6 +799,279 @@ app.get('/api/estadisticas', (req, res) => {
         
     } catch (error) {
         console.error('Error al obtener estadísticas:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// ==================== RUTAS DE PAGOS ====================
+
+// API para verificar pago
+app.post('/api/verificar-pago', (req, res) => {
+    try {
+        const { idPago } = req.body;
+        
+        if (!idPago) {
+            return res.status(400).json({
+                error: 'ID de pago requerido',
+                message: 'Debe proporcionar un ID de pago válido'
+            });
+        }
+        
+        const pagosData = cargarPagos();
+        const pago = pagosData.pagos.find(p => p.idPago === idPago);
+        
+        if (!pago) {
+            return res.status(404).json({
+                error: 'Pago no encontrado',
+                message: 'El ID de pago no existe en nuestros registros'
+            });
+        }
+        
+        if (pago.estado === 'usado') {
+            return res.status(400).json({
+                error: 'Pago ya utilizado',
+                message: 'Este ID de pago ya ha sido utilizado en otro registro'
+            });
+        }
+        
+        res.json({
+            success: true,
+            pago: {
+                idPago: pago.idPago,
+                tipoPaquete: pago.tipoPaquete,
+                monto: pago.monto,
+                fechaPago: pago.fechaPago,
+                estado: pago.estado
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error al verificar pago:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para marcar pago como usado
+app.post('/api/marcar-pago-usado', (req, res) => {
+    try {
+        const { idPago, idRegistro } = req.body;
+        
+        if (!idPago || !idRegistro) {
+            return res.status(400).json({
+                error: 'Datos requeridos',
+                message: 'Debe proporcionar ID de pago e ID de registro'
+            });
+        }
+        
+        const pagosData = cargarPagos();
+        const pagoIndex = pagosData.pagos.findIndex(p => p.idPago === idPago);
+        
+        if (pagoIndex === -1) {
+            return res.status(404).json({
+                error: 'Pago no encontrado',
+                message: 'El ID de pago no existe'
+            });
+        }
+        
+        if (pagosData.pagos[pagoIndex].estado === 'usado') {
+            return res.status(400).json({
+                error: 'Pago ya utilizado',
+                message: 'Este pago ya ha sido utilizado'
+            });
+        }
+        
+        // Marcar pago como usado
+        pagosData.pagos[pagoIndex].estado = 'usado';
+        pagosData.pagos[pagoIndex].idRegistro = idRegistro;
+        pagosData.pagos[pagoIndex].fechaUso = new Date().toISOString();
+        
+        if (guardarPagos(pagosData)) {
+            res.json({
+                success: true,
+                message: 'Pago marcado como usado exitosamente'
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error al guardar',
+                message: 'No se pudo actualizar el estado del pago'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al marcar pago como usado:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para obtener todos los pagos (solo para administradores)
+app.get('/api/pagos', (req, res) => {
+    try {
+        const pagosData = cargarPagos();
+        res.json(pagosData);
+    } catch (error) {
+        console.error('Error al obtener pagos:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para agregar nuevo pago (solo para administradores)
+app.post('/api/pagos', (req, res) => {
+    try {
+        const { idPago, tipoPaquete, monto, fechaPago, notas } = req.body;
+        
+        if (!idPago || !tipoPaquete || !monto) {
+            return res.status(400).json({
+                error: 'Datos requeridos',
+                message: 'Debe proporcionar ID de pago, tipo de paquete y monto'
+            });
+        }
+        
+        const pagosData = cargarPagos();
+        
+        // Verificar si el ID de pago ya existe
+        const pagoExistente = pagosData.pagos.find(p => p.idPago === idPago);
+        if (pagoExistente) {
+            return res.status(400).json({
+                error: 'ID de pago duplicado',
+                message: 'Este ID de pago ya existe en el sistema'
+            });
+        }
+        
+        // Crear nuevo pago
+        const nuevoPago = {
+            idPago: idPago,
+            tipoPaquete: tipoPaquete,
+            monto: parseFloat(monto),
+            fechaPago: fechaPago || new Date().toISOString(),
+            estado: 'disponible',
+            notas: notas || '',
+            fechaCreacion: new Date().toISOString()
+        };
+        
+        pagosData.pagos.push(nuevoPago);
+        
+        if (guardarPagos(pagosData)) {
+            res.json({
+                success: true,
+                message: 'Pago agregado exitosamente',
+                pago: nuevoPago
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error al guardar',
+                message: 'No se pudo guardar el pago'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al agregar pago:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para actualizar pago
+app.put('/api/pagos/:idPago', (req, res) => {
+    try {
+        const { idPago } = req.params;
+        const { tipoPaquete, monto, fechaPago, notas, estado } = req.body;
+        
+        const pagosData = cargarPagos();
+        const pagoIndex = pagosData.pagos.findIndex(p => p.idPago === idPago);
+        
+        if (pagoIndex === -1) {
+            return res.status(404).json({
+                error: 'Pago no encontrado',
+                message: 'El ID de pago no existe'
+            });
+        }
+        
+        // Actualizar campos si se proporcionan
+        if (tipoPaquete !== undefined) pagosData.pagos[pagoIndex].tipoPaquete = tipoPaquete;
+        if (monto !== undefined) pagosData.pagos[pagoIndex].monto = parseFloat(monto);
+        if (fechaPago !== undefined) pagosData.pagos[pagoIndex].fechaPago = fechaPago;
+        if (notas !== undefined) pagosData.pagos[pagoIndex].notas = notas;
+        if (estado !== undefined) pagosData.pagos[pagoIndex].estado = estado;
+        
+        pagosData.pagos[pagoIndex].fechaModificacion = new Date().toISOString();
+        
+        if (guardarPagos(pagosData)) {
+            res.json({
+                success: true,
+                message: 'Pago actualizado exitosamente',
+                pago: pagosData.pagos[pagoIndex]
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error al guardar',
+                message: 'No se pudo actualizar el pago'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al actualizar pago:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para eliminar pago
+app.delete('/api/pagos/:idPago', (req, res) => {
+    try {
+        const { idPago } = req.params;
+        
+        const pagosData = cargarPagos();
+        const pagoIndex = pagosData.pagos.findIndex(p => p.idPago === idPago);
+        
+        if (pagoIndex === -1) {
+            return res.status(404).json({
+                error: 'Pago no encontrado',
+                message: 'El ID de pago no existe'
+            });
+        }
+        
+        // Verificar si el pago ya fue usado
+        if (pagosData.pagos[pagoIndex].estado === 'usado') {
+            return res.status(400).json({
+                error: 'No se puede eliminar',
+                message: 'No se puede eliminar un pago que ya ha sido utilizado'
+            });
+        }
+        
+        // Eliminar pago
+        const pagoEliminado = pagosData.pagos.splice(pagoIndex, 1)[0];
+        
+        if (guardarPagos(pagosData)) {
+            res.json({
+                success: true,
+                message: 'Pago eliminado exitosamente',
+                pago: pagoEliminado
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error al guardar',
+                message: 'No se pudo eliminar el pago'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al eliminar pago:', error);
         res.status(500).json({
             error: 'Error interno del servidor',
             message: error.message

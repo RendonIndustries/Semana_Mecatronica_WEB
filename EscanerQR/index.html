@@ -304,6 +304,17 @@
                     <p class="menu-description">Gestionar usuarios, ver estadísticas y administrar registros</p>
                 </div>
             </div>
+            
+            <!-- Gestión de Pagos -->
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="menu-card" onclick="abrirGestionPagos()">
+                    <div class="menu-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h5 class="menu-title">Gestión de Pagos</h5>
+                    <p class="menu-description">Administrar pagos de paquetes y verificar transacciones</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -503,6 +514,113 @@
                     <button type="button" class="btn btn-warning" onclick="guardarCambiosUsuario()">
                         <i class="fas fa-save me-2"></i>Guardar Cambios
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestión de Pagos Modal -->
+    <div class="modal fade" id="pagosModal" tabindex="-1" aria-labelledby="pagosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="pagosModalLabel">
+                        <i class="fas fa-credit-card me-2"></i>Gestión de Pagos
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="pagosTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pagos-tab" data-bs-toggle="tab" data-bs-target="#pagos" type="button" role="tab">
+                                <i class="fas fa-list me-1"></i>Lista de Pagos
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="agregar-pago-tab" data-bs-toggle="tab" data-bs-target="#agregar-pago" type="button" role="tab">
+                                <i class="fas fa-plus me-1"></i>Agregar Pago
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="pagosTabContent">
+                        <!-- Lista de Pagos -->
+                        <div class="tab-pane fade show active" id="pagos" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="buscarPagos" placeholder="Buscar por ID de pago...">
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary" onclick="actualizarListaPagos()">
+                                        <i class="fas fa-sync me-1"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID de Pago</th>
+                                            <th>Tipo de Paquete</th>
+                                            <th>Monto</th>
+                                            <th>Fecha de Pago</th>
+                                            <th>Estado</th>
+                                            <th>ID de Registro</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaPagos">
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Cargando pagos...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Agregar Pago -->
+                        <div class="tab-pane fade" id="agregar-pago" role="tabpanel">
+                            <form id="agregarPagoForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nuevoIdPago" class="form-label">ID de Pago</label>
+                                        <input type="text" class="form-control" id="nuevoIdPago" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nuevoTipoPaquete" class="form-label">Tipo de Paquete</label>
+                                        <select class="form-select" id="nuevoTipoPaquete" required>
+                                            <option value="">Selecciona un paquete</option>
+                                            <option value="paquete1">Paquete 1</option>
+                                            <option value="paquete2">Paquete 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nuevoMonto" class="form-label">Monto</label>
+                                        <input type="number" class="form-control" id="nuevoMonto" step="0.01" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nuevaFechaPago" class="form-label">Fecha de Pago</label>
+                                        <input type="datetime-local" class="form-control" id="nuevaFechaPago">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label for="nuevasNotas" class="form-label">Notas (opcional)</label>
+                                        <textarea class="form-control" id="nuevasNotas" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save me-2"></i>Agregar Pago
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -819,6 +937,161 @@
                     fila.style.display = 'none';
                 }
             });
+        }
+        
+        // ==================== FUNCIONES DE GESTIÓN DE PAGOS ====================
+        
+        function abrirGestionPagos() {
+            const modal = new bootstrap.Modal(document.getElementById('pagosModal'));
+            modal.show();
+            
+            // Cargar datos iniciales
+            actualizarListaPagos();
+            
+            // Configurar búsqueda
+            document.getElementById('buscarPagos').addEventListener('input', buscarPagos);
+            
+            // Configurar formulario de agregar pago
+            document.getElementById('agregarPagoForm').addEventListener('submit', agregarPago);
+        }
+        
+        async function actualizarListaPagos() {
+            try {
+                const response = await fetch('../api/pagos');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Pagos recibidos:', data);
+                
+                const tbody = document.getElementById('tablaPagos');
+                tbody.innerHTML = '';
+                
+                if (!data.pagos || !Array.isArray(data.pagos)) {
+                    console.error('Estructura de datos inválida:', data);
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No hay pagos disponibles</td></tr>';
+                    return;
+                }
+                
+                data.pagos.forEach(pago => {
+                    const row = document.createElement('tr');
+                    const estadoBadge = pago.estado === 'disponible' ? 
+                        '<span class="badge bg-success">Disponible</span>' : 
+                        '<span class="badge bg-warning">Usado</span>';
+                    
+                    row.innerHTML = `
+                        <td><code>${pago.idPago}</code></td>
+                        <td><span class="badge bg-info">${pago.tipoPaquete}</span></td>
+                        <td>$${pago.monto}</td>
+                        <td>${new Date(pago.fechaPago).toLocaleString()}</td>
+                        <td>${estadoBadge}</td>
+                        <td>${pago.idRegistro || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editarPago('${pago.idPago}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            ${pago.estado === 'disponible' ? 
+                                `<button class="btn btn-sm btn-danger" onclick="eliminarPago('${pago.idPago}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>` : ''
+                            }
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar pagos:', error);
+                const tbody = document.getElementById('tablaPagos');
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error al cargar pagos: ${error.message}</td></tr>`;
+                alert(`Error al cargar la lista de pagos: ${error.message}`);
+            }
+        }
+        
+        function buscarPagos() {
+            const termino = document.getElementById('buscarPagos').value.toLowerCase();
+            const filas = document.querySelectorAll('#tablaPagos tr');
+            
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(termino)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        }
+        
+        async function agregarPago(e) {
+            e.preventDefault();
+            
+            const idPago = document.getElementById('nuevoIdPago').value;
+            const tipoPaquete = document.getElementById('nuevoTipoPaquete').value;
+            const monto = document.getElementById('nuevoMonto').value;
+            const fechaPago = document.getElementById('nuevaFechaPago').value;
+            const notas = document.getElementById('nuevasNotas').value;
+            
+            try {
+                const response = await fetch('../api/pagos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        idPago: idPago,
+                        tipoPaquete: tipoPaquete,
+                        monto: monto,
+                        fechaPago: fechaPago || new Date().toISOString(),
+                        notas: notas
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    alert('Pago agregado exitosamente');
+                    document.getElementById('agregarPagoForm').reset();
+                    actualizarListaPagos();
+                } else {
+                    alert('Error al agregar pago: ' + (data.message || 'Error desconocido'));
+                }
+                
+            } catch (error) {
+                console.error('Error al agregar pago:', error);
+                alert('Error de conexión al agregar pago');
+            }
+        }
+        
+        async function editarPago(idPago) {
+            // Implementar edición de pago
+            alert('Función de edición de pago en desarrollo');
+        }
+        
+        async function eliminarPago(idPago) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este pago?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`../api/pagos/${idPago}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    alert('Pago eliminado exitosamente');
+                    actualizarListaPagos();
+                } else {
+                    alert('Error al eliminar pago: ' + (data.message || 'Error desconocido'));
+                }
+                
+            } catch (error) {
+                console.error('Error al eliminar pago:', error);
+                alert('Error de conexión al eliminar pago');
+            }
         }
     </script>
 </body>

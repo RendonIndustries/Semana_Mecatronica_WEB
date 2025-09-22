@@ -486,6 +486,12 @@
                                             <option value="XXL">XXL</option>
                                         </select>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <label for="Pago" class="form-label required-field">ID de Pago</label>
+                                        <input type="text" class="form-control" id="pago" name="pago" required onblur="verificarPago()">
+                                        <div id="pagoStatus" class="mt-2"></div>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -764,10 +770,12 @@
             const packageInfo = document.getElementById('packageInfo');
             const packageDetails = document.getElementById('packageDetails');
             const tallaPlayera = document.getElementById('tallaPlayera');
+            const idPagoField = document.getElementById('pago');
             
             if (paquete === 'paquete1' || paquete === 'paquete2') {
                 packageInfo.style.display = 'block';
                 tallaPlayera.required = true;
+                idPagoField.required = true;
                 
                 // Mostrar información específica del paquete
                 if (paquete === 'paquete1') {
@@ -794,7 +802,68 @@
                 packageInfo.style.display = 'none';
                 tallaPlayera.required = false;
                 tallaPlayera.value = '';
+                idPagoField.required = false;
+                idPagoField.value = '';
                 packageDetails.innerHTML = '';
+            }
+        }
+        
+        // Función para verificar el pago
+        async function verificarPago() {
+            const idPago = document.getElementById('pago').value.trim();
+            const pagoStatus = document.getElementById('pagoStatus');
+            const paquete = document.getElementById('paquete').value;
+            
+            if (!idPago || paquete === 'ninguno' || !paquete) {
+                pagoStatus.innerHTML = '';
+                return;
+            }
+            
+            pagoStatus.innerHTML = '<div class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando pago...</div>';
+            
+            try {
+                const response = await fetch(getApiUrl('verificar-pago'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ idPago: idPago })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Verificar que el tipo de paquete coincida
+                    if (data.pago.tipoPaquete === paquete) {
+                        pagoStatus.innerHTML = `
+                            <div class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Pago válido - ${data.pago.tipoPaquete} ($${data.pago.monto})
+                            </div>
+                        `;
+                    } else {
+                        pagoStatus.innerHTML = `
+                            <div class="text-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                El pago corresponde a ${data.pago.tipoPaquete}, pero seleccionaste ${paquete}
+                            </div>
+                        `;
+                    }
+                } else {
+                    pagoStatus.innerHTML = `
+                        <div class="text-danger">
+                            <i class="fas fa-times-circle me-1"></i>
+                            ${data.message || 'Error al verificar el pago'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                pagoStatus.innerHTML = `
+                    <div class="text-danger">
+                        <i class="fas fa-times-circle me-1"></i>
+                        Error de conexión al verificar el pago
+                    </div>
+                `;
             }
         }
         
@@ -815,6 +884,12 @@
             
             for (let [key, value] of formData.entries()) {
                 data[key] = value;
+            }
+            
+            // Agregar ID de pago si se proporcionó
+            const idPago = document.getElementById('pago').value.trim();
+            if (idPago) {
+                data.idPago = idPago;
             }
             
             // Mostrar resumen de registro
