@@ -967,10 +967,7 @@
                                 
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-outline-primary" onclick="descargarQR('${data.qrUrl}', '${data.id}')">
-                                        <i class="fas fa-download me-2"></i>Descargar Código QR
-                                    </button>
-                                    <button class="btn btn-outline-secondary" onclick="enviarPorEmail('${data.id}')">
-                                        <i class="fas fa-envelope me-2"></i>Enviar por Email
+                                        <i class="fas fa-id-card me-2"></i>Descargar Tarjeta de Identificación
                                     </button>
                                 </div>
                                 
@@ -1004,30 +1001,107 @@
             });
         }
         
-        // Función para descargar QR
+        // Función para descargar QR como tarjeta de identificación
         function descargarQR(qrUrl, id) {
-            const link = document.createElement('a');
-            // Asegurar que la URL sea absoluta para producción
+            const nombre = document.getElementById('nombre').value || 'Participante';
             const fullUrl = qrUrl.startsWith('http') ? qrUrl : getApiUrl(qrUrl.replace('/api/', ''));
-            link.href = fullUrl;
-            link.download = `qr_registro_${id}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            
+            // Crear canvas para generar la tarjeta
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Dimensiones de la tarjeta
+            canvas.width = 400;
+            canvas.height = 500;
+            
+            // Cargar la imagen QR
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = function() {
+                // Fondo blanco
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Borde guinda
+                ctx.strokeStyle = '#6A0032';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+                
+                // Header con logo IPN (simulado con texto)
+                ctx.fillStyle = '#6A0032';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('SEMANA DE MECATRÓNICA 2025', canvas.width / 2, 30);
+                
+                ctx.font = '12px Arial';
+                ctx.fillText('UPIIZ - IPN Campus Zacatecas', canvas.width / 2, 50);
+                
+                // Línea separadora
+                ctx.strokeStyle = '#6A0032';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 70);
+                ctx.lineTo(canvas.width - 50, 70);
+                ctx.stroke();
+                
+                // Dibujar QR (escalado para que quepa bien)
+                const qrSize = 200;
+                const qrX = (canvas.width - qrSize) / 2;
+                const qrY = 90;
+                ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
+                
+                // Información del participante
+                ctx.fillStyle = '#333333';
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('ID DE REGISTRO', canvas.width / 2, qrY + qrSize + 30);
+                
+                ctx.fillStyle = '#6A0032';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText(id, canvas.width / 2, qrY + qrSize + 55);
+                
+                ctx.fillStyle = '#333333';
+                ctx.font = 'bold 16px Arial';
+                ctx.fillText('PARTICIPANTE', canvas.width / 2, qrY + qrSize + 85);
+                
+                ctx.fillStyle = '#6A0032';
+                ctx.font = 'bold 18px Arial';
+                // Truncar nombre si es muy largo
+                const nombreTruncado = nombre.length > 25 ? nombre.substring(0, 22) + '...' : nombre;
+                ctx.fillText(nombreTruncado.toUpperCase(), canvas.width / 2, qrY + qrSize + 110);
+                
+                // Footer
+                ctx.fillStyle = '#666666';
+                ctx.font = '10px Arial';
+                ctx.fillText('Presenta este código QR en la entrada del evento', canvas.width / 2, qrY + qrSize + 140);
+                ctx.fillText('10 - 14 de Noviembre, 2025', canvas.width / 2, qrY + qrSize + 155);
+                
+                // Descargar la imagen
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.download = `tarjeta_identificacion_${id}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
+            };
+            
+            img.onerror = function() {
+                // Si falla la carga de la imagen, descargar solo el QR original
+                const link = document.createElement('a');
+                link.href = fullUrl;
+                link.download = `qr_registro_${id}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+            
+            img.src = fullUrl;
         }
         
-        // Función para enviar por email (simulada)
-        function enviarPorEmail(id) {
-            const email = document.getElementById('email').value;
-            if (email) {
-                const subject = 'Código QR - Semana de Mecatrónica 2025';
-                const body = `Tu código QR para la Semana de Mecatrónica 2025\n\nID de Registro: ${id}\n\nPresenta este código QR en la entrada del evento para un acceso rápido.\n\n¡Nos vemos en el evento!`;
-                const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.open(mailtoLink);
-            } else {
-                alert('No se pudo obtener tu email. Por favor, copia manualmente el código QR.');
-            }
-        }
         
         // Función para limpiar formulario
         function limpiarFormulario() {
@@ -1035,6 +1109,7 @@
             document.getElementById('ipnFields').style.display = 'none';
             document.getElementById('packageInfo').style.display = 'none';
             document.getElementById('emailHelp').style.display = 'none';
+            document.getElementById('pagoStatus').innerHTML = '';
         }
         
         // Función auxiliar para obtener la URL base de la API
@@ -1062,6 +1137,8 @@
                 if (data.success) {
                     // Éxito - mostrar código QR
                     mostrarCodigoQR(data);
+                    // Limpiar formulario después del registro exitoso
+                    limpiarFormulario();
                 } else {
                     // Error del servidor
                     alert('Error al guardar el registro: ' + (data.message || 'Error desconocido'));
