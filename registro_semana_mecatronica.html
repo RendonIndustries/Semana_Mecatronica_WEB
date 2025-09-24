@@ -966,7 +966,7 @@
                                 </div>
                                 
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-outline-primary" onclick="descargarQR('${data.qrUrl}', '${data.id}')">
+                                    <button class="btn btn-outline-primary" onclick="descargarQR('${data.qrUrl}', '${data.id}', '${data.participante.nombre}')">
                                         <i class="fas fa-id-card me-2"></i>Descargar Tarjeta de Identificación
                                     </button>
                                 </div>
@@ -1002,8 +1002,8 @@
         }
         
         // Función para descargar QR como tarjeta de identificación
-        function descargarQR(qrUrl, id) {
-            const nombre = document.getElementById('nombre').value || 'Participante';
+        function descargarQR(qrUrl, id, nombreParticipante) {
+            const nombre = nombreParticipante || 'Participante';
             const fullUrl = qrUrl.startsWith('http') ? qrUrl : getApiUrl(qrUrl.replace('/api/', ''));
             
             // Crear canvas para generar la tarjeta
