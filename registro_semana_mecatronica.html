@@ -938,8 +938,27 @@
             enviarDatosAlServidor(registroCompleto, submitBtn, originalText);
         });
         
+        // Función auxiliar para obtener el nombre del participante
+        function obtenerNombreParticipante(data) {
+            // Intentar diferentes estructuras posibles
+            if (data.participante && data.participante.nombre) {
+                return data.participante.nombre;
+            }
+            if (data.nombre) {
+                return data.nombre;
+            }
+            if (data.participante && data.participante.participante && data.participante.participante.nombre) {
+                return data.participante.participante.nombre;
+            }
+            return 'Participante';
+        }
+
         // Función para mostrar código QR
         function mostrarCodigoQR(data) {
+            console.log('Datos recibidos en mostrarCodigoQR:', data);
+            const nombreParticipante = obtenerNombreParticipante(data);
+            console.log('Nombre del participante:', nombreParticipante);
+            
             // Crear modal para mostrar el QR
             const modalHTML = `
                 <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
@@ -966,7 +985,7 @@
                                 </div>
                                 
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-outline-primary" onclick="descargarQR('${data.qrUrl}', '${data.id}', '${data.participante.nombre}')">
+                                    <button class="btn btn-outline-primary" onclick="descargarQR('${data.qrUrl}', '${data.id}', '${nombreParticipante}')">
                                         <i class="fas fa-id-card me-2"></i>Descargar Tarjeta de Identificación
                                     </button>
                                 </div>
@@ -1133,6 +1152,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Respuesta del servidor:', data);
+                console.log('Estructura de datos:', JSON.stringify(data, null, 2));
                 
                 if (data.success) {
                     // Éxito - mostrar código QR
