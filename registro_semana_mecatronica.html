@@ -1017,12 +1017,15 @@
             // Limpiar modal cuando se cierre
             document.getElementById('qrModal').addEventListener('hidden.bs.modal', function () {
                 this.remove();
+                // Limpiar formulario después de cerrar el modal
+                limpiarFormulario();
             });
         }
         
         // Función para descargar QR como tarjeta de identificación
         function descargarQR(qrUrl, id, nombreParticipante) {
-            const nombre = nombreParticipante || 'Participante';
+            // Usar el nombre pasado como parámetro, o el del formulario, o 'Participante' como fallback
+            const nombre = nombreParticipante || document.getElementById('nombre').value || 'Participante';
             const fullUrl = qrUrl.startsWith('http') ? qrUrl : getApiUrl(qrUrl.replace('/api/', ''));
             
             // Crear canvas para generar la tarjeta
@@ -1157,8 +1160,6 @@
                 if (data.success) {
                     // Éxito - mostrar código QR
                     mostrarCodigoQR(data);
-                    // Limpiar formulario después del registro exitoso
-                    limpiarFormulario();
                 } else {
                     // Error del servidor
                     alert('Error al guardar el registro: ' + (data.message || 'Error desconocido'));
