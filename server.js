@@ -926,35 +926,59 @@ app.get('/api/pagos', (req, res) => {
     }
 });
 
+// Función para generar ID de pago único (6 caracteres alfanuméricos)
+function generarIdPago() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let idPago = '';
+    
+    // Generar ID único
+    do {
+        idPago = '';
+        for (let i = 0; i < 6; i++) {
+            idPago += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+    } while (cargarPagos().pagos.some(p => p.idPago === idPago));
+    
+    return idPago;
+}
+
 // API para agregar nuevo pago (solo para administradores)
 app.post('/api/pagos', (req, res) => {
     try {
-        const { idPago, tipoPaquete, monto, fechaPago, notas } = req.body;
+        const { tipoPaquete, notas } = req.body;
         
-        if (!idPago || !tipoPaquete || !monto) {
+        if (!tipoPaquete) {
             return res.status(400).json({
                 error: 'Datos requeridos',
-                message: 'Debe proporcionar ID de pago, tipo de paquete y monto'
+                message: 'Debe proporcionar el tipo de paquete'
+            });
+        }
+        
+        // Montos fijos por tipo de paquete
+        const montos = {
+            'paquete1': 150.00,
+            'paquete2': 250.00
+        };
+        
+        const monto = montos[tipoPaquete];
+        if (!monto) {
+            return res.status(400).json({
+                error: 'Tipo de paquete inválido',
+                message: 'El tipo de paquete debe ser "paquete1" o "paquete2"'
             });
         }
         
         const pagosData = cargarPagos();
         
-        // Verificar si el ID de pago ya existe
-        const pagoExistente = pagosData.pagos.find(p => p.idPago === idPago);
-        if (pagoExistente) {
-            return res.status(400).json({
-                error: 'ID de pago duplicado',
-                message: 'Este ID de pago ya existe en el sistema'
-            });
-        }
+        // Generar ID de pago único
+        const idPago = generarIdPago();
         
         // Crear nuevo pago
         const nuevoPago = {
             idPago: idPago,
             tipoPaquete: tipoPaquete,
-            monto: parseFloat(monto),
-            fechaPago: fechaPago || new Date().toISOString(),
+            monto: monto,
+            fechaPago: new Date().toISOString(),
             estado: 'disponible',
             notas: notas || '',
             fechaCreacion: new Date().toISOString()
@@ -965,7 +989,7 @@ app.post('/api/pagos', (req, res) => {
         if (guardarPagos(pagosData)) {
             res.json({
                 success: true,
-                message: 'Pago agregado exitosamente',
+                message: 'Pago generado exitosamente',
                 pago: nuevoPago
             });
         } else {
