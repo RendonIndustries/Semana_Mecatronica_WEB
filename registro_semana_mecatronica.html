@@ -442,18 +442,18 @@
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <h3 class="text-guinda mb-3">
-                                        <i class="fas fa-gift me-2"></i>Paquetes y Beneficios
+                                        <i class="fas fa-gift me-2"></i>Códigos de Registro y Beneficios
                                     </h3>
                                 </div>
                             </div>
                             
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <label for="paquete" class="form-label required-field">¿Compraste algún paquete?</label>
+                                    <label for="paquete" class="form-label required-field">¿Tienes un código de registro?</label>
                                     <select class="form-select" id="paquete" name="paquete" required onchange="togglePackageFields()">
                                         <option value="">Selecciona una opción</option>
-                                        <option value="paquete1">Paquete 1</option>
-                                        <option value="paquete2">Paquete 2</option>
+                                        <option value="paquete1">Código de Registro 1</option>
+                                        <option value="paquete2">Código de Registro 2</option>
                                         <option value="ninguno">Ninguno (Solo talleres)</option>
                                     </select>
                                 </div>
@@ -462,7 +462,7 @@
                             <!-- Información de paquetes -->
                             <div id="packageInfo" style="display: none;">
                                 <div class="package-info">
-                                    <h5><i class="fas fa-info-circle me-2"></i>Beneficios de tu paquete:</h5>
+                                    <h5><i class="fas fa-info-circle me-2"></i>Beneficios de tu código de registro:</h5>
                                     <div id="packageDetails">
                                         <!-- El contenido se actualizará dinámicamente según el paquete seleccionado -->
                                     </div>
@@ -488,7 +488,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label for="Pago" class="form-label required-field">ID de Pago</label>
+                                        <label for="Pago" class="form-label required-field">Código de Registro</label>
                                         <input type="text" class="form-control" id="pago" name="pago" required onblur="verificarPago()">
                                         <div id="pagoStatus" class="mt-2"></div>
                                     </div>
@@ -503,7 +503,7 @@
                                     </h3>
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Nota:</strong> Solo puedes seleccionar un taller. Si no compraste paquete, solo tendrás acceso al taller seleccionado.
+                                        <strong>Nota:</strong> Solo puedes seleccionar un taller. Si no tienes código de registro, solo tendrás acceso al taller seleccionado.
                                     </div>
                                 </div>
                             </div>
@@ -777,11 +777,11 @@
                 tallaPlayera.required = true;
                 idPagoField.required = true;
                 
-                // Mostrar información específica del paquete
+                // Mostrar información específica del código de registro
                 if (paquete === 'paquete1') {
                     packageDetails.innerHTML = `
                         <div class="alert alert-success mb-3">
-                            <h6><i class="fas fa-tshirt me-2"></i><strong>Paquete 1 incluye:</strong></h6>
+                            <h6><i class="fas fa-tshirt me-2"></i><strong>Código de Registro 1 incluye:</strong></h6>
                             <ul class="mb-0">
                                 <li>Playera oficial de la Semana de Mecatrónica 2025</li>
                             </ul>
@@ -790,7 +790,7 @@
                 } else if (paquete === 'paquete2') {
                     packageDetails.innerHTML = `
                         <div class="alert alert-success mb-3">
-                            <h6><i class="fas fa-gift me-2"></i><strong>Paquete 2 incluye:</strong></h6>
+                            <h6><i class="fas fa-gift me-2"></i><strong>Código de Registro 2 incluye:</strong></h6>
                             <ul class="mb-0">
                                 <li>Playera oficial de la Semana de Mecatrónica 2025</li>
                                 <li>Kit especial de la Semana de Mecatrónica</li>
@@ -905,13 +905,13 @@
             }
             
             if (data.paquete === 'paquete1') {
-                resumen += `Paquete: Paquete 1 (Incluye playera oficial)\n`;
+                resumen += `Código de Registro: Código 1 (Incluye playera oficial)\n`;
                 resumen += `Talla de playera: ${data.tallaPlayera}\n`;
             } else if (data.paquete === 'paquete2') {
-                resumen += `Paquete: Paquete 2 (Incluye playera oficial + kit especial)\n`;
+                resumen += `Código de Registro: Código 2 (Incluye playera oficial + kit especial)\n`;
                 resumen += `Talla de playera: ${data.tallaPlayera}\n`;
             } else {
-                resumen += `Paquete: Ninguno (Solo acceso a talleres)\n`;
+                resumen += `Código de Registro: Ninguno (Solo acceso a talleres)\n`;
             }
             
             resumen += `Taller seleccionado: ${data.taller}\n`;
