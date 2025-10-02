@@ -514,90 +514,7 @@
     </div>
 
     <!-- Menu Principal -->
-    <div class="menu-principal sticky-top" id="menu-principal">
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid p-0">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenuPrincipal" aria-controls="navbarMenuPrincipal" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarMenuPrincipal">
-                    <ul class="navbar-nav w-100 justify-content-center me-auto mb-2 mb-lg-0">
-                        <li>
-                            <div class="position-relative">
-                                <div class="position-absolute banderin">
-                                    <img src="https://www.ipn.mx/assets/files/upiiz/img/inicio/upiiz-icono.png" alt="upiiz" class="banderin-img">
-                                </div>
-                            </div>                        
-                        </li>
-                        <li class="px-xl-3 px-xxl-5"></li>
-                        <li class="px-xl-3 px-xxl-5"></li>
-                        <li>
-                            <ul class="navbar-nav w-100 d-flex justify-content-center me-auto mb-2 mb-lg-0">
-                                <li class="nav-item first">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#inicio" title="Semana de Mecatrónica 2025 - Inicio">Inicio</a>
-                                </li>
-                                <li class="nav-item dropdown active">
-                                    <a class="nav-link dropdown-toggle" href="#" title="Actividades de la Semana de Mecatrónica" role="button" data-bs-toggle="dropdown" aria-expanded="false">Actividades</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item first" href="concursos_semana_mecatronica copy.html" title="Concursos de Robótica y Programación">Concursos</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item active" href="#conferencias" title="Conferencias con Expertos">Conferencias</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="semana_mecatronica_2025.html#talleres" title="Talleres Prácticos">Talleres</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="semana_mecatronica_2025.html#exposiciones" title="Exposiciones de Proyectos">Exposiciones</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="semana_mecatronica_2025.html#deportivas" title="Actividades Deportivas">Actividades Deportivas</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item last" href="semana_mecatronica_2025.html#sorteos" title="Sorteos y Premios">Sorteos</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#poster" title="Posters Oficiales de la Semana de Mecatrónica">Posters</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#programa" title="Programa de la Semana de Mecatrónica">Programa</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#registro" title="Registro para la Semana de Mecatrónica">Registro</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" title="Información para Participantes" role="button" data-bs-toggle="dropdown" aria-expanded="false">Participantes</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item first" href="semana_mecatronica_2025.html#estudiantes" title="Información para Estudiantes">Estudiantes</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="semana_mecatronica_2025.html#docentes" title="Información para Docentes">Docentes</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="semana_mecatronica_2025.html#empresarios" title="Información para Empresarios">Empresarios</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item last" href="semana_mecatronica_2025.html#publico" title="Información para Público General">Público General</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#colaboradores" title="Colaboradores de la Semana de Mecatrónica">Colaboradores</a>
-                                </li>
-                                <li class="nav-item last">
-                                    <a class="nav-link" href="semana_mecatronica_2025.html#contacto" title="Contacto - Semana de Mecatrónica">Contacto</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <div id="navbar-container"></div>
 
     <!-- Título Unidad -->
     <div id="tituloUnidad" class="titulo_unidad">
@@ -849,6 +766,9 @@
     
     <!-- Scripts template IPN -->
     <script src="https://www.ipn.mx/assets/files/main/js/index.js"></script>
+    
+    <!-- Script del navbar modular -->
+    <script src="components/navbar.js"></script>
     
     <!-- Script personalizado -->
     <script>
