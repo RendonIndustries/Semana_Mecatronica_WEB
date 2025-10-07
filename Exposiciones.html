@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exposiciones - Semana de Mecatrónica 2025 - UPIIZ IPN</title>
+    <meta name="description" content="Exposiciones de la Semana de Mecatrónica 2025 en la UPIIZ IPN. Proyectos innovadores, tecnologías de vanguardia y presentaciones de pósters académicos.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.css" rel="stylesheet">
+    
+    <!-- Estilos template IPN -->
+    <link rel="stylesheet" type="text/css" href="https://www.ipn.mx/assets/files/main/css/style-template.css">
+    
+    <!-- Estilos componentes IPN -->
+    <link rel="stylesheet" type="text/css" href="https://www.ipn.mx/assets/files/main/css/style.css">
+    
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        
+        h1 {
+            color: var(--ipn-guinda);
+            border-bottom: 4px solid var(--ipn-guinda);
+            padding-bottom: 15px;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: var(--ipn-guinda);
+            border-left: 5px solid var(--ipn-guinda);
+            padding-left: 20px;
+            margin-top: 40px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        
+        .conferences-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .conferences-gallery:has(.conference-card:nth-child(2):last-child) {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .special-activities {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .special-activities .conference-card {
+            aspect-ratio: 3/3.5;
+        }
+        
+        .conference-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            border: 2px solid #dee2e6;
+            box-shadow: 0 8px 25px rgba(106, 0, 50, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .conference-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(106, 0, 50, 0.2);
+            border-color: var(--ipn-guinda);
+        }
+        
+        .conference-header {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .conference-icon {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .conference-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            line-height: 1.2;
+            margin: 0;
+            color: white;
+        }
+        
+        .conference-body {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .conference-speaker {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--ipn-guinda);
+        }
+        
+        .conference-speaker h4 {
+            color: var(--ipn-guinda);
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .conference-speaker p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .conference-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .conference-details h4 {
+            color: var(--ipn-guinda);
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .conference-details p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        
+        .conference-description {
+            color: #555;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            flex: 0 0 auto;
+        }
+        
+        .conference-topics {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: auto;
+        }
+        
+        .conference-topics h4 {
+            color: var(--ipn-guinda);
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .conference-topics ul {
+            margin: 0;
+            padding-left: 15px;
+            font-size: 0.75rem;
+        }
+        
+        .conference-topics li {
+            margin: 4px 0;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .contest-title {
+            color: var(--ipn-guinda);
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contest-icon {
+            font-size: 1.8em;
+            margin-right: 15px;
+        }
+        
+        .contest-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .contest-details {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .contest-details h4 {
+            color: var(--ipn-guinda);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .contest-details ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .contest-details li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .register-btn {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .register-btn:hover {
+            background: linear-gradient(135deg, #8B0040 0%, #6A0032 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 0, 50, 0.4);
+        }
+        
+        .robotics {
+            border-left-color: var(--ipn-guinda);
+        }
+        
+        .robotics .contest-icon {
+            color: var(--ipn-guinda);
+        }
+        
+        .academic {
+            border-left-color: var(--ipn-guinda);
+        }
+        
+        .academic .contest-icon {
+            color: var(--ipn-guinda);
+        }
+        
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid var(--ipn-guinda);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .info-box:before {
+            content: "ℹ️ INFORMACIÓN: ";
+            font-weight: bold;
+            color: var(--ipn-guinda);
+        }
+        
+        .prize-section {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid var(--ipn-guinda);
+        }
+        
+        .prize-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .prize-section p {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .schedule {
+            background-color: #f8f9fa;
+            border: 1px solid var(--ipn-guinda);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .schedule:before {
+            content: "📅 CRONOGRAMA: ";
+            font-weight: bold;
+            color: var(--ipn-guinda);
+        }
+        
+        .footer-mecatronica {
+            background: #343a40;
+            color: var(--ipn-blanco);
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        /* Estilos para el header igual que la página principal */
+        .hero-section {
+            background: linear-gradient(135deg, var(--ipn-guinda) 0%, #8B0040 100%);
+            color: var(--ipn-blanco);
+            padding: 120px 0 80px 0;
+        }
+        
+        .text-guinda {
+            color: var(--ipn-guinda) !important;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .activity-card {
+            background: var(--ipn-blanco);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(106, 0, 50, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 2px solid transparent;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--ipn-guinda);
+        }
+        
+        .activity-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--ipn-guinda), #8B0040);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--ipn-blanco);
+            font-size: 2rem;
+        }
+        
+        .section-title {
+            color: var(--ipn-guinda);
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--ipn-guinda);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ipn-blanco);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            background: #8B0040;
+            color: var(--ipn-blanco);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .conferences-gallery {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .special-activities {
+                grid-template-columns: 1fr !important;
+                max-width: none !important;
+                margin: 30px 0 !important;
+            }
+            
+            .conference-card {
+                aspect-ratio: 3/4;
+            }
+            
+            .conference-title {
+                font-size: 1rem;
+            }
+            
+            .conference-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar Gobierno de México -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-gob">
+        <div class="container p-0">
+            <a class="navbar-brand" href="https://www.gob.mx/">
+                <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="128" height="48" alt="Gobierno de México">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGobCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarGobCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.gob.mx/tramites">Trámites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.gob.mx/gobierno">Gobierno</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header IPN -->
+    <div class="container encabezado-ipn">
+        <div class="utilerias-header text-right">
+            <ul class="list-inline text-end utilerias-list">
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/directorio-telefonico.html">DIRECTORIO</a> |
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/correo-electronico.html">CORREO</a> |
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.ipn.mx/calendario-academico.html">CALENDARIO</a>
+                </li>
+            </ul>
+        </div>
+        <div class="header-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="https://www.gob.mx/sep" class="d-inline enlace-educacion">
+                            <img src="https://www.ipn.mx/assets/files/main/img/template/header/pleca-educacion.svg" class="logo-educacion" alt="Logotipo de la Secretaría de Educación Pública">
+                        </a>
+                        <a href="https://ipn.mx/">
+                            <img src="https://www.ipn.mx/assets/files/main/img/template/header/logo-ipn-horizontal.svg" class="logo-ipn" alt="Logo IPN">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Principal -->
+    <div id="navbar-container"></div>
+
+    <!-- Título Unidad -->
+    <div id="tituloUnidad" class="titulo_unidad">
+        <div class="container p-0">
+            <h1 class="titulo_unidad_text text-center">Exposiciones - Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <h1>Exposiciones - Semana de Mecatrónica 2025</h1>
+        
+        <div class="info-box">
+            <strong>¡Descubre la innovación en acción!</strong><br>
+            Las exposiciones te permitirán explorar proyectos innovadores, tecnologías de vanguardia 
+            y conocer el trabajo de empresas líderes en el sector mecatrónico. ¡Una experiencia única para inspirar tu creatividad!
+        </div>
+
+        <h2>🏢 Exhibición de Empresas Visitantes</h2>
+        
+        <div class="conferences-gallery">
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">🏭</span>
+                            <h3 class="conference-title">Empresas de Tecnología</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                Últimas tecnologías industriales y soluciones mecatrónicas de empresas líderes.
+                            </div>
+                            <div class="conference-details">
+                                <h4>📅 Jueves 13 Nov - 1:00-3:00 pm</h4>
+                                <p><strong>📍 Área de exposiciones UPIIZ</strong></p>
+                            </div>
+                            <div class="conference-topics">
+                                <h4>🔧 Tecnologías:</h4>
+                                <ul>
+                                    <li>Automatización industrial</li>
+                                    <li>Robótica avanzada</li>
+                                    <li>IoT y conectividad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+            <div class="conference-card">
+                <div class="conference-header">
+                    <span class="conference-icon">🎓</span>
+                    <h3 class="conference-title">Pósters Académicos</h3>
+                </div>
+                <div class="conference-body">
+                    <div class="conference-description">
+                        Investigaciones y proyectos de estudiantes y académicos de la UPIIZ.
+                    </div>
+                    <div class="conference-details">
+                        <h4>📅 Jueves 13 Nov - 1:00-3:00 pm</h4>
+                        <p><strong>📍 Pasillos principales UPIIZ</strong></p>
+                    </div>
+                    <div class="conference-topics">
+                        <h4>📊 Áreas:</h4>
+                        <ul>
+                            <li>Proyectos de mecatrónica</li>
+                            <li>Inteligencia artificial</li>
+                            <li>Sistemas embebidos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <h2>🎨 Exposiciones Especiales</h2>
+        
+        <div class="conferences-gallery special-activities">
+
+            <div class="conference-card">
+                <div class="conference-header">
+                    <span class="conference-icon">🔬</span>
+                    <h3 class="conference-title">Laboratorios Abiertos</h3>
+                </div>
+                <div class="conference-body">
+                    <div class="conference-description">
+                        Visita los laboratorios especializados de la UPIIZ y conoce el equipamiento de vanguardia disponible para estudiantes.
+                    </div>
+                    <div class="conference-details">
+                        <h4>📅 Durante toda la semana</h4>
+                        <ul>
+                            <li><strong>Horarios:</strong> Consultar en cada laboratorio</li>
+                            <li><strong>Ubicación:</strong> Edificios de laboratorios UPIIZ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule">
+            <strong>Cronograma de Exposiciones:</strong><br>
+            • <strong>Lunes a Miércoles:</strong> Exposiciones permanentes de proyectos estudiantiles<br>
+            • <strong>Jueves 13 de Noviembre:</strong> Exhibición de empresas, pósters académicos y rally tecnológico (1:00 pm - 3:00 pm)<br>
+            • <strong>Durante toda la semana:</strong> Laboratorios abiertos y visitas guiadas
+        </div>
+
+        <div class="info-box">
+            <strong>Información Importante:</strong><br>
+            • Todas las exposiciones son de acceso gratuito<br>
+            • Las empresas visitantes ofrecerán información sobre oportunidades laborales<br>
+            • Habrá demostraciones en vivo de tecnologías<br>
+            • Los pósters académicos estarán disponibles para consulta<br>
+            • Participa en el rally tecnológico para ganar premios<br>
+            • Para más información, contacta a la coordinación de exposiciones
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-mecatronica">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <p class="mb-2">
+                        <strong>Semana de Mecatrónica 2025</strong> - UPIIZ IPN Campus Zacatecas
+                    </p>
+                    <p class="mb-2">
+                        Sitio oficial: 
+                        <a href="http://semanameca.upiiz.ipn.mx" class="text-white text-decoration-none fw-bold" target="_blank">
+                            semanameca.upiiz.ipn.mx
+                        </a>
+                    </p>
+                    <p class="mb-0">
+                        © 2025 Instituto Politécnico Nacional. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Pie de página Gobernación -->
+    <footer class="footer-gob">
+        <div class="list-info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <a href="/">
+                            <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" alt="logo gobierno de méxico" class="logo_footer" style="max-width: 90%;">
+                        </a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 ps-0">
+                        <h5>Enlaces</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="https://datos.gob.mx/" target="_blank" rel="noopener">Datos</a></li>
+                            <li><a href="https://transparencia.gob.mx/home.html" target="_blank" rel="noopener">Transparencia</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <h5>¿Qué es gob.mx?</h5>
+                        <p>Es el portal único de trámites, información y participación ciudadana.</p>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 ps-0">
+                        <h5>Síguenos en</h5>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/gobmexico" target="_blank" rel="noopener" title="Facebook">
+                                    <img alt="Facebook" src="https://framework-gb.cdn.gob.mx/landing/img/facebook.png">
+                                </a>
+                            </li>
+                            <li class="list-inline-item mx-1">
+                                <a href="https://twitter.com/GobiernoMX" target="_blank" rel="noopener" title="Twitter">
+                                    <img alt="Twitter" src="https://framework-gb.cdn.gob.mx/landing/img/twitter.png">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts template IPN -->
+    <script src="https://www.ipn.mx/assets/files/main/js/index.js"></script>
+    
+    <!-- Script del navbar modular -->
+    <script src="components/navbar.js"></script>
+    
+    <!-- Script personalizado -->
+    <script>
+        // Función para mostrar información adicional de cada conferencia
+        function showConferenceInfo(conferenceName) {
+            const info = {
+                'IA en Industria 4.0': 'Explora las aplicaciones de inteligencia artificial en la transformación digital de la industria manufacturera.',
+                'Diseño Mecatrónico': 'Metodologías y mejores prácticas para el desarrollo exitoso de proyectos mecatrónicos integrados.',
+                'Navegación Magnética': 'Sistemas innovadores de navegación aérea utilizando anomalías del campo magnético terrestre.',
+                'Conferencia Magistral': 'Una visión integral del futuro de la mecatrónica y las tecnologías emergentes.',
+                'Panel Mujeres': 'Experiencias y perspectivas de mujeres profesionales en la industria mecatrónica.',
+                'Foro Egresados': 'Trayectorias profesionales y consejos de egresados exitosos de la UPIIZ.'
+            };
+            
+            alert(`${conferenceName}\n\n${info[conferenceName] || 'Información no disponible'}`);
+        }
+    </script>
+</body>
+</html>

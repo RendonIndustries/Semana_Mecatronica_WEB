@@ -1,11 +1,25 @@
 // Función para cargar el navbar y configurar el elemento activo
 function loadNavbar(activeElement = null) {
+    // Detectar la ruta correcta basada en la ubicación actual
+    const currentPath = window.location.pathname;
+    let navbarPath = 'components/navbar.html';
+    
+    // Si estamos en una subcarpeta, ajustar la ruta
+    if (currentPath.includes('/conocenos/')) {
+        navbarPath = '../components/navbar.html';
+    }
+    
     // Cargar el navbar desde el archivo HTML
-    fetch('components/navbar.html')
+    fetch(navbarPath)
         .then(response => response.text())
         .then(data => {
             // Insertar el navbar en el elemento con id 'navbar-container'
             document.getElementById('navbar-container').innerHTML = data;
+            
+            // Ajustar las rutas de los enlaces si estamos en una subcarpeta
+            if (currentPath.includes('/conocenos/')) {
+                adjustNavbarLinks('../');
+            }
             
             // Configurar el elemento activo si se especifica
             if (activeElement) {
@@ -17,6 +31,24 @@ function loadNavbar(activeElement = null) {
             // Fallback: mostrar un mensaje de error o navbar básico
             document.getElementById('navbar-container').innerHTML = '<div class="alert alert-warning">Error cargando el menú de navegación</div>';
         });
+}
+
+// Función para ajustar las rutas de los enlaces del navbar
+function adjustNavbarLinks(basePath) {
+    // Obtener todos los enlaces del navbar
+    const links = document.querySelectorAll('#navbar-container a');
+    
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        
+        // Solo ajustar enlaces relativos (no externos ni anclas absolutas)
+        if (href && !href.startsWith('http') && !href.startsWith('#')) {
+            // Si el enlace ya no comienza con 'conocenos/', agregar el basePath
+            if (!href.startsWith('conocenos/')) {
+                link.setAttribute('href', basePath + href);
+            }
+        }
+    });
 }
 
 // Función para marcar un elemento del navbar como activo
@@ -48,9 +80,15 @@ function setActiveNavItem(activeElement) {
 // Función para detectar automáticamente la página actual y configurar el navbar
 function autoDetectActiveNav() {
     const currentPage = window.location.pathname.split('/').pop();
+    const currentPath = window.location.pathname;
     let activeElement = 'inicio'; // Default
     
-    switch (currentPage) {
+    // Detectar página de directorio
+    if (currentPath.includes('/conocenos/directorio.html') || currentPage === 'directorio.html') {
+        activeElement = 'conocenos';
+    }
+    // Detectar otras páginas
+    else switch (currentPage) {
         case 'semana_mecatronica_2025.html':
         case '':
             activeElement = 'inicio';
@@ -60,6 +98,9 @@ function autoDetectActiveNav() {
             break;
         case 'Conferencias.html':
             activeElement = 'conferencias';
+            break;
+        case 'Exposiciones.html':
+            activeElement = 'exposiciones';
             break;
         case 'registro_semana_mecatronica.html':
             activeElement = 'registro';
