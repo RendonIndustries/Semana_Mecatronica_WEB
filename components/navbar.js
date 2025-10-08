@@ -25,6 +25,9 @@ function loadNavbar(activeElement = null) {
             if (activeElement) {
                 setActiveNavItem(activeElement);
             }
+
+            // Inicializar comportamiento fijo bajo el navbar de gobierno
+            initStickyMenuUnderGovBar();
         })
         .catch(error => {
             console.error('Error cargando el navbar:', error);
@@ -77,6 +80,75 @@ function setActiveNavItem(activeElement) {
     }
 }
 
+// Fijar el menú principal justo debajo del navbar de gobierno cuando el scroll lo alcance
+function initStickyMenuUnderGovBar() {
+    const menuPrincipal = document.getElementById('menu-principal');
+    if (!menuPrincipal) return;
+
+    const navbarGob = document.querySelector('.navbar-gob');
+
+    // Spacer para evitar saltos de layout cuando el menú se fija
+    let spacer = document.getElementById('menu-principal-spacer');
+    if (!spacer) {
+        spacer = document.createElement('div');
+        spacer.id = 'menu-principal-spacer';
+        // Mantenerlo en flujo desde el inicio para poder medir su posición
+        spacer.style.display = 'block';
+        spacer.style.height = '0px';
+        menuPrincipal.parentNode.insertBefore(spacer, menuPrincipal);
+    }
+
+    // Actualiza la variable CSS con la altura real del navbar de gobierno
+    function updateGovBarHeightVar() {
+        const govHeight = navbarGob ? Math.ceil(navbarGob.getBoundingClientRect().height) : 0;
+        document.documentElement.style.setProperty('--govbar-height', govHeight + 'px');
+        return govHeight;
+    }
+
+    function getTriggerTop() {
+        // Usamos el spacer como referencia estable (funciona tanto si está activo como no)
+        return spacer.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function applyFixed(menuHeight) {
+        if (!menuPrincipal.classList.contains('menu-fixed')) {
+            menuPrincipal.classList.add('menu-fixed');
+            spacer.style.height = menuHeight + 'px';
+            spacer.style.display = 'block';
+        }
+    }
+
+    function removeFixed() {
+        if (menuPrincipal.classList.contains('menu-fixed')) {
+            menuPrincipal.classList.remove('menu-fixed');
+            spacer.style.height = '0px';
+            // Mantener block para que su top sea medible siempre
+            spacer.style.display = 'block';
+        }
+    }
+
+    function onScrollOrResize() {
+        const govHeight = updateGovBarHeightVar();
+        const triggerTop = getTriggerTop();
+        const menuHeight = menuPrincipal.offsetHeight;
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY + govHeight >= triggerTop) {
+            applyFixed(menuHeight);
+        } else {
+            removeFixed();
+        }
+    }
+
+    // Listeners
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+
+    // Inicial
+    updateGovBarHeightVar();
+    onScrollOrResize();
+}
+
 // Función para detectar automáticamente la página actual y configurar el navbar
 function autoDetectActiveNav() {
     const currentPage = window.location.pathname.split('/').pop();
@@ -101,6 +173,9 @@ function autoDetectActiveNav() {
             break;
         case 'Exposiciones.html':
             activeElement = 'exposiciones';
+            break;
+        case 'Actividades deportivas.html':
+            activeElement = 'deportivas';
             break;
         case 'registro_semana_mecatronica.html':
             activeElement = 'registro';

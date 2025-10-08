@@ -20,6 +20,7 @@
         :root {
             --ipn-guinda: #6A0032;
             --ipn-blanco: #FFFFFF;
+            --govbar-height: 56px;
         }
         
         .hero-section {
@@ -172,6 +173,26 @@
         .qr-image {
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(106, 0, 50, 0.2);
+        }
+        
+        /* Navbar principal sticky (fallback) debajo del navbar de gobierno */
+        .menu-principal {
+            position: sticky !important;
+            top: var(--govbar-height) !important;
+            z-index: 1020 !important;
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Al fijarse con JS, se vuelve fixed exactamente debajo del navbar de gobierno */
+        .menu-principal.menu-fixed {
+            position: fixed !important;
+            top: var(--govbar-height) !important;
+            left: 0;
+            right: 0;
+            z-index: 1020 !important;
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
