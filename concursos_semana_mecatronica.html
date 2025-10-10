@@ -475,7 +475,7 @@
                         <i class="fas fa-download"></i> Descargar Reglamento Mini Sumo
                     </a>
                 </div>
-                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+                <button class="register-btn" onclick="abrirRegistroConcurso('minisumo', 'Mini Sumo')">📝 Inscribirse</button>
             </div>
 
             <div class="contest-item robotics">
@@ -543,7 +543,7 @@
                         <i class="fas fa-download"></i> Descargar Reglamento Seguidor de Línea
                     </a>
                 </div>
-                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+                <button class="register-btn" onclick="abrirRegistroConcurso('seguidorlinea', 'Seguidor de Línea')">📝 Inscribirse</button>
             </div>
 
             <div class="contest-item robotics">
@@ -621,7 +621,7 @@
                         <i class="fas fa-download"></i> Descargar Reglamento Boxeo Humanoide
                     </a>
                 </div>
-                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+                <button class="register-btn" onclick="abrirRegistroConcurso('boxeohumanoide', 'Boxeo Humanoide')">📝 Inscribirse</button>
             </div>
 
             <div class="contest-item robotics">
@@ -720,7 +720,7 @@
                         <i class="fas fa-download"></i> Descargar Reglamento Robot de Combate 3 lb
                     </a>
                 </div>
-                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+                <button class="register-btn" onclick="abrirRegistroConcurso('robotcombate', 'Robot de Combate 3 lb')">📝 Inscribirse</button>
             </div>
         </div>
 
@@ -741,7 +741,7 @@
                 <div class="contest-details">
                     <h4>📋 Formato de la Competencia:</h4>
                     <ul>
-                        <li><strong>Modalidad:</strong> Solo equipos de 2 personas</li>
+                        <li><strong>Modalidad:</strong> Solo equipos de 4 personas</li>
                         <li><strong>Rondas:</strong> 3 rondas eliminatorias + final</li>
                         <li><strong>Preguntas:</strong> Múltiple opción y verdadero/falso</li>
                         <li><strong>Tiempo:</strong> 30 segundos por pregunta</li>
@@ -756,7 +756,7 @@
                         <li><strong>3er Lugar</strong></li>
                     </ul>
                 </div>
-                <button class="register-btn" onclick="alert('Registro próximamente disponible')">📝 Inscribirse</button>
+                <button class="register-btn" onclick="abrirRegistroTrivia()">📝 Inscribirse</button>
             </div>
         </div>
 
@@ -844,6 +844,147 @@
         </div>
     </footer>
 
+    <!-- Modal de Registro de Concursos de Robótica -->
+    <div class="modal fade" id="registroConcursoModal" tabindex="-1" aria-labelledby="registroConcursoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--ipn-guinda), #8B0040); color: white;">
+                    <h5 class="modal-title" id="registroConcursoModalLabel">
+                        <i class="fas fa-robot me-2"></i>Registro de Concurso
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRegistroConcurso">
+                        <input type="hidden" id="tipoConcurso">
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Nota:</strong> Debes tener tu ID de registro de la Semana de Mecatrónica. Si aún no te has registrado, hazlo <a href="registro_semana_mecatronica.html" target="_blank">aquí</a>.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="idRegistroParticipante" class="form-label">
+                                <i class="fas fa-id-card me-2"></i>ID de Registro de Semana de Mecatrónica
+                            </label>
+                            <input type="text" class="form-control" id="idRegistroParticipante" required placeholder="Ej: abc123def456">
+                            <div id="participanteInfo" class="mt-2"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nombreRobot" class="form-label">
+                                <i class="fas fa-robot me-2"></i>Nombre del Robot
+                            </label>
+                            <input type="text" class="form-control" id="nombreRobot" required placeholder="Ej: Thunderbot 3000">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nombreEquipo" class="form-label">
+                                <i class="fas fa-users me-2"></i>Nombre del Equipo
+                            </label>
+                            <input type="text" class="form-control" id="nombreEquipo" required placeholder="Ej: Team Robotix">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contactoEquipo" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Teléfono de Contacto del Equipo
+                            </label>
+                            <input type="tel" class="form-control" id="contactoEquipo" required placeholder="Ej: 4921234567">
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="aceptarReglamento" required>
+                            <label class="form-check-label" for="aceptarReglamento">
+                                Acepto haber leído y cumplir con el reglamento del concurso
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarRegistroConcurso()">
+                        <i class="fas fa-save me-2"></i>Registrar Equipo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro "100 Burros Dijeron" -->
+    <div class="modal fade" id="registroTriviaModal" tabindex="-1" aria-labelledby="registroTriviaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--ipn-guinda), #8B0040); color: white;">
+                    <h5 class="modal-title" id="registroTriviaModalLabel">
+                        <i class="fas fa-brain me-2"></i>Registro "100 Burros Dijeron"
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRegistroTrivia">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Nota:</strong> Este concurso requiere equipos de 4 personas. Todos los integrantes deben tener su ID de registro de la Semana de Mecatrónica.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nombreEquipoTrivia" class="form-label">
+                                <i class="fas fa-users me-2"></i>Nombre del Equipo
+                            </label>
+                            <input type="text" class="form-control" id="nombreEquipoTrivia" required placeholder="Ej: Los Burros Sabios">
+                        </div>
+                        
+                        <h6 class="text-guinda mb-3"><i class="fas fa-user me-2"></i>Integrantes del Equipo (4 personas)</h6>
+                        
+                        <div class="mb-3">
+                            <label for="idIntegrante1" class="form-label">Integrante 1 - ID de Registro</label>
+                            <input type="text" class="form-control" id="idIntegrante1" required placeholder="ID de registro">
+                            <div id="infoIntegrante1" class="mt-1"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="idIntegrante2" class="form-label">Integrante 2 - ID de Registro</label>
+                            <input type="text" class="form-control" id="idIntegrante2" required placeholder="ID de registro">
+                            <div id="infoIntegrante2" class="mt-1"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="idIntegrante3" class="form-label">Integrante 3 - ID de Registro</label>
+                            <input type="text" class="form-control" id="idIntegrante3" required placeholder="ID de registro">
+                            <div id="infoIntegrante3" class="mt-1"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="idIntegrante4" class="form-label">Integrante 4 - ID de Registro</label>
+                            <input type="text" class="form-control" id="idIntegrante4" required placeholder="ID de registro">
+                            <div id="infoIntegrante4" class="mt-1"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contactoEquipoTrivia" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Teléfono de Contacto del Equipo
+                            </label>
+                            <input type="tel" class="form-control" id="contactoEquipoTrivia" required placeholder="Ej: 4921234567">
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="aceptarReglamentoTrivia" required>
+                            <label class="form-check-label" for="aceptarReglamentoTrivia">
+                                Todos los integrantes aceptan participar y cumplir con las reglas del concurso
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarRegistroTrivia()">
+                        <i class="fas fa-save me-2"></i>Registrar Equipo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -855,6 +996,290 @@
     
     <!-- Script personalizado -->
     <script>
+        // ================ SISTEMA DE REGISTRO DE CONCURSOS ================
+        
+        // Función auxiliar para obtener la URL base de la API
+        function getApiUrl(endpoint) {
+            const isProduction = window.location.hostname === 'semanameca.upiiz.ipn.mx';
+            const baseUrl = isProduction ? 'https://semanameca.upiiz.ipn.mx' : '';
+            return `${baseUrl}/api/${endpoint}`;
+        }
+        
+        // Abrir modal de registro de concurso de robótica
+        function abrirRegistroConcurso(tipoConcurso, nombreConcurso) {
+            document.getElementById('tipoConcurso').value = tipoConcurso;
+            document.getElementById('registroConcursoModalLabel').innerHTML = 
+                `<i class="fas fa-robot me-2"></i>Registro - ${nombreConcurso}`;
+            
+            // Limpiar formulario
+            document.getElementById('formRegistroConcurso').reset();
+            document.getElementById('participanteInfo').innerHTML = '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('registroConcursoModal'));
+            modal.show();
+        }
+        
+        // Abrir modal de registro de trivia
+        function abrirRegistroTrivia() {
+            // Limpiar formulario
+            document.getElementById('formRegistroTrivia').reset();
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`infoIntegrante${i}`).innerHTML = '';
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('registroTriviaModal'));
+            modal.show();
+        }
+        
+        // Verificar ID de participante en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const idInput = document.getElementById('idRegistroParticipante');
+            if (idInput) {
+                idInput.addEventListener('blur', verificarParticipante);
+            }
+            
+            // Verificar integrantes de trivia
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`idIntegrante${i}`);
+                if (input) {
+                    input.addEventListener('blur', function() {
+                        verificarIntegrante(i);
+                    });
+                }
+            }
+        });
+        
+        async function verificarParticipante() {
+            const id = document.getElementById('idRegistroParticipante').value.trim();
+            const infoDiv = document.getElementById('participanteInfo');
+            
+            if (!id) {
+                infoDiv.innerHTML = '';
+                return;
+            }
+            
+            infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
+            
+            try {
+                const response = await fetch(getApiUrl(`qr-data/${id}`));
+                const data = await response.json();
+                
+                if (response.ok && !data.error) {
+                    infoDiv.innerHTML = `
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Participante válido: ${data.nombre}
+                        </small>
+                    `;
+                } else {
+                    infoDiv.innerHTML = `
+                        <small class="text-danger">
+                            <i class="fas fa-times-circle me-1"></i>
+                            ID no válido. Por favor verifica el ID.
+                        </small>
+                    `;
+                }
+            } catch (error) {
+                infoDiv.innerHTML = `
+                    <small class="text-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Error al verificar. Intenta nuevamente.
+                    </small>
+                `;
+            }
+        }
+        
+        async function verificarIntegrante(numero) {
+            const id = document.getElementById(`idIntegrante${numero}`).value.trim();
+            const infoDiv = document.getElementById(`infoIntegrante${numero}`);
+            
+            if (!id) {
+                infoDiv.innerHTML = '';
+                return;
+            }
+            
+            infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
+            
+            try {
+                const response = await fetch(getApiUrl(`qr-data/${id}`));
+                const data = await response.json();
+                
+                if (response.ok && !data.error) {
+                    infoDiv.innerHTML = `
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            ${data.nombre}
+                        </small>
+                    `;
+                } else {
+                    infoDiv.innerHTML = `
+                        <small class="text-danger">
+                            <i class="fas fa-times-circle me-1"></i>
+                            ID no válido
+                        </small>
+                    `;
+                }
+            } catch (error) {
+                infoDiv.innerHTML = `
+                    <small class="text-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Error al verificar
+                    </small>
+                `;
+            }
+        }
+        
+        // Guardar registro de concurso de robótica
+        async function guardarRegistroConcurso() {
+            const form = document.getElementById('formRegistroConcurso');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const tipoConcurso = document.getElementById('tipoConcurso').value;
+            const idRegistroParticipante = document.getElementById('idRegistroParticipante').value.trim();
+            const nombreRobot = document.getElementById('nombreRobot').value.trim();
+            const nombreEquipo = document.getElementById('nombreEquipo').value.trim();
+            const contactoEquipo = document.getElementById('contactoEquipo').value.trim();
+            
+            const registro = {
+                metadata: {
+                    fechaRegistro: new Date().toISOString(),
+                    version: "1.0",
+                    tipoConcurso: tipoConcurso
+                },
+                equipo: {
+                    idRegistroParticipante: idRegistroParticipante,
+                    nombreRobot: nombreRobot,
+                    nombreEquipo: nombreEquipo,
+                    contactoEquipo: contactoEquipo
+                }
+            };
+            
+            // Mostrar indicador de carga
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch(getApiUrl('registro-concurso'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registro)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Cerrar modal
+                    bootstrap.Modal.getInstance(document.getElementById('registroConcursoModal')).hide();
+                    
+                    // Mostrar confirmación
+                    alert(`¡Registro exitoso!\n\nEquipo: ${nombreEquipo}\nRobot: ${nombreRobot}\nConcurso: ${tipoConcurso}\nID de Equipo: ${data.idEquipo}\n\n¡Nos vemos en la competencia!`);
+                    
+                    // Limpiar formulario
+                    form.reset();
+                    document.getElementById('participanteInfo').innerHTML = '';
+                } else {
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error al guardar registro:', error);
+                alert('Error de conexión. Por favor, intenta nuevamente.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Guardar registro de trivia
+        async function guardarRegistroTrivia() {
+            const form = document.getElementById('formRegistroTrivia');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const nombreEquipo = document.getElementById('nombreEquipoTrivia').value.trim();
+            const contactoEquipo = document.getElementById('contactoEquipoTrivia').value.trim();
+            
+            const integrantes = [];
+            for (let i = 1; i <= 4; i++) {
+                const id = document.getElementById(`idIntegrante${i}`).value.trim();
+                if (!id) {
+                    alert(`Por favor ingresa el ID del integrante ${i}`);
+                    return;
+                }
+                integrantes.push(id);
+            }
+            
+            // Verificar que no haya IDs duplicados
+            const idsUnicos = new Set(integrantes);
+            if (idsUnicos.size !== 4) {
+                alert('Error: No puedes usar el mismo ID para múltiples integrantes');
+                return;
+            }
+            
+            const registro = {
+                metadata: {
+                    fechaRegistro: new Date().toISOString(),
+                    version: "1.0",
+                    tipoConcurso: "trivia"
+                },
+                equipo: {
+                    nombreEquipo: nombreEquipo,
+                    contactoEquipo: contactoEquipo,
+                    integrantes: integrantes
+                }
+            };
+            
+            // Mostrar indicador de carga
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch(getApiUrl('registro-concurso'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registro)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Cerrar modal
+                    bootstrap.Modal.getInstance(document.getElementById('registroTriviaModal')).hide();
+                    
+                    // Mostrar confirmación
+                    alert(`¡Registro exitoso!\n\nEquipo: ${nombreEquipo}\nIntegrantes: 4\nID de Equipo: ${data.idEquipo}\n\n¡Nos vemos en la competencia!`);
+                    
+                    // Limpiar formulario
+                    form.reset();
+                    for (let i = 1; i <= 4; i++) {
+                        document.getElementById(`infoIntegrante${i}`).innerHTML = '';
+                    }
+                } else {
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error al guardar registro:', error);
+                alert('Error de conexión. Por favor, intenta nuevamente.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
         // Función para mostrar información adicional de cada concurso
         function showContestInfo(contestName) {
             const info = {

@@ -27,6 +27,9 @@ const archivoAsistencias = path.join(registrosDir, 'asistencias_entregas_2025.js
 // Archivo para pagos
 const archivoPagos = path.join(registrosDir, 'pagos_semana_mecatronica_2025.json');
 
+// Archivo para registros de concursos
+const archivoConcursos = path.join(registrosDir, 'registros_concursos_2025.json');
+
 // Función para cargar registros existentes
 function cargarRegistros() {
     try {
@@ -138,6 +141,48 @@ function guardarPagos(data) {
         return true;
     } catch (error) {
         console.error('Error al guardar pagos:', error);
+        return false;
+    }
+}
+
+// Función para cargar registros de concursos
+function cargarConcursos() {
+    try {
+        if (fs.existsSync(archivoConcursos)) {
+            const contenido = fs.readFileSync(archivoConcursos, 'utf8');
+            return JSON.parse(contenido);
+        }
+    } catch (error) {
+        console.error('Error al cargar concursos:', error);
+    }
+    
+    // Estructura inicial si no existe el archivo
+    return {
+        metadata: {
+            version: "1.0",
+            evento: "Semana de Mecatrónica 2025",
+            fechaCreacion: new Date().toISOString(),
+            ultimaActualizacion: new Date().toISOString()
+        },
+        concursos: {
+            minisumo: [],
+            seguidorlinea: [],
+            boxeohumanoide: [],
+            robotcombate: [],
+            trivia: []
+        }
+    };
+}
+
+// Función para guardar registros de concursos
+function guardarConcursos(data) {
+    try {
+        data.metadata.ultimaActualizacion = new Date().toISOString();
+        const jsonData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(archivoConcursos, jsonData, 'utf8');
+        return true;
+    } catch (error) {
+        console.error('Error al guardar concursos:', error);
         return false;
     }
 }
@@ -1096,6 +1141,174 @@ app.delete('/api/pagos/:idPago', (req, res) => {
         
     } catch (error) {
         console.error('Error al eliminar pago:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// ==================== RUTAS DE CONCURSOS ====================
+
+// API para registrar equipo en concurso
+app.post('/api/registro-concurso', (req, res) => {
+    try {
+        const data = req.body;
+        
+        // Validar datos básicos
+        if (!data || !data.metadata || !data.equipo) {
+            return res.status(400).json({
+                error: 'Datos inválidos',
+                message: 'Se requiere información del equipo y metadata'
+            });
+        }
+        
+        const tipoConcurso = data.metadata.tipoConcurso;
+        
+        // Verificar que el tipo de concurso sea válido
+        const concursosValidos = ['minisumo', 'seguidorlinea', 'boxeohumanoide', 'robotcombate', 'trivia'];
+        if (!concursosValidos.includes(tipoConcurso)) {
+            return res.status(400).json({
+                error: 'Tipo de concurso inválido',
+                message: 'El tipo de concurso no es válido'
+            });
+        }
+        
+        // Verificar registros de participantes
+        const registrosData = cargarRegistros();
+        
+        if (tipoConcurso === 'trivia') {
+            // Validar que sean 4 integrantes
+            if (!data.equipo.integrantes || data.equipo.integrantes.length !== 4) {
+                return res.status(400).json({
+                    error: 'Número de integrantes inválido',
+                    message: 'El equipo debe tener exactamente 4 integrantes'
+                });
+            }
+            
+            // Verificar que todos los IDs existan
+            const idsInvalidos = [];
+            const nombresIntegrantes = [];
+            
+            for (const idIntegrante of data.equipo.integrantes) {
+                const registro = registrosData.registros.find(r => r.id === idIntegrante);
+                if (!registro) {
+                    idsInvalidos.push(idIntegrante);
+                } else {
+                    nombresIntegrantes.push(registro.participante.nombre);
+                }
+            }
+            
+            if (idsInvalidos.length > 0) {
+                return res.status(404).json({
+                    error: 'IDs no válidos',
+                    message: `Los siguientes IDs no están registrados: ${idsInvalidos.join(', ')}`
+                });
+            }
+            
+            // Agregar nombres de integrantes al registro
+            data.equipo.nombresIntegrantes = nombresIntegrantes;
+            
+        } else {
+            // Para concursos de robótica, verificar el ID del participante
+            if (!data.equipo.idRegistroParticipante) {
+                return res.status(400).json({
+                    error: 'ID de participante requerido',
+                    message: 'Se requiere el ID de registro del participante'
+                });
+            }
+            
+            const registro = registrosData.registros.find(r => r.id === data.equipo.idRegistroParticipante);
+            if (!registro) {
+                return res.status(404).json({
+                    error: 'Participante no encontrado',
+                    message: 'El ID de registro no existe. Por favor verifica que el ID sea correcto.'
+                });
+            }
+            
+            // Agregar nombre del participante al registro
+            data.equipo.nombreParticipante = registro.participante.nombre;
+        }
+        
+        // Cargar registros de concursos
+        const concursosData = cargarConcursos();
+        
+        // Generar ID único para el equipo
+        const idEquipo = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        
+        // Crear registro del equipo
+        const nuevoRegistro = {
+            idEquipo: idEquipo,
+            ...data,
+            fechaGuardado: new Date().toISOString()
+        };
+        
+        // Agregar a la categoría correspondiente
+        if (!concursosData.concursos[tipoConcurso]) {
+            concursosData.concursos[tipoConcurso] = [];
+        }
+        
+        concursosData.concursos[tipoConcurso].push(nuevoRegistro);
+        
+        // Guardar
+        if (guardarConcursos(concursosData)) {
+            res.json({
+                success: true,
+                message: 'Equipo registrado exitosamente en el concurso',
+                idEquipo: idEquipo,
+                tipoConcurso: tipoConcurso,
+                nombreEquipo: data.equipo.nombreEquipo
+            });
+        } else {
+            res.status(500).json({
+                error: 'Error al guardar',
+                message: 'No se pudo guardar el registro del concurso'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al registrar concurso:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para obtener todos los registros de concursos
+app.get('/api/concursos', (req, res) => {
+    try {
+        const concursosData = cargarConcursos();
+        res.json(concursosData);
+    } catch (error) {
+        console.error('Error al obtener concursos:', error);
+        res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+// API para obtener registros de un concurso específico
+app.get('/api/concursos/:tipo', (req, res) => {
+    try {
+        const tipo = req.params.tipo;
+        const concursosData = cargarConcursos();
+        
+        if (!concursosData.concursos[tipo]) {
+            return res.status(404).json({
+                error: 'Concurso no encontrado',
+                message: 'El tipo de concurso no existe'
+            });
+        }
+        
+        res.json({
+            tipo: tipo,
+            equipos: concursosData.concursos[tipo],
+            total: concursosData.concursos[tipo].length
+        });
+    } catch (error) {
+        console.error('Error al obtener concurso:', error);
         res.status(500).json({
             error: 'Error interno del servidor',
             message: error.message
