@@ -1061,7 +1061,8 @@
             infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
             
             try {
-                const response = await fetch(`api/qr-data/${id}`);
+                const apiUrl = getApiUrl(`qr-data/${id}`);
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -1108,7 +1109,8 @@
             infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
             
             try {
-                const response = await fetch(`api/qr-data/${id}`);
+                const apiUrl = getApiUrl(`qr-data/${id}`);
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -1179,7 +1181,11 @@
             submitBtn.disabled = true;
             
             try {
-                const response = await fetch('api/registro-concurso', {
+                const apiUrl = getApiUrl('registro-concurso');
+                console.log('Enviando a:', apiUrl);
+                console.log('Datos:', registro);
+                
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1188,6 +1194,7 @@
                 });
                 
                 const data = await response.json();
+                console.log('Respuesta del servidor:', data);
                 
                 if (response.ok && data.success) {
                     // Cerrar modal
@@ -1200,11 +1207,12 @@
                     form.reset();
                     document.getElementById('participanteInfo').innerHTML = '';
                 } else {
-                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
+                    console.error('Error del servidor:', data);
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido') + '\n\nDetalles: ' + JSON.stringify(data));
                 }
             } catch (error) {
                 console.error('Error al guardar registro:', error);
-                alert('Error de conexión. Por favor, intenta nuevamente.');
+                alert('Error de conexión. Por favor, intenta nuevamente.\n\nDetalles: ' + error.message);
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -1260,7 +1268,8 @@
             submitBtn.disabled = true;
             
             try {
-                const response = await fetch('api/registro-concurso', {
+                const apiUrl = getApiUrl('registro-concurso');
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1283,11 +1292,12 @@
                         document.getElementById(`infoIntegrante${i}`).innerHTML = '';
                     }
                 } else {
-                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
+                    console.error('Error del servidor:', data);
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido') + '\n\nDetalles: ' + JSON.stringify(data));
                 }
             } catch (error) {
                 console.error('Error al guardar registro:', error);
-                alert('Error de conexión. Por favor, intenta nuevamente.');
+                alert('Error de conexión. Por favor, intenta nuevamente.\n\nDetalles: ' + error.message);
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;

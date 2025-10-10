@@ -1154,9 +1154,11 @@ app.delete('/api/pagos/:idPago', (req, res) => {
 app.post('/api/registro-concurso', (req, res) => {
     try {
         const data = req.body;
+        console.log('📝 Registro de concurso recibido:', JSON.stringify(data, null, 2));
         
         // Validar datos básicos
         if (!data || !data.metadata || !data.equipo) {
+            console.error('❌ Datos inválidos:', data);
             return res.status(400).json({
                 error: 'Datos inválidos',
                 message: 'Se requiere información del equipo y metadata'
@@ -1164,6 +1166,7 @@ app.post('/api/registro-concurso', (req, res) => {
         }
         
         const tipoConcurso = data.metadata.tipoConcurso;
+        console.log('🏆 Tipo de concurso:', tipoConcurso);
         
         // Verificar que el tipo de concurso sea válido
         const concursosValidos = ['minisumo', 'seguidorlinea', 'boxeohumanoide', 'robotcombate', 'trivia'];
@@ -1231,10 +1234,13 @@ app.post('/api/registro-concurso', (req, res) => {
         }
         
         // Cargar registros de concursos
+        console.log('📂 Cargando registros de concursos...');
         const concursosData = cargarConcursos();
+        console.log('✅ Concursos cargados:', Object.keys(concursosData.concursos));
         
         // Generar ID único para el equipo
         const idEquipo = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        console.log('🆔 ID generado para el equipo:', idEquipo);
         
         // Crear registro del equipo
         const nuevoRegistro = {
@@ -1243,15 +1249,22 @@ app.post('/api/registro-concurso', (req, res) => {
             fechaGuardado: new Date().toISOString()
         };
         
+        console.log('📋 Nuevo registro creado:', JSON.stringify(nuevoRegistro, null, 2));
+        
         // Agregar a la categoría correspondiente
         if (!concursosData.concursos[tipoConcurso]) {
+            console.warn('⚠️ Categoría no existe, creándola:', tipoConcurso);
             concursosData.concursos[tipoConcurso] = [];
         }
         
         concursosData.concursos[tipoConcurso].push(nuevoRegistro);
+        console.log('✅ Registro agregado a la categoría:', tipoConcurso);
+        console.log('📊 Total en categoría:', concursosData.concursos[tipoConcurso].length);
         
         // Guardar
+        console.log('💾 Guardando en archivo...');
         if (guardarConcursos(concursosData)) {
+            console.log('✅ Guardado exitoso');
             res.json({
                 success: true,
                 message: 'Equipo registrado exitosamente en el concurso',
@@ -1260,6 +1273,7 @@ app.post('/api/registro-concurso', (req, res) => {
                 nombreEquipo: data.equipo.nombreEquipo
             });
         } else {
+            console.error('❌ Error al guardar el archivo');
             res.status(500).json({
                 error: 'Error al guardar',
                 message: 'No se pudo guardar el registro del concurso'
@@ -1267,10 +1281,12 @@ app.post('/api/registro-concurso', (req, res) => {
         }
         
     } catch (error) {
-        console.error('Error al registrar concurso:', error);
+        console.error('❌ ERROR AL REGISTRAR CONCURSO:', error);
+        console.error('Stack trace:', error.stack);
         res.status(500).json({
             error: 'Error interno del servidor',
-            message: error.message
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 });
