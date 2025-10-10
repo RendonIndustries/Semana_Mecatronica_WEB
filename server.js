@@ -177,12 +177,24 @@ function cargarConcursos() {
 // Función para guardar registros de concursos
 function guardarConcursos(data) {
     try {
+        console.log('💾 Iniciando guardado de concursos...');
+        console.log('📁 Ruta del archivo:', archivoConcursos);
+        
         data.metadata.ultimaActualizacion = new Date().toISOString();
+        console.log('📅 Fecha actualizada:', data.metadata.ultimaActualizacion);
+        
         const jsonData = JSON.stringify(data, null, 2);
+        console.log('📝 JSON generado, tamaño:', jsonData.length, 'caracteres');
+        
+        console.log('💾 Escribiendo archivo...');
         fs.writeFileSync(archivoConcursos, jsonData, 'utf8');
+        console.log('✅ Archivo escrito exitosamente');
+        
         return true;
     } catch (error) {
-        console.error('Error al guardar concursos:', error);
+        console.error('❌ ERROR AL GUARDAR CONCURSOS:', error);
+        console.error('Stack trace:', error.stack);
+        console.error('Ruta del archivo:', archivoConcursos);
         return false;
     }
 }
