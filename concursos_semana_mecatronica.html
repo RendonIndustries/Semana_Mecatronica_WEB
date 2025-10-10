@@ -1049,7 +1049,7 @@
             }
         });
         
-        async function verificarParticipante() {
+        function verificarParticipante() {
             const id = document.getElementById('idRegistroParticipante').value.trim();
             const infoDiv = document.getElementById('participanteInfo');
             
@@ -1060,15 +1060,11 @@
             
             infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
             
-            try {
-                const apiUrl = getApiUrl(`qr-data/${id}`);
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
+            const apiUrl = getApiUrl(`qr-data/${id}`);
+            
+            fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
                 console.log('Datos recibidos:', data);
                 
                 if (data.error) {
@@ -1086,7 +1082,8 @@
                         </small>
                     `;
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error al verificar:', error);
                 infoDiv.innerHTML = `
                     <small class="text-danger">
@@ -1094,10 +1091,10 @@
                         Error al verificar. Intenta nuevamente.
                     </small>
                 `;
-            }
+            });
         }
         
-        async function verificarIntegrante(numero) {
+        function verificarIntegrante(numero) {
             const id = document.getElementById(`idIntegrante${numero}`).value.trim();
             const infoDiv = document.getElementById(`infoIntegrante${numero}`);
             
@@ -1108,15 +1105,11 @@
             
             infoDiv.innerHTML = '<small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Verificando...</small>';
             
-            try {
-                const apiUrl = getApiUrl(`qr-data/${id}`);
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
+            const apiUrl = getApiUrl(`qr-data/${id}`);
+            
+            fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
                 console.log(`Datos integrante ${numero}:`, data);
                 
                 if (data.error) {
@@ -1134,7 +1127,8 @@
                         </small>
                     `;
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error al verificar:', error);
                 infoDiv.innerHTML = `
                     <small class="text-danger">
@@ -1142,11 +1136,11 @@
                         Error al verificar
                     </small>
                 `;
-            }
+            });
         }
         
         // Guardar registro de concurso de robótica
-        async function guardarRegistroConcurso() {
+        function guardarRegistroConcurso() {
             const form = document.getElementById('formRegistroConcurso');
             
             if (!form.checkValidity()) {
@@ -1180,23 +1174,22 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
             submitBtn.disabled = true;
             
-            try {
-                const apiUrl = getApiUrl('registro-concurso');
-                console.log('Enviando a:', apiUrl);
-                console.log('Datos:', registro);
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(registro)
-                });
-                
-                const data = await response.json();
+            const apiUrl = getApiUrl('registro-concurso');
+            console.log('Enviando a:', apiUrl);
+            console.log('Datos:', registro);
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registro)
+            })
+            .then(response => response.json())
+            .then(data => {
                 console.log('Respuesta del servidor:', data);
                 
-                if (response.ok && data.success) {
+                if (data.success) {
                     // Cerrar modal
                     bootstrap.Modal.getInstance(document.getElementById('registroConcursoModal')).hide();
                     
@@ -1208,19 +1201,22 @@
                     document.getElementById('participanteInfo').innerHTML = '';
                 } else {
                     console.error('Error del servidor:', data);
-                    alert('Error al registrar: ' + (data.message || 'Error desconocido') + '\n\nDetalles: ' + JSON.stringify(data));
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
                 }
-            } catch (error) {
-                console.error('Error al guardar registro:', error);
-                alert('Error de conexión. Por favor, intenta nuevamente.\n\nDetalles: ' + error.message);
-            } finally {
+            })
+            .catch(error => {
+                console.error('Error al enviar datos:', error);
+                alert('Error de conexión. Por favor, verifica tu conexión a internet e intenta nuevamente.');
+            })
+            .finally(() => {
+                // Restaurar botón
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-            }
+            });
         }
         
         // Guardar registro de trivia
-        async function guardarRegistroTrivia() {
+        function guardarRegistroTrivia() {
             const form = document.getElementById('formRegistroTrivia');
             
             if (!form.checkValidity()) {
@@ -1267,19 +1263,22 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
             submitBtn.disabled = true;
             
-            try {
-                const apiUrl = getApiUrl('registro-concurso');
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(registro)
-                });
+            const apiUrl = getApiUrl('registro-concurso');
+            console.log('Enviando trivia a:', apiUrl);
+            console.log('Datos trivia:', registro);
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registro)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor (trivia):', data);
                 
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
+                if (data.success) {
                     // Cerrar modal
                     bootstrap.Modal.getInstance(document.getElementById('registroTriviaModal')).hide();
                     
@@ -1293,15 +1292,18 @@
                     }
                 } else {
                     console.error('Error del servidor:', data);
-                    alert('Error al registrar: ' + (data.message || 'Error desconocido') + '\n\nDetalles: ' + JSON.stringify(data));
+                    alert('Error al registrar: ' + (data.message || 'Error desconocido'));
                 }
-            } catch (error) {
-                console.error('Error al guardar registro:', error);
-                alert('Error de conexión. Por favor, intenta nuevamente.\n\nDetalles: ' + error.message);
-            } finally {
+            })
+            .catch(error => {
+                console.error('Error al enviar datos:', error);
+                alert('Error de conexión. Por favor, verifica tu conexión a internet e intenta nuevamente.');
+            })
+            .finally(() => {
+                // Restaurar botón
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-            }
+            });
         }
         
         // Función para mostrar información adicional de cada concurso
