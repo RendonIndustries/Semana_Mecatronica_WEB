@@ -179,6 +179,14 @@ function guardarConcursos(data) {
     try {
         console.log('💾 Iniciando guardado de concursos...');
         console.log('📁 Ruta del archivo:', archivoConcursos);
+        console.log('📁 Directorio actual:', __dirname);
+        console.log('📁 RegistrosDir:', registrosDir);
+        
+        // Verificar si el directorio existe
+        if (!fs.existsSync(registrosDir)) {
+            console.log('📁 Directorio no existe, creándolo...');
+            fs.mkdirSync(registrosDir, { recursive: true });
+        }
         
         data.metadata.ultimaActualizacion = new Date().toISOString();
         console.log('📅 Fecha actualizada:', data.metadata.ultimaActualizacion);
@@ -190,11 +198,22 @@ function guardarConcursos(data) {
         fs.writeFileSync(archivoConcursos, jsonData, 'utf8');
         console.log('✅ Archivo escrito exitosamente');
         
+        // Verificar que el archivo se creó
+        if (fs.existsSync(archivoConcursos)) {
+            const stats = fs.statSync(archivoConcursos);
+            console.log('✅ Archivo verificado, tamaño:', stats.size, 'bytes');
+        } else {
+            console.error('❌ Archivo no se creó correctamente');
+            return false;
+        }
+        
         return true;
     } catch (error) {
         console.error('❌ ERROR AL GUARDAR CONCURSOS:', error);
         console.error('Stack trace:', error.stack);
         console.error('Ruta del archivo:', archivoConcursos);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
         return false;
     }
 }
@@ -273,9 +292,9 @@ app.post('/api/registro', (req, res) => {
         // Cargar registros existentes
         const registrosData = cargarRegistros();
         
-        // Agregar ID único al registro
+        // Agregar ID único al registro (8 caracteres con prefijo RI)
         const nuevoRegistro = {
-            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+            id: generarIdRegistro(),
             ...data,
             fechaGuardado: new Date().toISOString()
         };
@@ -983,6 +1002,46 @@ app.get('/api/pagos', (req, res) => {
     }
 });
 
+// Función para generar ID de registro único (8 caracteres: RI + 6 alfanuméricos)
+function generarIdRegistro() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let idRegistro = '';
+    
+    // Generar ID único con prefijo RI (alusión sutil a Rendón Industries)
+    do {
+        idRegistro = 'RI';
+        for (let i = 0; i < 6; i++) {
+            idRegistro += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+    } while (cargarRegistros().registros.some(r => r.id === idRegistro));
+    
+    return idRegistro;
+}
+
+// Función para generar ID de equipo de concurso único (8 caracteres: RI + 6 alfanuméricos)
+function generarIdEquipoConcurso() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let idEquipo = '';
+    
+    // Generar ID único con prefijo RI
+    do {
+        idEquipo = 'RI';
+        for (let i = 0; i < 6; i++) {
+            idEquipo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        
+        // Verificar que no exista en ningún concurso
+        const concursosData = cargarConcursos();
+        const existeId = Object.values(concursosData.concursos).some(equipos => 
+            equipos.some(equipo => equipo.idEquipo === idEquipo)
+        );
+        
+        if (!existeId) break;
+    } while (true);
+    
+    return idEquipo;
+}
+
 // Función para generar ID de pago único (6 caracteres alfanuméricos)
 function generarIdPago() {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -1162,8 +1221,26 @@ app.delete('/api/pagos/:idPago', (req, res) => {
 
 // ==================== RUTAS DE CONCURSOS ====================
 
+// Endpoint de prueba para verificar conectividad
+app.get('/api/test', (req, res) => {
+    console.log('🧪 Test endpoint llamado');
+    res.json({
+        success: true,
+        message: 'Servidor Node.js funcionando correctamente',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'production',
+        workingDirectory: __dirname,
+        registrosDir: registrosDir,
+        archivoConcursos: archivoConcursos
+    });
+});
+
 // API para registrar equipo en concurso
 app.post('/api/registro-concurso', (req, res) => {
+    console.log('🚀 POST /api/registro-concurso - Petición recibida');
+    console.log('📦 Body recibido:', req.body);
+    console.log('📋 Headers:', req.headers);
+    
     try {
         const data = req.body;
         console.log('📝 Registro de concurso recibido:', JSON.stringify(data, null, 2));
@@ -1250,8 +1327,8 @@ app.post('/api/registro-concurso', (req, res) => {
         const concursosData = cargarConcursos();
         console.log('✅ Concursos cargados:', Object.keys(concursosData.concursos));
         
-        // Generar ID único para el equipo
-        const idEquipo = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        // Generar ID único para el equipo (8 caracteres con prefijo RI)
+        const idEquipo = generarIdEquipoConcurso();
         console.log('🆔 ID generado para el equipo:', idEquipo);
         
         // Crear registro del equipo
@@ -1295,9 +1372,16 @@ app.post('/api/registro-concurso', (req, res) => {
     } catch (error) {
         console.error('❌ ERROR AL REGISTRAR CONCURSO:', error);
         console.error('Stack trace:', error.stack);
+        console.error('Error type:', typeof error);
+        console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
+        console.error('Environment:', process.env.NODE_ENV);
+        
         res.status(500).json({
             error: 'Error interno del servidor',
             message: error.message,
+            code: error.code,
+            environment: process.env.NODE_ENV,
             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
