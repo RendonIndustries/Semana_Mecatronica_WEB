@@ -11,61 +11,76 @@
         {
             "day": "Lunes",
             "activities": [
-                {"time": "8:00 am - 8:30 am", "event": "Inauguración"},
-                {"time": "8:30 am - 9:30 am", "event": "Plática SIP, DIRECCIÓN DE INVESTIGACIÓN"},
-                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
-                {"time": "10:00 am - 12:30 pm", "event": "Inicio talleres"},
-                {"time": "12:00 pm - 1:30 pm", "event": "Taller - Costeo de proyectos mecatrónicos"},
-                {"time": "1:30 pm - 2:00 pm", "event": "Entrevista Por confirmar"},
-                {"time": "2:00 pm - 3:00 pm", "event": "Eventos deportivos"}
+                {"time": "8:30 am - 9:15 am", "event": "Inauguración", "Participants": "Funcionarios, Comité de Organización, Staff, Docentes", "spaces": 250},
+                {"time": "9:30 am - 10:30 am", "event": "Conferencia: I.A. en la Industria Automotriz - Dr. José María Celaya Padilla", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Implementación de HMI en Raspberry Pi con Ubuntu y Qt - Ubicación: Laboratorio de Cómputo", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Diseño e impresión 3D - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 14},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "2:00 pm - 4:00 pm", "event": "Encuentros deportivos (Voleibol)", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
         },
         {
             "day": "Martes",
             "activities": [
-                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
-                {"time": "8:30 am - 9:30 am", "event": "Conferencia \"El lenguaje del control: cómo los ingenieros gobiernan el movimiento, la vida y la energía\" - Dr. Luis Tupak Aguilar Bustos"},
-                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
-                {"time": "10:00 am - 1:30 pm", "event": "Talleres"},
-                {"time": "1:30 pm - 2:00 pm", "event": "Entrevista al Dr. Luis Tupak Aguilar Bustos"},
-                {"time": "2:00 pm - 3:00 pm", "event": "Eventos deportivos"}
+                {"time": "9:30 am - 10:30 am", "event": "Conferencia: El lenguaje del control: cómo los ingenieros gobiernan el movimiento, la vida y la energía - Dr. Luis Tupak Aguilar Bustos (CITEDI IPN)", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
+                {"time": "10:00 am - 2:00 pm", "event": "Exhibición de posters (Domo Ligeros)", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Implementación de HMI en Raspberry Pi con Ubuntu y Qt - Ubicación: Laboratorio de Cómputo", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Diseño e impresión 3D - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "2:00 pm - 4:00 pm", "event": "Encuentros deportivos (Fútbol)", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
         },
         {
             "day": "Miércoles",
             "activities": [
-                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
-                {"time": "8:30 am - 9:30 am", "event": "Conferencia \"Consideraciones para el desarrollo de proyectos basados en la metodología de diseño mecatrónico\" - M. en C. Omar Désiga Orenday"},
-                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
-                {"time": "10:00 am - 12:30 pm", "event": "Talleres"},
-                {"time": "1:00 pm - 2:00 pm", "event": "Seguidor de línea femenil"},
-                {"time": "2:00 pm - 3:00 pm", "event": "Seguidor de línea femenil / eventos deportivos"}
+                {"time": "9:30 am - 10:30 am", "event": "Conferencia: De la robótica de servicio al espacio: integración mecatrónica para sistemas autónomos terrestres y espaciales - Dr. Héctor Simón Vargas Martínez (Profesor Investigador de UPAEP)", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Implementación de HMI en Raspberry Pi con Ubuntu y Qt - Ubicación: Laboratorio de Cómputo", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Diseño e impresión 3D - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "1:00 pm", "event": "Carrera de Carretones", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "1:00 pm", "event": "Concurso de robótica", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
         },
         {
             "day": "Jueves",
             "activities": [
-                {"time": "8:00 am - 9:00 am", "event": "Conferencia por Confirmar"},
-                {"time": "9:00 am - 10:00 am", "event": "Conferencia \"Sistema de navegación para aeronaves basado en anomalías del campo magnético de la tierra\" - PhD in Aerosp. Humberto Ramos (9:15)"},
-                {"time": "10:00 am - 10:30 am", "event": "Descanso"},
-                {"time": "10:30 am - 11:30 am", "event": "Eliminatorias seguidor PRO"},
-                {"time": "11:30 am - 12:30 pm", "event": "Foro Egresados"},
-                {"time": "12:30 pm - 1:00 pm", "event": "Finales Robótica"},
-                {"time": "1:00 pm - 3:00 pm", "event": "Exhibición de Empresas Visitantes, Exhibición y Presentación de Pósters, Rally"}
+                {"time": "9:30 am - 10:30 am", "event": "Conferencia: Del robot móvil al humanoide: desafíos mecatrónicos en la locomoción, percepción y control de robots bípedos - Dr. Marco Antonio Negrete Villanueva", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Implementación de HMI en Raspberry Pi con Ubuntu y Qt - Ubicación: Laboratorio de Cómputo", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Diseño e impresión 3D - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "11:30 am - 12:15 pm", "event": "Plática de egresados", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "1:00 pm - 2:00 pm", "event": "Rally", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
         },
         {
             "day": "Viernes",
             "activities": [
-                {"time": "8:00 am - 8:30 am", "event": "STAFF"},
-                {"time": "8:30 am - 9:30 am", "event": "Conferencia Magistral"},
-                {"time": "9:30 am - 10:00 am", "event": "Descanso"},
-                {"time": "10:00 am - 10:30 am", "event": "Panel de Mujeres en la Industria Mecatrónica"},
-                {"time": "10:30 am - 12:00 pm", "event": "\"101 Burros dijeron\" - Mtro. Alberto Córdoba"},
-                {"time": "12:00 pm - 12:30 pm", "event": "Premiación"},
-                {"time": "12:30 pm - 1:30 pm", "event": "Rifa"},
-                {"time": "1:30 pm - 3:00 pm", "event": "Clausura / Comida"},
-                {"time": "7:00 pm", "event": "Callejoneada"}
+                {"time": "9:30 am - 10:30 am", "event": "Conferencia: Markovito: Robot de Servicio - Dr. Luis Enrique Sucar Succar", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
+                {"time": "11:00 am - 11:30 am", "event": "Clausura", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "11:30 am - 1:00 pm", "event": "100 Burros dijeron", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "1:00 pm - 1:30 pm", "event": "Rifa", "Participants": "Alumnos, académicos, docentes", "spaces": 200},
+                {"time": "2:00 pm - 3:30 pm", "event": "Comida", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "7:00 pm", "event": "Callejoneada", "Participants": "Alumnos, académicos, docentes", "spaces": 500}
             ]
         }
     ]
