@@ -49,15 +49,22 @@ class QRScanner {
     
     // Mostrar interfaz del escáner
     showScanner() {
-        const titles = {
-            'conferencias': 'Pase de Lista - Conferencias',
-            'talleres': 'Pase de Lista - Talleres',
-            'kits': 'Entrega de Kits',
-            'comida': 'Comida de Clausura'
-        };
+        let title;
+        
+        if (this.currentMode === 'talleres' && this.currentOptions && this.currentOptions.tallerName) {
+            title = `Pase de Lista - ${this.currentOptions.tallerName}`;
+        } else {
+            const titles = {
+                'conferencias': 'Pase de Lista - Conferencias',
+                'talleres': 'Pase de Lista - Talleres',
+                'kits': 'Entrega de Kits',
+                'comida': 'Comida de Clausura'
+            };
+            title = titles[this.currentMode];
+        }
         
         document.getElementById('scannerTitle').innerHTML = 
-            `<i class="fas fa-qrcode me-2"></i>${titles[this.currentMode]}`;
+            `<i class="fas fa-qrcode me-2"></i>${title}`;
         
         document.getElementById('scannerContainer').style.display = 'block';
     }
@@ -289,78 +296,105 @@ function iniciarEscaneo(mode) {
 }
 
 // Función para mostrar selección de taller
-function mostrarSeleccionTaller() {
-    const modalHTML = `
-        <div class="modal fade" id="tallerModal" tabindex="-1" aria-labelledby="tallerModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="tallerModalLabel">
-                            <i class="fas fa-tools me-2"></i>Seleccionar Taller
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-3">Selecciona el taller para el cual vas a registrar asistencias:</p>
-                        <div class="row">
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller1')">
-                                    <i class="fas fa-cog me-2"></i>Taller 1
-                                </button>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller2')">
-                                    <i class="fas fa-cog me-2"></i>Taller 2
-                                </button>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller3')">
-                                    <i class="fas fa-cog me-2"></i>Taller 3
-                                </button>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller4')">
-                                    <i class="fas fa-cog me-2"></i>Taller 4
-                                </button>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller5')">
-                                    <i class="fas fa-cog me-2"></i>Taller 5
-                                </button>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <button class="btn btn-outline-primary w-100" onclick="seleccionarTaller('taller6')">
-                                    <i class="fas fa-cog me-2"></i>Taller 6
-                                </button>
+async function mostrarSeleccionTaller() {
+    try {
+        // Cargar talleres desde el JSON
+        const response = await fetch('../Docs/Programa_2025.json');
+        const data = await response.json();
+        
+        // Extraer talleres únicos
+        const talleresMap = new Map();
+        data.schedule.forEach(day => {
+            day.activities.forEach(activity => {
+                const event = activity.event;
+                
+                // Buscar si es un taller
+                if (event.toLowerCase().includes('taller:') && 
+                    !event.toLowerCase().includes('inicio de talleres') && 
+                    !event.toLowerCase().includes('otros talleres')) {
+                    
+                    // Extraer el nombre del taller
+                    const tallerMatch = event.match(/Taller:\s*(.+?)(?:\s*-|$)/);
+                    if (tallerMatch) {
+                        const tallerName = tallerMatch[1].trim();
+                        
+                        // Si no existe en el mapa, agregarlo
+                        if (!talleresMap.has(tallerName)) {
+                            talleresMap.set(tallerName, {
+                                nombre: tallerName,
+                                descripcion: event
+                            });
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Convertir a array
+        const talleres = Array.from(talleresMap.values());
+        
+        // Generar botones de talleres
+        let talleresHTML = '';
+        talleres.forEach((taller, index) => {
+            const idTaller = taller.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            const shortName = taller.nombre.length > 30 ? taller.nombre.substring(0, 27) + '...' : taller.nombre;
+            
+            talleresHTML += `
+                <div class="col-12 mb-2">
+                    <button class="btn btn-outline-primary w-100 text-start" onclick="seleccionarTaller('${idTaller}', '${taller.nombre}')">
+                        <i class="fas fa-cog me-2"></i><strong>${shortName}</strong>
+                    </button>
+                </div>
+            `;
+        });
+        
+        const modalHTML = `
+            <div class="modal fade" id="tallerModal" tabindex="-1" aria-labelledby="tallerModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="tallerModalLabel">
+                                <i class="fas fa-tools me-2"></i>Seleccionar Taller
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="mb-3">Selecciona el taller para el cual vas a registrar asistencias:</p>
+                            <div class="row">
+                                ${talleresHTML}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    `;
-    
-    // Agregar modal al DOM
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('tallerModal'));
-    modal.show();
-    
-    // Limpiar modal cuando se cierre
-    document.getElementById('tallerModal').addEventListener('hidden.bs.modal', function () {
-        this.remove();
-    });
+        `;
+        
+        // Agregar modal al DOM
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Mostrar modal
+        const modal = new bootstrap.Modal(document.getElementById('tallerModal'));
+        modal.show();
+        
+        // Limpiar modal cuando se cierre
+        document.getElementById('tallerModal').addEventListener('hidden.bs.modal', function () {
+            this.remove();
+        });
+        
+    } catch (error) {
+        console.error('Error al cargar talleres:', error);
+        alert('Error al cargar los talleres. Por favor, recarga la página.');
+    }
 }
 
 // Función para seleccionar taller y iniciar escaneo
-function seleccionarTaller(taller) {
+function seleccionarTaller(taller, tallerName) {
     // Cerrar modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('tallerModal'));
     modal.hide();
     
     // Iniciar escaneo con el taller seleccionado
-    qrScanner.init('talleres', { taller: taller });
+    qrScanner.init('talleres', { taller: taller, tallerName: tallerName });
 }
 
 function cerrarScanner() {

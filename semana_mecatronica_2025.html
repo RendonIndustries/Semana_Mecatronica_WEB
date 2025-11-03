@@ -199,6 +199,30 @@
             border-color: var(--ipn-guinda);
         }
         
+        /* Estilos para elementos clickeables del programa */
+        .program-item-clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 4px 8px;
+            border-radius: 5px;
+            margin-left: -8px;
+            margin-right: -8px;
+            display: inline-block;
+            color: inherit !important;
+            position: relative;
+            text-decoration: none !important;
+        }
+        
+        .program-item-clickable:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(106, 0, 50, 0.1);
+        }
+        
+        .program-item-clickable:hover strong {
+            color: var(--ipn-guinda);
+        }
+        
         /* Navbar principal sticky (fallback) debajo del navbar de gobierno */
         .menu-principal {
             position: sticky !important;
@@ -373,13 +397,15 @@
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-6" id="talleres">
-                    <div class="activity-card">
-                        <div class="activity-icon">
-                            <i class="fas fa-tools"></i>
+                    <a href="Talleres.html" class="text-decoration-none">
+                        <div class="activity-card">
+                            <div class="activity-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <h3 class="text-guinda">Talleres</h3>
+                            <p>Aprende con talleres prácticos de Arduino, programación y diseño 3D.</p>
                         </div>
-                        <h3 class="text-guinda">Talleres</h3>
-                        <p>Aprende con talleres prácticos de Arduino, programación y diseño 3D.</p>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-lg-4 col-md-6" id="deportivas">
                     <a href="Actividades deportivas.html" class="text-decoration-none">
@@ -404,13 +430,15 @@
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-6" id="sorteos">
-                    <div class="activity-card">
-                        <div class="activity-icon">
-                            <i class="fas fa-gift"></i>
+                    <a href="Sorteos.html" class="text-decoration-none">
+                        <div class="activity-card">
+                            <div class="activity-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <h3 class="text-guinda">Sorteos</h3>
+                            <p>Participa en emocionantes sorteos con premios tecnológicos.</p>
                         </div>
-                        <h3 class="text-guinda">Sorteos</h3>
-                        <p>Participa en emocionantes sorteos con premios tecnológicos.</p>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -831,6 +859,59 @@
                 'Viernes': dates.friday
             };
             
+            // Función para determinar el link y si es clickeable
+            function getActivityLink(event) {
+                const eventLower = event.toLowerCase();
+                
+                // Detectar talleres (debe ir antes de otras detecciones para evitar conflictos)
+                if (eventLower.includes('taller:') && 
+                    !eventLower.includes('inicio de talleres') && 
+                    !eventLower.includes('otros talleres')) {
+                    return 'Talleres.html';
+                }
+                
+                // Detectar conferencias
+                if (eventLower.includes('conferencia:')) {
+                    return 'Conferencias.html';
+                }
+                
+                // Detectar concursos
+                if (eventLower.includes('concurso') || 
+                    eventLower.includes('competencia')) {
+                    return 'concursos_semana_mecatronica.html';
+                }
+                
+                // Detectar actividades deportivas
+                if (eventLower.includes('deportivo') || 
+                    eventLower.includes('deportivos') ||
+                    eventLower.includes('voleibol') ||
+                    eventLower.includes('fútbol') ||
+                    eventLower.includes('futbol') ||
+                    eventLower.includes('carrera') ||
+                    eventLower.includes('carretones') ||
+                    eventLower.includes('rally')) {
+                    return 'Actividades deportivas.html';
+                }
+                
+                // Detectar exposiciones
+                if (eventLower.includes('exhibición') || 
+                    eventLower.includes('exposición') ||
+                    eventLower.includes('poster') ||
+                    eventLower.includes('póster')) {
+                    return 'Exposiciones.html';
+                }
+                
+                // Detectar sorteos (debe ir al final para evitar conflictos)
+                if (eventLower.includes('rifa') || 
+                    eventLower.includes('sorteo') ||
+                    eventLower.includes('100 burros')) {
+                    return 'Sorteos.html';
+                }
+                
+                // No hay link para otros eventos (Inauguración, Clausura, Receso, etc.)
+                return null;
+            }
+            
             // Organizar los días en grupos para mostrar 2 por fila
             const days = schedule.map(day => day.day);
             const rows = [];
@@ -863,10 +944,16 @@
                             spacesInfo = ` <span class="badge bg-primary ms-2">${activity.spaces} espacios</span>`;
                         }
                         
+                        // Determinar si tiene link
+                        const link = getActivityLink(activity.event);
+                        
+                        // Construir el contenido del evento
+                        const eventContent = `<strong>${activity.time}:</strong> ${activity.event}${spacesInfo}`;
+                        
                         html += `
                             <li class="mb-3">
                                 <i class="fas fa-clock text-guinda me-2"></i>
-                                <strong>${activity.time}:</strong> ${activity.event}${spacesInfo}
+                                ${link ? `<a href="${link}" class="text-decoration-none program-item-clickable">${eventContent}</a>` : eventContent}
                                 ${activity.Participants ? `<br><small class="text-muted ms-4"><i class="fas fa-users me-1"></i>${activity.Participants}</small>` : ''}
                             </li>
                         `;

@@ -480,12 +480,7 @@
                             <div class="col-md-6">
                                 <label for="editTaller" class="form-label">Taller</label>
                                 <select class="form-select" id="editTaller">
-                                    <option value="taller1">Taller 1</option>
-                                    <option value="taller2">Taller 2</option>
-                                    <option value="taller3">Taller 3</option>
-                                    <option value="taller4">Taller 4</option>
-                                    <option value="taller5">Taller 5</option>
-                                    <option value="taller6">Taller 6</option>
+                                    <option value="">Cargando talleres...</option>
                                 </select>
                             </div>
                         </div>
@@ -892,8 +887,53 @@
             modal.show();
             
             // Cargar datos iniciales
+            cargarTalleresDinamicos();
             actualizarListaUsuarios();
             cargarEstadisticas();
+        }
+        
+        // Función para cargar talleres dinámicamente desde el JSON
+        async function cargarTalleresDinamicos() {
+            try {
+                const response = await fetch('../Docs/Programa_2025.json');
+                const data = await response.json();
+                
+                // Extraer talleres únicos
+                const talleresMap = new Map();
+                data.schedule.forEach(day => {
+                    day.activities.forEach(activity => {
+                        const event = activity.event;
+                        
+                        if (event.toLowerCase().includes('taller:') && 
+                            !event.toLowerCase().includes('inicio de talleres') && 
+                            !event.toLowerCase().includes('otros talleres')) {
+                            
+                            const tallerMatch = event.match(/Taller:\s*(.+?)(?:\s*-|$)/);
+                            if (tallerMatch) {
+                                const tallerName = tallerMatch[1].trim();
+                                if (!talleresMap.has(tallerName)) {
+                                    const idTaller = tallerName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                                    talleresMap.set(tallerName, idTaller);
+                                }
+                            }
+                        }
+                    });
+                });
+                
+                // Actualizar el select de editar talleres
+                const selectEditTaller = document.getElementById('editTaller');
+                selectEditTaller.innerHTML = '';
+                
+                talleresMap.forEach((idTaller, nombreTaller) => {
+                    const option = document.createElement('option');
+                    option.value = idTaller;
+                    option.textContent = nombreTaller;
+                    selectEditTaller.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar talleres dinámicos:', error);
+            }
         }
 
         async function actualizarListaUsuarios() {

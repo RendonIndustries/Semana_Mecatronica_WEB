@@ -422,78 +422,12 @@
                                 </div>
                             </div>
                             
-                            <div class="workshop-section">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller1" name="taller" value="taller1">
-                                                <label class="form-check-label" for="taller1">
-                                                    <strong>Taller 1</strong>
-                                                    <br><small class="text-muted">Descripción del taller 1</small>
-                                                </label>
-                                            </div>
-                                        </div>
+                            <div class="workshop-section" id="workshops-container">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-guinda" role="status">
+                                        <span class="visually-hidden">Cargando talleres...</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller2" name="taller" value="taller2">
-                                                <label class="form-check-label" for="taller2">
-                                                    <strong>Taller 2</strong>
-                                                    <br><small class="text-muted">Descripción del taller 2</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller3" name="taller" value="taller3">
-                                                <label class="form-check-label" for="taller3">
-                                                    <strong>Taller 3</strong>
-                                                    <br><small class="text-muted">Descripción del taller 3</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller4" name="taller" value="taller4">
-                                                <label class="form-check-label" for="taller4">
-                                                    <strong>Taller 4</strong>
-                                                    <br><small class="text-muted">Descripción del taller 4</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller5" name="taller" value="taller5">
-                                                <label class="form-check-label" for="taller5">
-                                                    <strong>Taller 5</strong>
-                                                    <br><small class="text-muted">Descripción del taller 5</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="workshop-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="taller6" name="taller" value="taller6">
-                                                <label class="form-check-label" for="taller6">
-                                                    <strong>Taller 6</strong>
-                                                    <br><small class="text-muted">Descripción del taller 6</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p class="mt-3 text-muted">Cargando talleres disponibles...</p>
                                 </div>
                             </div>
                             
@@ -650,6 +584,112 @@
     
     <!-- Script personalizado -->
     <script>
+        // Cargar talleres al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWorkshops();
+        });
+        
+        // Función para cargar talleres desde el JSON
+        async function loadWorkshops() {
+            try {
+                const response = await fetch('Docs/Programa_2025.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar el programa');
+                }
+                const data = await response.json();
+                renderWorkshops(data);
+            } catch (error) {
+                console.error('Error cargando talleres:', error);
+                document.getElementById('workshops-container').innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error al cargar los talleres. Por favor, recarga la página.
+                    </div>
+                `;
+            }
+        }
+        
+        // Función para renderizar talleres
+        function renderWorkshops(data) {
+            const schedule = data.schedule;
+            const allWorkshops = new Map();
+            
+            // Recopilar todos los talleres únicos de todos los días
+            schedule.forEach(day => {
+                day.activities.forEach(activity => {
+                    const event = activity.event;
+                    
+                    // Buscar si es un taller
+                    if (event.toLowerCase().includes('taller:') && 
+                        !event.toLowerCase().includes('inicio de talleres') && 
+                        !event.toLowerCase().includes('otros talleres')) {
+                        
+                        // Extraer el nombre del taller (después de "Taller:")
+                        const tallerMatch = event.match(/Taller:\s*(.+?)(?:\s*-|$)/);
+                        if (tallerMatch) {
+                            const tallerName = tallerMatch[1].trim();
+                            
+                            // Si no existe en el mapa, agregarlo
+                            if (!allWorkshops.has(tallerName)) {
+                                allWorkshops.set(tallerName, {
+                                    name: tallerName,
+                                    description: event,
+                                    spaces: activity.spaces || 0
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Convertir a array para renderizar
+            const workshopsArray = Array.from(allWorkshops.values());
+            
+            // Renderizar en el contenedor
+            renderWorkshopCards(workshopsArray);
+        }
+        
+        // Función para renderizar tarjetas de talleres
+        function renderWorkshopCards(workshops) {
+            const container = document.getElementById('workshops-container');
+            
+            if (workshops.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No hay talleres disponibles en este momento.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            // Organizar talleres en filas de 2
+            for (let i = 0; i < workshops.length; i += 2) {
+                html += '<div class="row">';
+                
+                for (let j = i; j < Math.min(i + 2, workshops.length); j++) {
+                    const workshop = workshops[j];
+                    const workshopId = `taller_${j + 1}`;
+                    const workshopValue = workshop.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                    
+                    html += `
+                        <div class="col-md-6">
+                            <div class="workshop-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="${workshopId}" name="taller" value="${workshopValue}">
+                                    <label class="form-check-label" for="${workshopId}">
+                                        <strong>${workshop.name}</strong>
+                                        <br><small class="text-muted">Cupo: ${workshop.spaces} espacios</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
         function enviarBusqueda() {
             const texto = document.getElementById('textoBusqueda').value;
             if (texto.trim() !== '') {

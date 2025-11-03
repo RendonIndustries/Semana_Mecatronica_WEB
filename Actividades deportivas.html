@@ -549,102 +549,22 @@
 
         <h2>🏃 Actividades Programadas</h2>
         
-        <div class="conferences-gallery">
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">⚽</span>
-                    <h3 class="conference-title">Eventos Deportivos</h3>
+        <div class="conferences-gallery" id="sports-activities-container">
+            <div class="text-center py-4">
+                <div class="spinner-border text-guinda" role="status">
+                    <span class="visually-hidden">Cargando actividades deportivas...</span>
                 </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Actividades recreativas y deportivas para promover la convivencia.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Lunes 10 Nov - 2:00-3:00 pm</h4>
-                        <p><strong>📍 Por confirmar</strong></p>
-                    </div>
-                    <div class="conference-topics">
-                        <h4>🏆 Detalles:</h4>
-                        <ul>
-                            <li>Por confirmar</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">🏐</span>
-                    <h3 class="conference-title">Eventos Deportivos</h3>
-                </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Actividades recreativas y deportivas para promover la convivencia.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Martes 11 Nov - 2:00-3:00 pm</h4>
-                        <p><strong>📍 Por confirmar</strong></p>
-                    </div>
-                    <div class="conference-topics">
-                        <h4>🏆 Detalles:</h4>
-                        <ul>
-                            <li>Por confirmar</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">🏀</span>
-                    <h3 class="conference-title">Eventos Deportivos</h3>
-                </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Actividades recreativas y deportivas para promover la convivencia.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Miércoles 12 Nov - 2:00-3:00 pm</h4>
-                        <p><strong>📍 Por confirmar</strong></p>
-                    </div>
-                    <div class="conference-topics">
-                        <h4>🏆 Detalles:</h4>
-                        <ul>
-                            <li>Por confirmar</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">🎯</span>
-                    <h3 class="conference-title">Rally Deportivo</h3>
-                </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Rally recreativo y deportivo que combina desafíos en equipo.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Jueves 13 Nov - 1:00-3:00 pm</h4>
-                        <p><strong>📍 Por confirmar</strong></p>
-                    </div>
-                    <div class="conference-topics">
-                        <h4>🏆 Detalles:</h4>
-                        <ul>
-                            <li>Por confirmar</li>
-                        </ul>
-                    </div>
-                </div>
+                <p class="mt-3 text-muted">Cargando actividades deportivas disponibles...</p>
             </div>
         </div>
 
-        <div class="schedule">
+        <div class="schedule" id="schedule-container">
             <strong>Cronograma de Actividades Deportivas:</strong><br>
-            • <strong>Lunes 10 de Noviembre:</strong> Eventos deportivos (2:00 pm - 3:00 pm)<br>
-            • <strong>Martes 11 de Noviembre:</strong> Eventos deportivos (2:00 pm - 3:00 pm)<br>
-            • <strong>Miércoles 12 de Noviembre:</strong> Eventos deportivos (2:00 pm - 3:00 pm)<br>
-            • <strong>Jueves 13 de Noviembre:</strong> Rally deportivo (1:00 pm - 3:00 pm)
+            <div class="text-center py-2">
+                <div class="spinner-border spinner-border-sm text-guinda" role="status">
+                    <span class="visually-hidden">Cargando cronograma...</span>
+                </div>
+            </div>
         </div>
 
         <div class="info-box">
@@ -732,6 +652,238 @@
     
     <!-- Script personalizado -->
     <script>
+        // Cargar actividades deportivas al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSportsActivities();
+        });
+        
+        // Función para cargar las actividades deportivas desde el JSON
+        async function loadSportsActivities() {
+            try {
+                const response = await fetch('Docs/Programa_2025.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar el programa');
+                }
+                const data = await response.json();
+                renderSportsActivities(data);
+            } catch (error) {
+                console.error('Error cargando actividades deportivas:', error);
+                document.getElementById('sports-activities-container').innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error al cargar las actividades deportivas. Por favor, recarga la página.
+                    </div>
+                `;
+            }
+        }
+        
+        // Función para renderizar las actividades deportivas
+        function renderSportsActivities(data) {
+            const schedule = data.schedule;
+            const dates = data.dates;
+            
+            // Mapeo de días a fechas
+            const dayToDate = {
+                'Lunes': dates.monday,
+                'Martes': dates.tuesday,
+                'Miércoles': dates.wednesday,
+                'Jueves': dates.thursday,
+                'Viernes': dates.friday
+            };
+            
+            // Iconos y descripciones para diferentes tipos de actividades deportivas
+            // Usar arrays para preservar el orden (más específicas primero)
+            const sportsConfig = [
+                { keyword: 'carretones', icon: '🎯', description: 'Carrera de carretones con diseño mecatrónico.' },
+                { keyword: 'rally', icon: '🎯', description: 'Rally recreativo y deportivo que combina desafíos en equipo.' },
+                { keyword: 'voleibol', icon: '🏐', description: 'Torneo de voleibol para promover el trabajo en equipo y la competencia sana.' },
+                { keyword: 'fútbol', icon: '⚽', description: 'Partidos de fútbol para disfrutar y competir.' },
+                { keyword: 'futbol', icon: '⚽', description: 'Partidos de fútbol para disfrutar y competir.' },
+                { keyword: 'carrera', icon: '🏃', description: 'Carrera de carretones con diseño mecatrónico.' },
+                { keyword: 'deportivo', icon: '🏀', description: 'Actividades recreativas y deportivas para promover la convivencia.' }
+            ];
+            
+            // Obtener icono según el tipo
+            function getSportsIcon(event) {
+                const eventLower = event.toLowerCase();
+                for (const config of sportsConfig) {
+                    if (eventLower.includes(config.keyword)) {
+                        return config.icon;
+                    }
+                }
+                return '🏀';
+            }
+            
+            // Obtener descripción según el tipo
+            function getSportsDescription(event) {
+                const eventLower = event.toLowerCase();
+                for (const config of sportsConfig) {
+                    if (eventLower.includes(config.keyword)) {
+                        return config.description;
+                    }
+                }
+                return 'Actividades recreativas y deportivas para promover la convivencia.';
+            }
+            
+            // Palabras clave que identifican actividades deportivas
+            const sportsKeywords = [
+                'deportivo', 'voleibol', 'fútbol', 'futbol', 'carrera', 
+                'carretones', 'rally', 'encuentro', 'encuentros'
+            ];
+            
+            // Recopilar actividades deportivas
+            const sportsActivities = [];
+            const scheduleItems = [];
+            
+            schedule.forEach(day => {
+                const date = dayToDate[day.day] || '';
+                
+                day.activities.forEach(activity => {
+                    const event = activity.event.toLowerCase();
+                    
+                    // Verificar si es una actividad deportiva
+                    const isSports = sportsKeywords.some(keyword => event.includes(keyword));
+                    
+                    if (!isSports) {
+                        return; // Saltar si no es una actividad deportiva
+                    }
+                    
+                    // Excluir otras actividades específicas que no deberían aparecer
+                    const excludeKeywords = [
+                        'taller', 'conferencia', 'exhibición', 'exposición', 'poster',
+                        'inauguración', 'clausura', 'descanso', 'receso', 'comida',
+                        'callejoneada', 'rifa', 'premiación', 'plática', '100 burros',
+                        'concurso de robótica', 'póster'
+                    ];
+                    const shouldExclude = excludeKeywords.some(keyword => event.includes(keyword));
+                    
+                    if (!shouldExclude) {
+                        const eventOriginal = activity.event;
+                        sportsActivities.push({
+                            day: day.day,
+                            date: date,
+                            event: eventOriginal,
+                            time: activity.time,
+                            icon: getSportsIcon(eventOriginal),
+                            description: getSportsDescription(eventOriginal)
+                        });
+                        
+                        scheduleItems.push({
+                            day: day.day,
+                            date: date,
+                            event: eventOriginal,
+                            time: activity.time
+                        });
+                    }
+                });
+            });
+            
+            // Renderizar tarjetas de actividades deportivas
+            renderSportsCards(sportsActivities);
+            
+            // Renderizar cronograma
+            renderScheduleHTML(scheduleItems, dayToDate);
+        }
+        
+        // Función para renderizar tarjetas de actividades deportivas
+        function renderSportsCards(activities) {
+            const container = document.getElementById('sports-activities-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No hay actividades deportivas programadas en este momento.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            activities.forEach(activity => {
+                // Extraer nombre de la actividad
+                let title = activity.event;
+                
+                // Limpiar el título
+                if (title.includes('Encuentros deportivos')) {
+                    const match = title.match(/Encuentros deportivos\s*\((.+?)\)/i);
+                    if (match) {
+                        title = `${match[1]} - Eventos Deportivos`;
+                    } else {
+                        title = 'Eventos Deportivos';
+                    }
+                } else if (title.includes('Carrera de')) {
+                    title = 'Carrera de Carretones';
+                } else if (title.includes('Rally')) {
+                    title = 'Rally Deportivo';
+                }
+                
+                // Truncar título si es muy largo
+                const shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
+                
+                html += `
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">${activity.icon}</span>
+                            <h3 class="conference-title">${shortTitle}</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                ${activity.description}
+                            </div>
+                            <div class="conference-details">
+                                <h4>📅 ${activity.day} ${activity.date}</h4>
+                                <p><strong>🕒 ${activity.time}</strong></p>
+                            </div>
+                            <div class="conference-topics">
+                                <h4>🏆 Participación:</h4>
+                                <ul>
+                                    <li>Acceso libre</li>
+                                    <li>Sin registro previo</li>
+                                    <li>Ropa deportiva recomendada</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Función para renderizar el HTML del cronograma
+        function renderScheduleHTML(activities, dayToDate) {
+            const container = document.getElementById('schedule-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <strong>Cronograma de Actividades Deportivas:</strong><br>
+                    <p class="text-muted">No hay actividades deportivas programadas en este momento.</p>
+                `;
+                return;
+            }
+            
+            // Agrupar por día
+            const groupedByDay = {};
+            activities.forEach(activity => {
+                if (!groupedByDay[activity.day]) {
+                    groupedByDay[activity.day] = [];
+                }
+                groupedByDay[activity.day].push(activity);
+            });
+            
+            let html = '<strong>Cronograma de Actividades Deportivas:</strong><br>';
+            
+            Object.keys(groupedByDay).forEach(day => {
+                const date = dayToDate[day] || '';
+                const items = groupedByDay[day];
+                
+                html += `• <strong>${day} ${date}:</strong> `;
+                
+                const eventList = items.map(item => `${item.event} (${item.time})`).join(', ');
+                
+                html += eventList + '<br>';
+            });
+            
+            container.innerHTML = html;
+        }
+        
         // Función para mostrar información adicional de cada conferencia
         function showConferenceInfo(conferenceName) {
             const info = {

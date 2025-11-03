@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Conferencias - Semana de Mecatrónica 2025 - UPIIZ IPN</title>
-    <meta name="description" content="Conferencias de la Semana de Mecatrónica 2025 en la UPIIZ IPN. Charlas magistrales con expertos en mecatrónica e inteligencia artificial.">
+    <title>Talleres - Semana de Mecatrónica 2025 - UPIIZ IPN</title>
+    <meta name="description" content="Talleres de la Semana de Mecatrónica 2025 en la UPIIZ IPN. Aprende nuevas habilidades técnicas y prácticas con expertos en mecatrónica.">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -153,26 +153,20 @@
             background: #f8f9fa;
             border-radius: 8px;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .conference-details h4 {
             color: var(--ipn-guinda);
-            margin: 0 0 10px 0;
-            font-size: 0.9rem;
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
-        .conference-details ul {
+        .conference-details p {
             margin: 0;
-            padding-left: 15px;
             font-size: 0.8rem;
-        }
-        
-        .conference-details li {
-            margin: 5px 0;
             color: #555;
-            line-height: 1.3;
         }
         
         .conference-description {
@@ -186,21 +180,21 @@
         .conference-topics {
             background: #e9ecef;
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             margin-top: auto;
         }
         
         .conference-topics h4 {
             color: var(--ipn-guinda);
-            margin: 0 0 10px 0;
-            font-size: 0.9rem;
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
         .conference-topics ul {
             margin: 0;
             padding-left: 15px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         
         .conference-topics li {
@@ -540,43 +534,33 @@
     <!-- Título Unidad -->
     <div id="tituloUnidad" class="titulo_unidad">
         <div class="container p-0">
-            <h1 class="titulo_unidad_text text-center">Conferencias - Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
+            <h1 class="titulo_unidad_text text-center">Talleres - Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
         </div>
     </div>
 
     <div class="main-container">
-        <h1> Conferencias - Semana de Mecatrónica 2025</h1>
+        <h1>🔧 Talleres - Semana de Mecatrónica 2025</h1>
         
         <div class="info-box">
-            <strong>¡Aprende de los mejores expertos en mecatrónica e inteligencia artificial!</strong><br>
-            Las conferencias magistrales están diseñadas para expandir tus conocimientos con 
-            ponentes de reconocimiento internacional. ¡No te las pierdas!
+            <strong>¡Aprende haciendo!</strong><br>
+            Los talleres te permitirán desarrollar habilidades prácticas en tecnologías de vanguardia. 
+            Participa en sesiones intensivas donde conocerás técnicas avanzadas y trabajarás directamente 
+            con expertos. ¡Inscríbete temprano para asegurar tu lugar!
         </div>
 
-        <h2>🎤 Conferencias Magistrales</h2>
+        <h2>📚 Talleres Disponibles</h2>
         
-        <div class="conferences-gallery" id="conferences-container">
+        <div class="conferences-gallery" id="workshops-container">
             <div class="text-center py-4">
                 <div class="spinner-border text-guinda" role="status">
-                    <span class="visually-hidden">Cargando conferencias...</span>
+                    <span class="visually-hidden">Cargando talleres...</span>
                 </div>
-                <p class="mt-3 text-muted">Cargando conferencias...</p>
-            </div>
-        </div>
-
-        <h2>👥 Actividades Especiales</h2>
-        
-        <div class="conferences-gallery special-activities" id="special-activities-container">
-            <div class="text-center py-4">
-                <div class="spinner-border text-guinda" role="status">
-                    <span class="visually-hidden">Cargando actividades especiales...</span>
-                </div>
-                <p class="mt-3 text-muted">Cargando actividades especiales...</p>
+                <p class="mt-3 text-muted">Cargando talleres disponibles...</p>
             </div>
         </div>
 
         <div class="schedule" id="schedule-container">
-            <strong>Cronograma de Conferencias:</strong><br>
+            <strong>Cronograma de Talleres:</strong><br>
             <div class="text-center py-2">
                 <div class="spinner-border spinner-border-sm text-guinda" role="status">
                     <span class="visually-hidden">Cargando cronograma...</span>
@@ -586,12 +570,12 @@
 
         <div class="info-box">
             <strong>Información Importante:</strong><br>
-            • Todas las conferencias son de acceso gratuito<br>
-            • Se entregará constancia de participación a los asistentes<br>
-            • Las conferencias se realizarán en el auditorio principal de la UPIIZ<br>
-            • Habrá sesión de preguntas y respuestas al final de cada conferencia<br>
-            • No es necesario registro previo - acceso libre<br>
-            • Para más información, contacta a la coordinación académica
+            • Los talleres tienen cupo limitado - asegura tu lugar inscribiéndote temprano<br>
+            • Cada taller incluye materiales y certificado de participación<br>
+            • Se proporcionará todo el equipo necesario para el desarrollo de las actividades<br>
+            • Los talleres requieren asistencia completa para obtener el certificado<br>
+            • Si no estás inscrito, puedes consultar la disponibilidad en el momento<br>
+            • Para más información, contacta a la coordinación de talleres
         </div>
     </div>
 
@@ -669,66 +653,33 @@
     
     <!-- Script personalizado -->
     <script>
-        // Cargar conferencias al iniciar la página
+        // Cargar talleres al iniciar la página
         document.addEventListener('DOMContentLoaded', function() {
-            loadConferences();
+            loadWorkshops();
         });
         
-        // Función para cargar las conferencias desde el JSON
-        async function loadConferences() {
+        // Función para cargar talleres desde el JSON
+        async function loadWorkshops() {
             try {
                 const response = await fetch('Docs/Programa_2025.json');
                 if (!response.ok) {
                     throw new Error('Error al cargar el programa');
                 }
                 const data = await response.json();
-                renderConferences(data);
+                renderWorkshops(data);
             } catch (error) {
-                console.error('Error cargando conferencias:', error);
-                document.getElementById('conferences-container').innerHTML = `
+                console.error('Error cargando talleres:', error);
+                document.getElementById('workshops-container').innerHTML = `
                     <div class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Error al cargar las conferencias. Por favor, intenta recargar la página.
+                        Error al cargar los talleres. Por favor, recarga la página.
                     </div>
                 `;
             }
         }
         
-        // Iconos para diferentes tipos de conferencias
-        const iconMap = {
-            'IA': '🤖',
-            'Inteligencia Artificial': '🤖',
-            'control': '🎛️',
-            'lenguaje': '🎛️',
-            'robótica': '🤖',
-            'robot': '🤖',
-            'humanoide': '🤖',
-            'Mecatrónica': '⚙️',
-            'Diseño': '⚙️',
-            'navegación': '✈️',
-            'magnético': '✈️',
-            'Markovito': '🎓',
-            'Servicio': '🎓',
-            'Magistral': '🎓',
-            'Panel': '👩‍💼',
-            'Mujeres': '👩‍💼',
-            'Egresados': '🎓',
-            'Burros': '🎓'
-        };
-        
-        // Obtener icono según el título
-        function getIcon(title) {
-            const titleLower = title.toLowerCase();
-            for (const [key, icon] of Object.entries(iconMap)) {
-                if (titleLower.includes(key.toLowerCase())) {
-                    return icon;
-                }
-            }
-            return '🎓'; // Icono por defecto
-        }
-        
-        // Función para renderizar las conferencias
-        function renderConferences(data) {
+        // Función para renderizar los talleres y el cronograma
+        function renderWorkshops(data) {
             const schedule = data.schedule;
             const dates = data.dates;
             
@@ -741,227 +692,178 @@
                 'Viernes': dates.friday
             };
             
-            // Extraer título y ponente de una actividad de conferencia
-            function parseConference(activity) {
-                const event = activity.event;
-                
-                // Buscar si es una conferencia
-                if (event.toLowerCase().includes('conferencia:')) {
-                    const parts = event.split('Conferencia:')[1].trim();
-                    const lastDashIndex = parts.lastIndexOf(' - ');
-                    
-                    if (lastDashIndex > 0) {
-                        const title = parts.substring(0, lastDashIndex).trim();
-                        const speaker = parts.substring(lastDashIndex + 3).trim();
-                        return { title, speaker, type: 'conference' };
-                    }
-                }
-                
-                // Buscar actividades especiales
-                if (event.toLowerCase().includes('panel de mujeres')) {
-                    return { 
-                        title: 'Panel de Mujeres en la Industria Mecatrónica', 
-                        speaker: 'Panelistas profesionales',
-                        type: 'special' 
-                    };
-                }
-                
-                if (event.toLowerCase().includes('plática de egresados') || 
-                    event.toLowerCase().includes('foro egresados')) {
-                    return { 
-                        title: 'Plática de Egresados', 
-                        speaker: 'Egresados UPIIZ',
-                        type: 'special' 
-                    };
-                }
-                
-                if (event.toLowerCase().includes('100 burros dijeron') || 
-                    event.toLowerCase().includes('101 burros dijeron')) {
-                    return { 
-                        title: '100 Burros dijeron', 
-                        speaker: 'Mtro. Alberto Córdoba',
-                        type: 'special' 
-                    };
-                }
-                
-                return null;
-            }
-            
-            // Recopilar todas las conferencias y actividades especiales
-            const conferences = [];
-            const specialActivities = [];
+            // Recopilar todos los talleres únicos de todos los días
+            const allWorkshops = new Map();
             const scheduleItems = [];
             
             schedule.forEach(day => {
                 const date = dayToDate[day.day] || '';
+                
                 day.activities.forEach(activity => {
-                    const parsed = parseConference(activity);
+                    const event = activity.event;
                     
-                    if (parsed) {
-                        const item = {
-                            ...parsed,
-                            day: day.day,
-                            date: date,
-                            time: activity.time,
-                            participants: activity.Participants || '',
-                            spaces: activity.spaces || 0
-                        };
+                    // Buscar si es un taller
+                    if (event.toLowerCase().includes('taller:') && 
+                        !event.toLowerCase().includes('inicio de talleres') && 
+                        !event.toLowerCase().includes('otros talleres')) {
                         
-                        if (parsed.type === 'conference') {
-                            conferences.push(item);
-                        } else {
-                            specialActivities.push(item);
+                        // Extraer el nombre del taller (después de "Taller:")
+                        const tallerMatch = event.match(/Taller:\s*(.+?)(?:\s*-|$)/);
+                        if (tallerMatch) {
+                            const tallerName = tallerMatch[1].trim();
+                            
+                            // Si no existe en el mapa, agregarlo
+                            if (!allWorkshops.has(tallerName)) {
+                                allWorkshops.set(tallerName, {
+                                    name: tallerName,
+                                    fullDescription: event,
+                                    spaces: activity.spaces || 0
+                                });
+                            }
                         }
                         
                         // Agregar al cronograma
                         scheduleItems.push({
                             day: day.day,
                             date: date,
-                            event: activity.event,
+                            event: event,
                             time: activity.time
                         });
                     }
                 });
             });
             
-            // Renderizar conferencias magistrales
-            renderConferenceCards(conferences, 'conferences-container');
+            // Convertir a array para renderizar
+            const workshopsArray = Array.from(allWorkshops.values());
             
-            // Renderizar actividades especiales
-            renderConferenceCards(specialActivities, 'special-activities-container');
+            // Renderizar tarjetas de talleres
+            renderWorkshopCards(workshopsArray);
             
             // Renderizar cronograma
-            renderSchedule(scheduleItems, 'schedule-container', dayToDate);
+            renderScheduleHTML(scheduleItems, dayToDate);
         }
         
-        // Función para obtener la ruta de la imagen de la conferencia
-        function getConferenceImagePath(title) {
-            const imageMap = {
-                'I.A. en la Industria Automotriz': 'Docs/Conferencias/I.A. en la Industria Automotriz.jpeg',
-                'El lenguaje del control': 'Docs/Conferencias/El lenguaje del control.jpeg',
-                'De la robótica de servicio al espacio': 'Docs/Conferencias/De la robótica de servicio al espacio.jpeg',
-                'Del robot móvil al humanoide': 'Docs/Conferencias/Del robot móvil al humanoide.jpeg',
-                'Markovito: Robot de Servicio': 'Docs/Conferencias/Robot de Servicio.jpeg'
-            };
+        // Función para renderizar tarjetas de talleres
+        function renderWorkshopCards(workshops) {
+            const container = document.getElementById('workshops-container');
             
-            // Buscar coincidencia parcial
-            for (const key in imageMap) {
-                if (title.includes(key)) {
-                    return imageMap[key];
-                }
-            }
-            
-            return null; // No hay imagen disponible
-        }
-        
-        // Función para renderizar tarjetas de conferencias
-        function renderConferenceCards(items, containerId) {
-            const container = document.getElementById(containerId);
-            
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-center text-muted">No hay conferencias disponibles en este momento.</p>';
+            if (workshops.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No hay talleres disponibles en este momento.</p>';
                 return;
             }
             
             let html = '';
             
-            items.forEach(item => {
-                const imagePath = getConferenceImagePath(item.title);
-                
-                if (imagePath) {
-                    // Mostrar imagen de la conferencia
-                    html += `
-                        <div class="conference-card">
-                            <img src="${imagePath}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="window.open('${imagePath}', '_blank')">
-                        </div>
-                    `;
-                } else {
-                    // Fallback: mostrar card sin imagen
-                    const icon = getIcon(item.title);
-                    const shortTitle = item.title.length > 40 ? item.title.substring(0, 40) + '...' : item.title;
-                    
-                    html += `
-                        <div class="conference-card">
-                            <div class="conference-header">
-                                <span class="conference-icon">${icon}</span>
-                                <h3 class="conference-title">${shortTitle}</h3>
-                            </div>
-                            <div class="conference-body">
-                                <div class="conference-description">
-                                    ${item.title}
-                                </div>
-                                <div class="conference-speaker">
-                                    <h4>👨‍🏫 ${item.type === 'special' ? 'Participantes' : 'Ponente'}</h4>
-                                    <p><strong>${item.speaker}</strong></p>
-                                </div>
-                                <div class="conference-details">
-                                    <h4>📅 Evento</h4>
-                                    <ul>
-                                        <li><strong>Fecha:</strong> ${item.day} ${item.date}</li>
-                                        <li><strong>Hora:</strong> ${item.time}</li>
-                                        ${item.spaces > 0 ? `<li><strong>Espacios:</strong> ${item.spaces}</li>` : ''}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+            workshops.forEach(workshop => {
+                // Extraer ubicación si existe
+                let location = '';
+                const locationMatch = workshop.fullDescription.match(/- Ubicación:\s*(.+?)(?:\s*$)/i);
+                if (locationMatch) {
+                    location = locationMatch[1].trim();
                 }
+                
+                // Crear descripción mejorada
+                let description = 'Taller práctico e interactivo donde aprenderás técnicas de vanguardia.';
+                
+                // Personalizar descripción según el taller
+                const fullDescLower = workshop.fullDescription.toLowerCase();
+                if (fullDescLower.includes('hmi') || fullDescLower.includes('raspberry')) {
+                    description = 'Aprende a implementar interfaces hombre-máquina (HMI) utilizando Raspberry Pi y tecnologías open source.';
+                } else if (fullDescLower.includes('3d') || fullDescLower.includes('impresión')) {
+                    description = 'Domina las técnicas de diseño e impresión 3D para crear prototipos y piezas funcionales.';
+                } else if (fullDescLower.includes('pcb') || fullDescLower.includes('prototipado')) {
+                    description = 'Fabricación profesional de tarjetas PCB usando técnicas de película fotosensible.';
+                } else if (fullDescLower.includes('fundición') || fullDescLower.includes('cera perdida')) {
+                    description = 'Técnicas avanzadas de fundición investment casting para crear piezas de alta precisión en aluminio.';
+                } else if (fullDescLower.includes('empuje')) {
+                    description = 'Aprende sobre principios físicos aplicados mediante experimentos prácticos.';
+                } else if (fullDescLower.includes('resina')) {
+                    description = 'Técnicas de impresión 3D con resina para obtener acabados de alta calidad.';
+                }
+                
+                // Truncar título si es muy largo
+                const shortTitle = workshop.name.length > 50 ? workshop.name.substring(0, 47) + '...' : workshop.name;
+                
+                html += `
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">🔧</span>
+                            <h3 class="conference-title">${shortTitle}</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                ${description}
+                            </div>
+                            <div class="conference-details">
+                                <h4>📊 Cupo Disponible</h4>
+                                <p><strong>${workshop.spaces} espacios</strong></p>
+                                ${location ? `<p><strong>📍 ${location}</strong></p>` : ''}
+                            </div>
+                            <div class="conference-topics">
+                                <h4>🕒 Horario:</h4>
+                                <ul>
+                                    <li>Lunes a Jueves</li>
+                                    <li>10:45 am - 1:45 pm</li>
+                                    <li>3 horas de duración</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
             
             container.innerHTML = html;
         }
         
-        // Función para renderizar el cronograma
-        function renderSchedule(scheduleItems, containerId, dayToDate) {
-            const container = document.getElementById(containerId);
+        // Función para renderizar el HTML del cronograma
+        function renderScheduleHTML(activities, dayToDate) {
+            const container = document.getElementById('schedule-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <strong>Cronograma de Talleres:</strong><br>
+                    <p class="text-muted">No hay talleres programados en este momento.</p>
+                `;
+                return;
+            }
             
             // Agrupar por día
             const groupedByDay = {};
-            scheduleItems.forEach(item => {
-                if (!groupedByDay[item.day]) {
-                    groupedByDay[item.day] = [];
+            activities.forEach(activity => {
+                if (!groupedByDay[activity.day]) {
+                    groupedByDay[activity.day] = [];
                 }
-                groupedByDay[item.day].push(item);
+                groupedByDay[activity.day].push(activity);
             });
             
-            let html = '<strong>Cronograma de Conferencias:</strong><br>';
+            let html = '<strong>Cronograma de Talleres:</strong><br>';
             
-            Object.keys(groupedByDay).forEach(day => {
+            Object.keys(groupedByDay).sort((a, b) => {
+                const daysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+                return daysOrder.indexOf(a) - daysOrder.indexOf(b);
+            }).forEach(day => {
                 const date = dayToDate[day] || '';
                 const items = groupedByDay[day];
-                html += `• <strong>${day} ${date}:</strong> `;
                 
-                const eventList = items.map(item => {
-                    let eventText = item.event;
-                    // Limpiar el texto para mostrar solo el título de la conferencia
-                    if (eventText.includes('Conferencia:')) {
-                        const parts = eventText.split('Conferencia:')[1].trim();
-                        const lastDashIndex = parts.lastIndexOf(' - ');
-                        if (lastDashIndex > 0) {
-                            eventText = parts.substring(0, lastDashIndex).trim();
-                        }
+                html += `<strong>${day} ${date}:</strong><br>`;
+                
+                items.forEach(item => {
+                    // Extraer nombre del taller
+                    let workshopName = item.event;
+                    const match = item.event.match(/Taller:\s*(.+?)(?:\s*- Ubicación:|$)/);
+                    if (match) {
+                        workshopName = match[1].trim();
                     }
-                    return `${eventText} (${item.time})`;
-                }).join(', ');
+                    
+                    html += `&nbsp;&nbsp;&nbsp;• ${workshopName} (${item.time})<br>`;
+                });
                 
-                html += eventList + '<br>';
+                html += '<br>';
             });
             
-            container.innerHTML = html;
-        }
-        
-        // Función para mostrar información adicional de cada conferencia
-        function showConferenceInfo(conferenceName) {
-            const info = {
-                'IA en Industria 4.0': 'Explora las aplicaciones de inteligencia artificial en la transformación digital de la industria manufacturera.',
-                'Diseño Mecatrónico': 'Metodologías y mejores prácticas para el desarrollo exitoso de proyectos mecatrónicos integrados.',
-                'Navegación Magnética': 'Sistemas innovadores de navegación aérea utilizando anomalías del campo magnético terrestre.',
-                'Conferencia Magistral': 'Una visión integral del futuro de la mecatrónica y las tecnologías emergentes.',
-                'Panel Mujeres': 'Experiencias y perspectivas de mujeres profesionales en la industria mecatrónica.',
-                'Foro Egresados': 'Trayectorias profesionales y consejos de egresados exitosos de la UPIIZ.'
-            };
+            html += '<em>Nota: Los talleres se imparten de lunes a jueves. Los horarios pueden variar según disponibilidad de espacios.</em>';
             
-            alert(`${conferenceName}\n\n${info[conferenceName] || 'Información no disponible'}`);
+            container.innerHTML = html;
         }
     </script>
 </body>

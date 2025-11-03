@@ -760,13 +760,13 @@
             </div>
         </div>
 
-        <div class="schedule">
+        <div class="schedule" id="schedule-container">
             <strong>Cronograma de Competencias:</strong><br>
-            • <strong>Lunes 10 de Noviembre:</strong> Inauguración, Talleres, Eventos deportivos<br>
-            • <strong>Martes 11 de Noviembre:</strong> Conferencias, Talleres, Eventos deportivos<br>
-            • <strong>Miércoles 12 de Noviembre:</strong> Seguidor de línea femenil, Eventos deportivos<br>
-            • <strong>Jueves 13 de Noviembre:</strong> Eliminatorias seguidor PRO, Finales Robótica<br>
-            • <strong>Viernes 14 de Noviembre:</strong> "101 Burros dijeron", Premiación, Clausura
+            <div class="text-center py-2">
+                <div class="spinner-border spinner-border-sm text-guinda" role="status">
+                    <span class="visually-hidden">Cargando cronograma...</span>
+                </div>
+            </div>
         </div>
 
 
@@ -996,6 +996,131 @@
     
     <!-- Script personalizado -->
     <script>
+        // Cargar cronograma al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchedule();
+        });
+        
+        // Función para cargar el cronograma desde el JSON
+        async function loadSchedule() {
+            try {
+                const response = await fetch('Docs/Programa_2025.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar el programa');
+                }
+                const data = await response.json();
+                renderSchedule(data);
+            } catch (error) {
+                console.error('Error cargando cronograma:', error);
+                document.getElementById('schedule-container').innerHTML = `
+                    <strong>Cronograma de Competencias:</strong><br>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No se pudo cargar el cronograma. Por favor, verifica más tarde.
+                    </div>
+                `;
+            }
+        }
+        
+        // Función para renderizar el cronograma
+        function renderSchedule(data) {
+            const schedule = data.schedule;
+            const dates = data.dates;
+            
+            // Mapeo de días a fechas
+            const dayToDate = {
+                'Lunes': dates.monday,
+                'Martes': dates.tuesday,
+                'Miércoles': dates.wednesday,
+                'Jueves': dates.thursday,
+                'Viernes': dates.friday
+            };
+            
+            // Palabras clave que identifican competencias de robótica
+            const roboticsKeywords = [
+                'concurso', 'competencia', 'seguidor', 'sumo', 'boxeo', 'humanoide', 
+                'combate', 'robótica', 'carrera', 'carretones', 'finales'
+            ];
+            
+            // Palabras clave que identifican competencias académicas
+            const academicKeywords = [
+                'burros', 'trivia', 'quiz', 'preguntas'
+            ];
+            
+            // Recopilar actividades de competencias
+            const competitionActivities = [];
+            
+            schedule.forEach(day => {
+                const date = dayToDate[day.day] || '';
+                
+                day.activities.forEach(activity => {
+                    const event = activity.event.toLowerCase();
+                    
+                    // Verificar si es una competencia de robótica o académica
+                    const isRobotics = roboticsKeywords.some(keyword => event.includes(keyword));
+                    const isAcademic = academicKeywords.some(keyword => event.includes(keyword));
+                    const isCompetition = isRobotics || isAcademic;
+                    
+                    // Excluir talleres, conferencias, inauguración, clausura, etc.
+                    const excludeKeywords = [
+                        'taller', 'conferencia', 'exhibición', 'exposición', 'poster',
+                        'inauguración', 'clausura', 'descanso', 'receso', 'rally',
+                        'comida', 'callejoneada', 'rifa', 'premiación', 'plática'
+                    ];
+                    const shouldExclude = excludeKeywords.some(keyword => event.includes(keyword));
+                    
+                    if (isCompetition && !shouldExclude) {
+                        competitionActivities.push({
+                            day: day.day,
+                            date: date,
+                            event: activity.event,
+                            time: activity.time
+                        });
+                    }
+                });
+            });
+            
+            // Renderizar cronograma
+            renderScheduleHTML(competitionActivities, dayToDate);
+        }
+        
+        // Función para renderizar el HTML del cronograma
+        function renderScheduleHTML(activities, dayToDate) {
+            const container = document.getElementById('schedule-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <strong>Cronograma de Competencias:</strong><br>
+                    <p class="text-muted">No hay competencias programadas en este momento.</p>
+                `;
+                return;
+            }
+            
+            // Agrupar por día
+            const groupedByDay = {};
+            activities.forEach(activity => {
+                if (!groupedByDay[activity.day]) {
+                    groupedByDay[activity.day] = [];
+                }
+                groupedByDay[activity.day].push(activity);
+            });
+            
+            let html = '<strong>Cronograma de Competencias:</strong><br>';
+            
+            Object.keys(groupedByDay).forEach(day => {
+                const date = dayToDate[day] || '';
+                const items = groupedByDay[day];
+                
+                html += `• <strong>${day} ${date}:</strong> `;
+                
+                const eventList = items.map(item => `${item.event} (${item.time})`).join(', ');
+                
+                html += eventList + '<br>';
+            });
+            
+            container.innerHTML = html;
+        }
+        
         // ================ SISTEMA DE REGISTRO DE CONCURSOS ================
         
         // Función auxiliar para obtener la URL base de la API

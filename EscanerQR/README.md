@@ -74,10 +74,18 @@ EscanerQR/
   "fecha": "2025-09-17T21:19:49.287Z",
   "tipo": "ipn",
   "paquete": "paquete2",
-  "taller": "taller1",
+  "taller": "implementacion_de_hmi_en_raspberry_pi_con_ubuntu_y_qt",
   "valido": true
 }
 ```
+
+**Nota**: Los talleres se cargan dinámicamente desde `Docs/Programa_2025.json`. Algunos talleres disponibles son:
+- Implementación de HMI en Raspberry Pi con Ubuntu y Qt
+- Diseño e impresión 3D
+- El empuje
+- Impresión con resina
+- Fabricación de PCB con película seca fotosensible para prototipado
+- Fundición Investment Casting (técnica cera perdida)
 
 ## Modos de Operación
 

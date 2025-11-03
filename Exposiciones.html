@@ -549,86 +549,33 @@
 
         <h2>🏢 Exhibición de Empresas Visitantes</h2>
         
-        <div class="conferences-gallery">
-                    <div class="conference-card">
-                        <div class="conference-header">
-                            <span class="conference-icon">🏭</span>
-                            <h3 class="conference-title">Empresas de Tecnología</h3>
-                        </div>
-                        <div class="conference-body">
-                            <div class="conference-description">
-                                Últimas tecnologías industriales y soluciones mecatrónicas de empresas líderes.
-                            </div>
-                            <div class="conference-details">
-                                <h4>📅 Jueves 13 Nov - 1:00-3:00 pm</h4>
-                                <p><strong>📍 Área de exposiciones UPIIZ</strong></p>
-                            </div>
-                            <div class="conference-topics">
-                                <h4>🔧 Tecnologías:</h4>
-                                <ul>
-                                    <li>Automatización industrial</li>
-                                    <li>Robótica avanzada</li>
-                                    <li>IoT y conectividad</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">🎓</span>
-                    <h3 class="conference-title">Pósters Académicos</h3>
+        <div class="conferences-gallery" id="exhibitions-container">
+            <div class="text-center py-4">
+                <div class="spinner-border text-guinda" role="status">
+                    <span class="visually-hidden">Cargando exposiciones...</span>
                 </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Investigaciones y proyectos de estudiantes y académicos de la UPIIZ.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Jueves 13 Nov - 1:00-3:00 pm</h4>
-                        <p><strong>📍 Pasillos principales UPIIZ</strong></p>
-                    </div>
-                    <div class="conference-topics">
-                        <h4>📊 Áreas:</h4>
-                        <ul>
-                            <li>Proyectos de mecatrónica</li>
-                            <li>Inteligencia artificial</li>
-                            <li>Sistemas embebidos</li>
-                        </ul>
-                    </div>
-                </div>
+                <p class="mt-3 text-muted">Cargando exposiciones disponibles...</p>
             </div>
-
         </div>
 
         <h2>🎨 Exposiciones Especiales</h2>
         
-        <div class="conferences-gallery special-activities">
-
-            <div class="conference-card">
-                <div class="conference-header">
-                    <span class="conference-icon">🔬</span>
-                    <h3 class="conference-title">Laboratorios Abiertos</h3>
+        <div class="conferences-gallery special-activities" id="special-exhibitions-container">
+            <div class="text-center py-4">
+                <div class="spinner-border text-guinda" role="status">
+                    <span class="visually-hidden">Cargando exposiciones especiales...</span>
                 </div>
-                <div class="conference-body">
-                    <div class="conference-description">
-                        Visita los laboratorios especializados de la UPIIZ y conoce el equipamiento de vanguardia disponible para estudiantes.
-                    </div>
-                    <div class="conference-details">
-                        <h4>📅 Durante toda la semana</h4>
-                        <ul>
-                            <li><strong>Horarios:</strong> Consultar en cada laboratorio</li>
-                            <li><strong>Ubicación:</strong> Edificios de laboratorios UPIIZ</li>
-                        </ul>
-                    </div>
-                </div>
+                <p class="mt-3 text-muted">Cargando exposiciones especiales disponibles...</p>
             </div>
         </div>
 
-        <div class="schedule">
+        <div class="schedule" id="schedule-container">
             <strong>Cronograma de Exposiciones:</strong><br>
-            • <strong>Lunes a Miércoles:</strong> Exposiciones permanentes de proyectos estudiantiles<br>
-            • <strong>Jueves 13 de Noviembre:</strong> Exhibición de empresas, pósters académicos y rally tecnológico (1:00 pm - 3:00 pm)<br>
-            • <strong>Durante toda la semana:</strong> Laboratorios abiertos y visitas guiadas
+            <div class="text-center py-2">
+                <div class="spinner-border spinner-border-sm text-guinda" role="status">
+                    <span class="visually-hidden">Cargando cronograma...</span>
+                </div>
+            </div>
         </div>
 
         <div class="info-box">
@@ -716,6 +663,286 @@
     
     <!-- Script personalizado -->
     <script>
+        // Cargar cronograma al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchedule();
+        });
+        
+        // Función para cargar el cronograma desde el JSON
+        async function loadSchedule() {
+            try {
+                const response = await fetch('Docs/Programa_2025.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar el programa');
+                }
+                const data = await response.json();
+                renderSchedule(data);
+            } catch (error) {
+                console.error('Error cargando cronograma:', error);
+                document.getElementById('schedule-container').innerHTML = `
+                    <strong>Cronograma de Exposiciones:</strong><br>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No se pudo cargar el cronograma. Por favor, verifica más tarde.
+                    </div>
+                `;
+            }
+        }
+        
+        // Función para renderizar las exposiciones y cronograma
+        function renderSchedule(data) {
+            const schedule = data.schedule;
+            const dates = data.dates;
+            
+            // Mapeo de días a fechas
+            const dayToDate = {
+                'Lunes': dates.monday,
+                'Martes': dates.tuesday,
+                'Miércoles': dates.wednesday,
+                'Jueves': dates.thursday,
+                'Viernes': dates.friday
+            };
+            
+            // Iconos para diferentes tipos de exposiciones
+            const iconMap = {
+                'empresa': '🏭',
+                'visitante': '🏢',
+                'poster': '🎓',
+                'póster': '🎓',
+                'rally': '🔬'
+            };
+            
+            // Descripciones por defecto
+            const descriptionMap = {
+                'empresa': 'Últimas tecnologías industriales y soluciones mecatrónicas de empresas líderes.',
+                'visitante': 'Empresas líderes en mecatrónica presentando sus innovaciones y oportunidades laborales.',
+                'poster': 'Investigaciones y proyectos de estudiantes y académicos de la UPIIZ.',
+                'póster': 'Investigaciones y proyectos de estudiantes y académicos de la UPIIZ.',
+                'rally': 'Competición tecnológica con premios y retos de innovación.'
+            };
+            
+            // Obtener icono según el tipo
+            function getExhibitionIcon(event) {
+                const eventLower = event.toLowerCase();
+                for (const [key, icon] of Object.entries(iconMap)) {
+                    if (eventLower.includes(key)) {
+                        return icon;
+                    }
+                }
+                return '🎓';
+            }
+            
+            // Obtener descripción según el tipo
+            function getExhibitionDescription(event) {
+                const eventLower = event.toLowerCase();
+                for (const [key, description] of Object.entries(descriptionMap)) {
+                    if (eventLower.includes(key)) {
+                        return description;
+                    }
+                }
+                return 'Exposición especial de la Semana de Mecatrónica.';
+            }
+            
+            // Palabras clave que identifican exposiciones
+            const exhibitionKeywords = [
+                'exhibición', 'exposición', 'poster', 'póster', 'empresa', 
+                'visitante', 'rally', 'proyecto'
+            ];
+            
+            // Palabras clave para exposiciones especiales (permanentes)
+            const specialKeywords = [
+                'laboratorio', 'abierto', 'permanente'
+            ];
+            
+            // Recopilar actividades de exposiciones
+            const exhibitionActivities = [];
+            const scheduleItems = [];
+            
+            schedule.forEach(day => {
+                const date = dayToDate[day.day] || '';
+                
+                day.activities.forEach(activity => {
+                    const event = activity.event.toLowerCase();
+                    
+                    // Verificar si es una exposición
+                    const isExhibition = exhibitionKeywords.some(keyword => event.includes(keyword));
+                    const isSpecial = specialKeywords.some(keyword => event.includes(keyword));
+                    
+                    // Excluir otras actividades
+                    const excludeKeywords = [
+                        'taller', 'conferencia', 'descanso', 'receso', 'inauguración', 
+                        'clausura', 'comida', 'rifa', 'callejoneada', 'premiación', 
+                        'plática', 'concurso', 'competencia', 'evento deportivo'
+                    ];
+                    const shouldExclude = excludeKeywords.some(keyword => event.includes(keyword));
+                    
+                    if (isExhibition && !shouldExclude && !isSpecial) {
+                        const eventOriginal = activity.event;
+                        exhibitionActivities.push({
+                            day: day.day,
+                            date: date,
+                            event: eventOriginal,
+                            time: activity.time,
+                            icon: getExhibitionIcon(eventOriginal),
+                            description: getExhibitionDescription(eventOriginal)
+                        });
+                        
+                        scheduleItems.push({
+                            day: day.day,
+                            date: date,
+                            event: eventOriginal,
+                            time: activity.time
+                        });
+                    }
+                });
+            });
+            
+            // Renderizar tarjetas de exposiciones
+            renderExhibitionCards(exhibitionActivities);
+            
+            // Agregar exposición especial de Laboratorios Abiertos (siempre presente)
+            renderSpecialExhibitions();
+            
+            // Renderizar cronograma
+            renderScheduleHTML(scheduleItems, dayToDate);
+        }
+        
+        // Función para renderizar exposiciones especiales (permanentes)
+        function renderSpecialExhibitions() {
+            const container = document.getElementById('special-exhibitions-container');
+            
+            const specialExhibitions = [
+                {
+                    icon: '🔬',
+                    title: 'Laboratorios Abiertos',
+                    description: 'Visita los laboratorios especializados de la UPIIZ y conoce el equipamiento de vanguardia disponible para estudiantes.',
+                    details: {
+                        schedule: 'Durante toda la semana',
+                        location: 'Edificios de laboratorios UPIIZ',
+                        additional: 'Horarios: Consultar en cada laboratorio'
+                    }
+                }
+            ];
+            
+            let html = '';
+            
+            specialExhibitions.forEach(exhibition => {
+                html += `
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">${exhibition.icon}</span>
+                            <h3 class="conference-title">${exhibition.title}</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                ${exhibition.description}
+                            </div>
+                            <div class="conference-details">
+                                <h4>📅 ${exhibition.details.schedule}</h4>
+                                <ul>
+                                    <li><strong>Horarios:</strong> ${exhibition.details.additional}</li>
+                                    <li><strong>Ubicación:</strong> ${exhibition.details.location}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Función para renderizar tarjetas de exposiciones
+        function renderExhibitionCards(exhibitions) {
+            const container = document.getElementById('exhibitions-container');
+            
+            if (exhibitions.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No hay exposiciones programadas en este momento.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            exhibitions.forEach(exhibition => {
+                // Extraer nombre de la exposición
+                let title = exhibition.event;
+                
+                // Limpiar el título
+                if (title.includes('Exhibición de') || title.includes('Exposición de')) {
+                    const match = title.match(/(?:Exhibición|Exposición)\s+de\s+(.+?)(?:\s*[\(\-]|$)/i);
+                    if (match) {
+                        title = match[1].trim();
+                    }
+                } else if (title.includes(': ')) {
+                    const parts = title.split(': ');
+                    title = parts[0].trim();
+                }
+                
+                // Truncar título si es muy largo
+                const shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
+                
+                html += `
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">${exhibition.icon}</span>
+                            <h3 class="conference-title">${shortTitle}</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                ${exhibition.description}
+                            </div>
+                            <div class="conference-details">
+                                <h4>📅 ${exhibition.day} ${exhibition.date}</h4>
+                                <p><strong>🕒 ${exhibition.time}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Función para renderizar el HTML del cronograma
+        function renderScheduleHTML(activities, dayToDate) {
+            const container = document.getElementById('schedule-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <strong>Cronograma de Exposiciones:</strong><br>
+                    <p class="text-muted">No hay exposiciones programadas en este momento.</p>
+                `;
+                return;
+            }
+            
+            // Agrupar por día
+            const groupedByDay = {};
+            activities.forEach(activity => {
+                if (!groupedByDay[activity.day]) {
+                    groupedByDay[activity.day] = [];
+                }
+                groupedByDay[activity.day].push(activity);
+            });
+            
+            let html = '<strong>Cronograma de Exposiciones:</strong><br>';
+            
+            Object.keys(groupedByDay).forEach(day => {
+                const date = dayToDate[day] || '';
+                const items = groupedByDay[day];
+                
+                html += `• <strong>${day} ${date}:</strong> `;
+                
+                const eventList = items.map(item => `${item.event} (${item.time})`).join(', ');
+                
+                html += eventList + '<br>';
+            });
+            
+            // Agregar nota sobre laboratorios abiertos
+            html += '<br><em>Durante toda la semana: Laboratorios abiertos y visitas guiadas</em>';
+            
+            container.innerHTML = html;
+        }
+        
         // Función para mostrar información adicional de cada conferencia
         function showConferenceInfo(conferenceName) {
             const info = {

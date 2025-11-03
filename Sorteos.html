@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Conferencias - Semana de Mecatrónica 2025 - UPIIZ IPN</title>
-    <meta name="description" content="Conferencias de la Semana de Mecatrónica 2025 en la UPIIZ IPN. Charlas magistrales con expertos en mecatrónica e inteligencia artificial.">
+    <title>Sorteos - Semana de Mecatrónica 2025 - UPIIZ IPN</title>
+    <meta name="description" content="Sorteos y rifas de la Semana de Mecatrónica 2025 en la UPIIZ IPN. Participa en emocionantes sorteos con premios tecnológicos.">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -153,26 +153,20 @@
             background: #f8f9fa;
             border-radius: 8px;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .conference-details h4 {
             color: var(--ipn-guinda);
-            margin: 0 0 10px 0;
-            font-size: 0.9rem;
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
-        .conference-details ul {
+        .conference-details p {
             margin: 0;
-            padding-left: 15px;
             font-size: 0.8rem;
-        }
-        
-        .conference-details li {
-            margin: 5px 0;
             color: #555;
-            line-height: 1.3;
         }
         
         .conference-description {
@@ -186,21 +180,21 @@
         .conference-topics {
             background: #e9ecef;
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             margin-top: auto;
         }
         
         .conference-topics h4 {
             color: var(--ipn-guinda);
-            margin: 0 0 10px 0;
-            font-size: 0.9rem;
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
         .conference-topics ul {
             margin: 0;
             padding-left: 15px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         
         .conference-topics li {
@@ -540,43 +534,32 @@
     <!-- Título Unidad -->
     <div id="tituloUnidad" class="titulo_unidad">
         <div class="container p-0">
-            <h1 class="titulo_unidad_text text-center">Conferencias - Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
+            <h1 class="titulo_unidad_text text-center">Sorteos - Semana de Mecatrónica 2025 - UPIIZ IPN</h1>
         </div>
     </div>
 
     <div class="main-container">
-        <h1> Conferencias - Semana de Mecatrónica 2025</h1>
+        <h1>🎁 Sorteos y Rifas - Semana de Mecatrónica 2025</h1>
         
         <div class="info-box">
-            <strong>¡Aprende de los mejores expertos en mecatrónica e inteligencia artificial!</strong><br>
-            Las conferencias magistrales están diseñadas para expandir tus conocimientos con 
-            ponentes de reconocimiento internacional. ¡No te las pierdas!
+            <strong>¡Participa y gana premios!</strong><br>
+            Durante la Semana de Mecatrónica tendremos emocionantes sorteos y rifas con premios tecnológicos. 
+            ¡No pierdas la oportunidad de ganar! Participa en todas las actividades para aumentar tus posibilidades.
         </div>
 
-        <h2>🎤 Conferencias Magistrales</h2>
+        <h2>🎲 Sorteos Disponibles</h2>
         
-        <div class="conferences-gallery" id="conferences-container">
+        <div class="conferences-gallery" id="raffles-container">
             <div class="text-center py-4">
                 <div class="spinner-border text-guinda" role="status">
-                    <span class="visually-hidden">Cargando conferencias...</span>
+                    <span class="visually-hidden">Cargando sorteos...</span>
                 </div>
-                <p class="mt-3 text-muted">Cargando conferencias...</p>
-            </div>
-        </div>
-
-        <h2>👥 Actividades Especiales</h2>
-        
-        <div class="conferences-gallery special-activities" id="special-activities-container">
-            <div class="text-center py-4">
-                <div class="spinner-border text-guinda" role="status">
-                    <span class="visually-hidden">Cargando actividades especiales...</span>
-                </div>
-                <p class="mt-3 text-muted">Cargando actividades especiales...</p>
+                <p class="mt-3 text-muted">Cargando sorteos disponibles...</p>
             </div>
         </div>
 
         <div class="schedule" id="schedule-container">
-            <strong>Cronograma de Conferencias:</strong><br>
+            <strong>Cronograma de Sorteos:</strong><br>
             <div class="text-center py-2">
                 <div class="spinner-border spinner-border-sm text-guinda" role="status">
                     <span class="visually-hidden">Cargando cronograma...</span>
@@ -586,12 +569,12 @@
 
         <div class="info-box">
             <strong>Información Importante:</strong><br>
-            • Todas las conferencias son de acceso gratuito<br>
-            • Se entregará constancia de participación a los asistentes<br>
-            • Las conferencias se realizarán en el auditorio principal de la UPIIZ<br>
-            • Habrá sesión de preguntas y respuestas al final de cada conferencia<br>
-            • No es necesario registro previo - acceso libre<br>
-            • Para más información, contacta a la coordinación académica
+            • Todos los sorteos son gratuitos y abiertos a todos los participantes<br>
+            • Los premios se entregarán en persona durante los eventos<br>
+            • Algunos sorteos pueden tener cupo limitado - asegura tu participación<br>
+            • La participación en actividades incrementa tus oportunidades de ganar<br>
+            • Los ganadores se anunciarán públicamente durante los eventos<br>
+            • Para más información, contacta a la coordinación de sorteos
         </div>
     </div>
 
@@ -669,66 +652,33 @@
     
     <!-- Script personalizado -->
     <script>
-        // Cargar conferencias al iniciar la página
+        // Cargar sorteos al iniciar la página
         document.addEventListener('DOMContentLoaded', function() {
-            loadConferences();
+            loadRaffles();
         });
         
-        // Función para cargar las conferencias desde el JSON
-        async function loadConferences() {
+        // Función para cargar sorteos desde el JSON
+        async function loadRaffles() {
             try {
                 const response = await fetch('Docs/Programa_2025.json');
                 if (!response.ok) {
                     throw new Error('Error al cargar el programa');
                 }
                 const data = await response.json();
-                renderConferences(data);
+                renderRaffles(data);
             } catch (error) {
-                console.error('Error cargando conferencias:', error);
-                document.getElementById('conferences-container').innerHTML = `
+                console.error('Error cargando sorteos:', error);
+                document.getElementById('raffles-container').innerHTML = `
                     <div class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Error al cargar las conferencias. Por favor, intenta recargar la página.
+                        Error al cargar los sorteos. Por favor, recarga la página.
                     </div>
                 `;
             }
         }
         
-        // Iconos para diferentes tipos de conferencias
-        const iconMap = {
-            'IA': '🤖',
-            'Inteligencia Artificial': '🤖',
-            'control': '🎛️',
-            'lenguaje': '🎛️',
-            'robótica': '🤖',
-            'robot': '🤖',
-            'humanoide': '🤖',
-            'Mecatrónica': '⚙️',
-            'Diseño': '⚙️',
-            'navegación': '✈️',
-            'magnético': '✈️',
-            'Markovito': '🎓',
-            'Servicio': '🎓',
-            'Magistral': '🎓',
-            'Panel': '👩‍💼',
-            'Mujeres': '👩‍💼',
-            'Egresados': '🎓',
-            'Burros': '🎓'
-        };
-        
-        // Obtener icono según el título
-        function getIcon(title) {
-            const titleLower = title.toLowerCase();
-            for (const [key, icon] of Object.entries(iconMap)) {
-                if (titleLower.includes(key.toLowerCase())) {
-                    return icon;
-                }
-            }
-            return '🎓'; // Icono por defecto
-        }
-        
-        // Función para renderizar las conferencias
-        function renderConferences(data) {
+        // Función para renderizar los sorteos y el cronograma
+        function renderRaffles(data) {
             const schedule = data.schedule;
             const dates = data.dates;
             
@@ -741,227 +691,144 @@
                 'Viernes': dates.friday
             };
             
-            // Extraer título y ponente de una actividad de conferencia
-            function parseConference(activity) {
-                const event = activity.event;
-                
-                // Buscar si es una conferencia
-                if (event.toLowerCase().includes('conferencia:')) {
-                    const parts = event.split('Conferencia:')[1].trim();
-                    const lastDashIndex = parts.lastIndexOf(' - ');
-                    
-                    if (lastDashIndex > 0) {
-                        const title = parts.substring(0, lastDashIndex).trim();
-                        const speaker = parts.substring(lastDashIndex + 3).trim();
-                        return { title, speaker, type: 'conference' };
-                    }
-                }
-                
-                // Buscar actividades especiales
-                if (event.toLowerCase().includes('panel de mujeres')) {
-                    return { 
-                        title: 'Panel de Mujeres en la Industria Mecatrónica', 
-                        speaker: 'Panelistas profesionales',
-                        type: 'special' 
-                    };
-                }
-                
-                if (event.toLowerCase().includes('plática de egresados') || 
-                    event.toLowerCase().includes('foro egresados')) {
-                    return { 
-                        title: 'Plática de Egresados', 
-                        speaker: 'Egresados UPIIZ',
-                        type: 'special' 
-                    };
-                }
-                
-                if (event.toLowerCase().includes('100 burros dijeron') || 
-                    event.toLowerCase().includes('101 burros dijeron')) {
-                    return { 
-                        title: '100 Burros dijeron', 
-                        speaker: 'Mtro. Alberto Córdoba',
-                        type: 'special' 
-                    };
-                }
-                
-                return null;
-            }
+            // Palabras clave que identifican sorteos
+            const raffleKeywords = ['rifa', 'sorteo', '100 burros'];
             
-            // Recopilar todas las conferencias y actividades especiales
-            const conferences = [];
-            const specialActivities = [];
+            // Recopilar todos los sorteos
+            const allRaffles = [];
             const scheduleItems = [];
             
             schedule.forEach(day => {
                 const date = dayToDate[day.day] || '';
+                
                 day.activities.forEach(activity => {
-                    const parsed = parseConference(activity);
+                    const event = activity.event.toLowerCase();
                     
-                    if (parsed) {
-                        const item = {
-                            ...parsed,
-                            day: day.day,
-                            date: date,
-                            time: activity.time,
-                            participants: activity.Participants || '',
+                    // Buscar si es un sorteo/rifa
+                    const isRaffle = raffleKeywords.some(keyword => event.includes(keyword));
+                    
+                    if (isRaffle) {
+                        const eventOriginal = activity.event;
+                        allRaffles.push({
+                            name: eventOriginal,
+                            fullDescription: eventOriginal,
                             spaces: activity.spaces || 0
-                        };
+                        });
                         
-                        if (parsed.type === 'conference') {
-                            conferences.push(item);
-                        } else {
-                            specialActivities.push(item);
-                        }
-                        
-                        // Agregar al cronograma
                         scheduleItems.push({
                             day: day.day,
                             date: date,
-                            event: activity.event,
+                            event: eventOriginal,
                             time: activity.time
                         });
                     }
                 });
             });
             
-            // Renderizar conferencias magistrales
-            renderConferenceCards(conferences, 'conferences-container');
-            
-            // Renderizar actividades especiales
-            renderConferenceCards(specialActivities, 'special-activities-container');
+            // Renderizar tarjetas de sorteos
+            renderRaffleCards(allRaffles);
             
             // Renderizar cronograma
-            renderSchedule(scheduleItems, 'schedule-container', dayToDate);
+            renderScheduleHTML(scheduleItems, dayToDate);
         }
         
-        // Función para obtener la ruta de la imagen de la conferencia
-        function getConferenceImagePath(title) {
-            const imageMap = {
-                'I.A. en la Industria Automotriz': 'Docs/Conferencias/I.A. en la Industria Automotriz.jpeg',
-                'El lenguaje del control': 'Docs/Conferencias/El lenguaje del control.jpeg',
-                'De la robótica de servicio al espacio': 'Docs/Conferencias/De la robótica de servicio al espacio.jpeg',
-                'Del robot móvil al humanoide': 'Docs/Conferencias/Del robot móvil al humanoide.jpeg',
-                'Markovito: Robot de Servicio': 'Docs/Conferencias/Robot de Servicio.jpeg'
-            };
+        // Función para renderizar tarjetas de sorteos
+        function renderRaffleCards(raffles) {
+            const container = document.getElementById('raffles-container');
             
-            // Buscar coincidencia parcial
-            for (const key in imageMap) {
-                if (title.includes(key)) {
-                    return imageMap[key];
-                }
-            }
-            
-            return null; // No hay imagen disponible
-        }
-        
-        // Función para renderizar tarjetas de conferencias
-        function renderConferenceCards(items, containerId) {
-            const container = document.getElementById(containerId);
-            
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-center text-muted">No hay conferencias disponibles en este momento.</p>';
+            if (raffles.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No hay sorteos programados en este momento.</p>';
                 return;
             }
             
             let html = '';
             
-            items.forEach(item => {
-                const imagePath = getConferenceImagePath(item.title);
+            raffles.forEach(raffle => {
+                // Crear descripción mejorada
+                let description = 'Participa en este emocionante sorteo y gana premios tecnológicos.';
+                let icon = '🎲';
                 
-                if (imagePath) {
-                    // Mostrar imagen de la conferencia
-                    html += `
-                        <div class="conference-card">
-                            <img src="${imagePath}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="window.open('${imagePath}', '_blank')">
-                        </div>
-                    `;
-                } else {
-                    // Fallback: mostrar card sin imagen
-                    const icon = getIcon(item.title);
-                    const shortTitle = item.title.length > 40 ? item.title.substring(0, 40) + '...' : item.title;
-                    
-                    html += `
-                        <div class="conference-card">
-                            <div class="conference-header">
-                                <span class="conference-icon">${icon}</span>
-                                <h3 class="conference-title">${shortTitle}</h3>
-                            </div>
-                            <div class="conference-body">
-                                <div class="conference-description">
-                                    ${item.title}
-                                </div>
-                                <div class="conference-speaker">
-                                    <h4>👨‍🏫 ${item.type === 'special' ? 'Participantes' : 'Ponente'}</h4>
-                                    <p><strong>${item.speaker}</strong></p>
-                                </div>
-                                <div class="conference-details">
-                                    <h4>📅 Evento</h4>
-                                    <ul>
-                                        <li><strong>Fecha:</strong> ${item.day} ${item.date}</li>
-                                        <li><strong>Hora:</strong> ${item.time}</li>
-                                        ${item.spaces > 0 ? `<li><strong>Espacios:</strong> ${item.spaces}</li>` : ''}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                // Personalizar descripción según el tipo de sorteo
+                const fullDescLower = raffle.fullDescription.toLowerCase();
+                if (fullDescLower.includes('100 burros')) {
+                    description = 'Juego interactivo tipo "100 Mexicanos dijeron" donde pondrás a prueba tus conocimientos sobre mecatrónica.';
+                    icon = '🎯';
+                } else if (fullDescLower.includes('rifa')) {
+                    description = 'Gran rifa con premios tecnológicos. ¡Asegúrate de participar y ganar!';
+                    icon = '🎁';
                 }
+                
+                html += `
+                    <div class="conference-card">
+                        <div class="conference-header">
+                            <span class="conference-icon">${icon}</span>
+                            <h3 class="conference-title">${raffle.name}</h3>
+                        </div>
+                        <div class="conference-body">
+                            <div class="conference-description">
+                                ${description}
+                            </div>
+                            <div class="conference-details">
+                                <h4>🎁 Cupo Disponible</h4>
+                                <p><strong>${raffle.spaces} personas</strong></p>
+                            </div>
+                            <div class="conference-topics">
+                                <h4>🏆 Premios:</h4>
+                                <ul>
+                                    <li>Equipos tecnológicos</li>
+                                    <li>Dispositivos electrónicos</li>
+                                    <li>Material educativo</li>
+                                    <li>Y más sorpresas...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
             
             container.innerHTML = html;
         }
         
-        // Función para renderizar el cronograma
-        function renderSchedule(scheduleItems, containerId, dayToDate) {
-            const container = document.getElementById(containerId);
+        // Función para renderizar el HTML del cronograma
+        function renderScheduleHTML(activities, dayToDate) {
+            const container = document.getElementById('schedule-container');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <strong>Cronograma de Sorteos:</strong><br>
+                    <p class="text-muted">No hay sorteos programados en este momento.</p>
+                `;
+                return;
+            }
             
             // Agrupar por día
             const groupedByDay = {};
-            scheduleItems.forEach(item => {
-                if (!groupedByDay[item.day]) {
-                    groupedByDay[item.day] = [];
+            activities.forEach(activity => {
+                if (!groupedByDay[activity.day]) {
+                    groupedByDay[activity.day] = [];
                 }
-                groupedByDay[item.day].push(item);
+                groupedByDay[activity.day].push(activity);
             });
             
-            let html = '<strong>Cronograma de Conferencias:</strong><br>';
+            let html = '<strong>Cronograma de Sorteos:</strong><br>';
             
-            Object.keys(groupedByDay).forEach(day => {
+            Object.keys(groupedByDay).sort((a, b) => {
+                const daysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+                return daysOrder.indexOf(a) - daysOrder.indexOf(b);
+            }).forEach(day => {
                 const date = dayToDate[day] || '';
                 const items = groupedByDay[day];
-                html += `• <strong>${day} ${date}:</strong> `;
                 
-                const eventList = items.map(item => {
-                    let eventText = item.event;
-                    // Limpiar el texto para mostrar solo el título de la conferencia
-                    if (eventText.includes('Conferencia:')) {
-                        const parts = eventText.split('Conferencia:')[1].trim();
-                        const lastDashIndex = parts.lastIndexOf(' - ');
-                        if (lastDashIndex > 0) {
-                            eventText = parts.substring(0, lastDashIndex).trim();
-                        }
-                    }
-                    return `${eventText} (${item.time})`;
-                }).join(', ');
+                html += `<strong>${day} ${date}:</strong><br>`;
                 
-                html += eventList + '<br>';
+                items.forEach(item => {
+                    html += `&nbsp;&nbsp;&nbsp;• ${item.event} (${item.time})<br>`;
+                });
+                
+                html += '<br>';
             });
             
             container.innerHTML = html;
-        }
-        
-        // Función para mostrar información adicional de cada conferencia
-        function showConferenceInfo(conferenceName) {
-            const info = {
-                'IA en Industria 4.0': 'Explora las aplicaciones de inteligencia artificial en la transformación digital de la industria manufacturera.',
-                'Diseño Mecatrónico': 'Metodologías y mejores prácticas para el desarrollo exitoso de proyectos mecatrónicos integrados.',
-                'Navegación Magnética': 'Sistemas innovadores de navegación aérea utilizando anomalías del campo magnético terrestre.',
-                'Conferencia Magistral': 'Una visión integral del futuro de la mecatrónica y las tecnologías emergentes.',
-                'Panel Mujeres': 'Experiencias y perspectivas de mujeres profesionales en la industria mecatrónica.',
-                'Foro Egresados': 'Trayectorias profesionales y consejos de egresados exitosos de la UPIIZ.'
-            };
-            
-            alert(`${conferenceName}\n\n${info[conferenceName] || 'Información no disponible'}`);
         }
     </script>
 </body>
