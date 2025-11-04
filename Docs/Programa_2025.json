@@ -21,6 +21,7 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 14},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fundición Investment Casting (técnica cera perdida) - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: taller de prueba borrar - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
                 {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
                 {"time": "2:00 pm - 4:00 pm", "event": "Encuentros deportivos (Voleibol)", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
