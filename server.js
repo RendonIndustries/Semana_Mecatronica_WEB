@@ -1073,7 +1073,7 @@ app.post('/api/pagos', (req, res) => {
         // Montos fijos por tipo de paquete
         const montos = {
             'paquete1': 150.00,
-            'paquete2': 250.00
+            'paquete2': 350.00
         };
         
         const monto = montos[tipoPaquete];

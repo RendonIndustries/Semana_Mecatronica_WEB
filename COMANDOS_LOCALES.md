@@ -45,7 +45,7 @@ node server.js
 
 **Ejemplo de Pagos:**
 - **ID:** `PAY001` | **Paquete:** `paquete1` | **Monto:** `150.00`
-- **ID:** `PAY002` | **Paquete:** `paquete2` | **Monto:** `250.00`
+- **ID:** `PAY002` | **Paquete:** `paquete2` | **Monto:** `350.00`
 - **ID:** `PAY003` | **Paquete:** `paquete1` | **Monto:** `150.00`
 
 ### 2. **Probar Registro con Pago**

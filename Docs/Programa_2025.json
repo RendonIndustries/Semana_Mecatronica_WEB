@@ -21,6 +21,9 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 14},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fundición Investment Casting (técnica cera perdida) - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Dimensionamiento de sistemas fotovoltaicos urbanos - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
                 {"time": "2:00 pm - 4:00 pm", "event": "Encuentros deportivos (Voleibol)", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
@@ -38,6 +41,9 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fundición Investment Casting (técnica cera perdida) - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Dimensionamiento de sistemas fotovoltaicos urbanos - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
                 {"time": "2:00 pm - 4:00 pm", "event": "Encuentros deportivos (Fútbol)", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
@@ -54,6 +60,9 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fundición Investment Casting (técnica cera perdida) - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Dimensionamiento de sistemas fotovoltaicos urbanos - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "10:45 am - 1:45 pm", "event": "Otros talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
                 {"time": "1:00 pm", "event": "Carrera de Carretones", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
                 {"time": "1:00 pm", "event": "Concurso de robótica", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
@@ -70,6 +79,9 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Impresión con resina - Ubicación: Laboratorio de Química 2", "Participants": "Alumnos, académicos, docentes", "spaces": 25},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Dimensionamiento de sistemas fotovoltaicos urbanos - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
+                {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "11:30 am - 12:15 pm", "event": "Plática de egresados", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
                 {"time": "1:00 pm - 2:00 pm", "event": "Rally", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
