@@ -417,7 +417,7 @@
                                     </h3>
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Nota:</strong> Solo puedes seleccionar un taller. Si no tienes código de registro, solo tendrás acceso al taller seleccionado.
+                                        <strong>Nota:</strong> Selecciona una opción: si eres Staff o miembro del Club de Robótica UPIIZ, selecciona la opción correspondiente. Si eres participante, selecciona un taller. Solo puedes seleccionar una opción. Si no tienes código de registro, solo tendrás acceso al taller seleccionado.
                                     </div>
                                 </div>
                             </div>
@@ -653,12 +653,46 @@
         function renderWorkshopCards(workshops) {
             const container = document.getElementById('workshops-container');
             
-            if (workshops.length === 0) {
-                container.innerHTML = '<p class="text-center text-muted">No hay talleres disponibles en este momento.</p>';
-                return;
+            let html = '';
+            
+            // Agregar opciones especiales para staff y club de robótica
+            html += '<div class="row mb-3">';
+            html += `
+                <div class="col-md-6">
+                    <div class="workshop-item">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="taller_staff" name="taller" value="soy_staff">
+                            <label class="form-check-label" for="taller_staff">
+                                <strong>Soy Staff</strong>
+                                <br><small class="text-muted">Personal de organización</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="workshop-item">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="taller_club_robotica" name="taller" value="soy_club_de_robotica_upiiz">
+                            <label class="form-check-label" for="taller_club_robotica">
+                                <strong>Soy Club de Robótica UPIIZ</strong>
+                                <br><small class="text-muted">Miembro del club</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+            html += '</div>';
+            
+            // Separador visual
+            if (workshops.length > 0) {
+                html += '<hr class="my-4">';
+                html += '<h5 class="mb-3">Talleres disponibles:</h5>';
             }
             
-            let html = '';
+            if (workshops.length === 0) {
+                container.innerHTML = html + '<p class="text-center text-muted">No hay talleres disponibles en este momento.</p>';
+                return;
+            }
             
             // Organizar talleres en filas de 2
             for (let i = 0; i < workshops.length; i += 2) {
