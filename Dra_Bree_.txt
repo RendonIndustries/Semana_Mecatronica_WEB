@@ -1,0 +1,41 @@
+LISTA DE PONENTES - SEMANA DE MECATRÓNICA 2025
+RECONOCIMIENTOS
+
+================================================================================
+
+1. Dr. José María Celaya Padilla
+   Fecha: 10 de Noviembre de 2025 (Lunes)
+   Conferencia: I.A. en la Industria Automotriz
+
+================================================================================
+
+2. Dr. Luis Tupak Aguilar Bustos
+   Institución: CITEDI IPN
+   Fecha: 11 de Noviembre de 2025 (Martes)
+   Conferencia: El lenguaje del control: cómo los ingenieros gobiernan el movimiento, la vida y la energía
+
+================================================================================
+
+3. Dr. Héctor Simón Vargas Martínez
+   Institución: Profesor Investigador de UPAEP
+   Fecha: 12 de Noviembre de 2025 (Miércoles)
+   Conferencia: De la robótica de servicio al espacio: integración mecatrónica para sistemas autónomos terrestres y espaciales
+
+================================================================================
+
+4. Dr. Marco Antonio Negrete Villanueva
+   Fecha: 13 de Noviembre de 2025 (Jueves)
+   Conferencia: Del robot móvil al humanoide: desafíos mecatrónicos en la locomoción, percepción y control de robots bípedos
+
+================================================================================
+
+5. Dr. Luis Enrique Sucar Succar
+   Fecha: 14 de Noviembre de 2025 (Viernes)
+   Conferencia: Markovito: Robot de Servicio
+
+================================================================================
+
+TOTAL DE PONENTES: 5
+
+================================================================================
+
