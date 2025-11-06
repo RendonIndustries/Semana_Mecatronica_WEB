@@ -414,7 +414,7 @@
                                     </h3>
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Nota:</strong> Selecciona una opción: si eres Staff o miembro del Club de Robótica UPIIZ, selecciona la opción correspondiente. Si eres participante, selecciona un taller. Solo puedes seleccionar una opción. Si no tienes código de registro, solo tendrás acceso al taller seleccionado.
+                                        <strong>Nota:</strong> Selecciona una opción: si eres Staff, miembro del Club de Robótica UPIIZ, o solo participas en concursos de robótica, selecciona la opción correspondiente. Si eres participante en talleres, selecciona un taller. Solo puedes seleccionar una opción. Si no tienes código de registro, solo tendrás acceso al taller seleccionado.
                                     </div>
                                 </div>
                             </div>
@@ -652,10 +652,10 @@
             
             let html = '';
             
-            // Agregar opciones especiales para staff y club de robótica
+            // Agregar opciones especiales para staff, club de robótica y solo concursos
             html += '<div class="row mb-3">';
             html += `
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="workshop-item">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="taller_staff" name="taller" value="soy_staff">
@@ -666,13 +666,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="workshop-item">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="taller_club_robotica" name="taller" value="soy_club_de_robotica_upiiz">
                             <label class="form-check-label" for="taller_club_robotica">
                                 <strong>Soy Club de Robótica UPIIZ</strong>
                                 <br><small class="text-muted">Miembro del club</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="workshop-item">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="taller_solo_concursos" name="taller" value="solo_concursos_de_robotica">
+                            <label class="form-check-label" for="taller_solo_concursos">
+                                <strong>Solo Concursos de Robótica</strong>
+                                <br><small class="text-muted">Solo participo en concursos</small>
                             </label>
                         </div>
                     </div>
