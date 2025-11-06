@@ -957,15 +957,19 @@
                     // Verificar si la estructura es la esperada
                     const participante = registro.participante || registro;
                     
+                    // Obtener talla directamente del registro o del participante
+                    const talla = registro.tallaPlayera || participante.tallaPlayera || 'N/A';
+                    const tallaBadge = talla !== 'N/A' ? `<span class="badge bg-primary">${talla}</span>` : '<span class="text-muted">N/A</span>';
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><small>${registro.id.substring(0, 8)}...</small></td>
-                        <td>${participante.nombre || 'N/A'}</td>
-                        <td>${participante.email || 'N/A'}</td>
-                        <td><span class="badge ${participante.tipoParticipante === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${participante.tipoParticipante === 'ipn' ? 'IPN' : 'Externo'}</span></td>
-                        <td><span class="badge ${participante.paquete === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${participante.paquete || 'N/A'}</span></td>
-                        <td><span class="badge bg-info">${participante.taller || 'N/A'}</span></td>
-                        <td>${participante.tallaPlayera || 'N/A'}</td>
+                        <td>${registro.nombre || participante.nombre || 'N/A'}</td>
+                        <td>${registro.email || participante.email || 'N/A'}</td>
+                        <td><span class="badge ${(registro.tipo || participante.tipoParticipante) === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${(registro.tipo || participante.tipoParticipante) === 'ipn' ? 'IPN' : 'Externo'}</span></td>
+                        <td><span class="badge ${(registro.paquete || participante.paquete) === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${registro.paquete || participante.paquete || 'N/A'}</span></td>
+                        <td><span class="badge bg-info">${registro.taller || participante.taller || 'N/A'}</span></td>
+                        <td>${tallaBadge}</td>
                         <td>
                             <button class="btn btn-sm btn-warning" onclick="editarUsuario('${registro.id}')">
                                 <i class="fas fa-edit"></i>
