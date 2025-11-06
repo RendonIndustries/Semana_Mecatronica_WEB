@@ -82,7 +82,7 @@
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
                 {"time": "10:45 am - 1:45 pm", "event": "Taller: IA y Sensores: del Arduino al Aprendizaje Automático - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
-                {"time": "11:30 am - 12:15 pm", "event": "Plática de egresados", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
+                {"time": "11:30 am", "event": "Mesa de egresados", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
                 {"time": "1:00 pm - 2:00 pm", "event": "Rally", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
         },
