@@ -73,15 +73,6 @@
             "activities": [
                 {"time": "9:30 am - 10:30 am", "event": "Conferencia: Del robot móvil al humanoide: desafíos mecatrónicos en la locomoción, percepción y control de robots bípedos - Dr. Marco Antonio Negrete Villanueva", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
                 {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
-                {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: Mantenimiento Automotriz - Ubicación: Laboratorio de Cómputo", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: Diseño e impresión 3D - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: El empuje - Ubicación: Laboratorio de Física", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: Fabricación de PCB con película seca fotosensible para prototipado - Ubicación: Laboratorio de Electrónica", "Participants": "Alumnos, académicos, docentes", "spaces": 15},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: Dimensionamiento de sistemas fotovoltaicos urbanos - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: Tecnologías bioenergéticas - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller básico de microhidráulica: potencia y precisión en sistemas a pequeña escala - Ubicación: En línea", "Participants": "Alumnos, académicos, docentes", "spaces": 50},
-                {"time": "10:45 am - 1:45 pm", "event": "Taller: IA y Sensores: del Arduino al Aprendizaje Automático - Ubicación: Por definir", "Participants": "Alumnos, académicos, docentes", "spaces": 30},
                 {"time": "11:30 am - 12:15 pm", "event": "Mesa de egresados - Conduce: M. en I. Rafael Flores Pinedo", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
                 {"time": "1:00 pm - 2:00 pm", "event": "Rally", "Participants": "Alumnos, académicos, docentes", "spaces": 0}
             ]
