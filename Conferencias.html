@@ -744,9 +744,10 @@
             // Extraer título y ponente de una actividad de conferencia
             function parseConference(activity) {
                 const event = activity.event;
+                const eventLower = event.toLowerCase();
                 
                 // Buscar si es una conferencia
-                if (event.toLowerCase().includes('conferencia:')) {
+                if (eventLower.includes('conferencia:')) {
                     const parts = event.split('Conferencia:')[1].trim();
                     const lastDashIndex = parts.lastIndexOf(' - ');
                     
@@ -766,8 +767,22 @@
                     };
                 }
                 
-                if (event.toLowerCase().includes('plática de egresados') || 
-                    event.toLowerCase().includes('foro egresados')) {
+                if (eventLower.includes('mesa de egresados')) {
+                    let speaker = 'Egresados UPIIZ';
+                    const conduceIndex = event.indexOf('Conduce:');
+                    if (conduceIndex >= 0) {
+                        speaker = event.substring(conduceIndex + 'Conduce:'.length).trim();
+                    }
+                    
+                    return { 
+                        title: 'Mesa de Egresados', 
+                        speaker,
+                        type: 'special' 
+                    };
+                }
+                
+                if (eventLower.includes('plática de egresados') || 
+                    eventLower.includes('foro egresados')) {
                     return { 
                         title: 'Plática de Egresados', 
                         speaker: 'Egresados UPIIZ',
@@ -775,8 +790,8 @@
                     };
                 }
                 
-                if (event.toLowerCase().includes('100 burros dijeron') || 
-                    event.toLowerCase().includes('101 burros dijeron')) {
+                if (eventLower.includes('100 burros dijeron') || 
+                    eventLower.includes('101 burros dijeron')) {
                     return { 
                         title: '100 Burros dijeron', 
                         speaker: 'Mtro. Alberto Córdoba',
@@ -841,7 +856,8 @@
                 'El lenguaje del control': 'Docs/Conferencias/El lenguaje del control.jpeg',
                 'De la robótica de servicio al espacio': 'Docs/Conferencias/De la robótica de servicio al espacio.jpeg',
                 'Del robot móvil al humanoide': 'Docs/Conferencias/Del robot móvil al humanoide.jpeg',
-                'Markovito: Robot de Servicio': 'Docs/Conferencias/Robot de Servicio.jpeg'
+                'Markovito: Robot de Servicio': 'Docs/Conferencias/Robot de Servicio.jpeg',
+                'Mesa de Egresados': 'Poster Egresados.png'
             };
             
             // Buscar coincidencia parcial
