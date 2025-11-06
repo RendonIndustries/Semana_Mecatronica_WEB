@@ -209,6 +209,131 @@
         .result-warning {
             color: #ffc107;
         }
+        
+        /* Estilos para el modal de administración */
+        #adminModal .modal-dialog {
+            max-width: 95vw;
+            width: 95vw;
+        }
+        
+        @media (min-width: 1200px) {
+            #adminModal .modal-dialog {
+                max-width: 90vw;
+                width: 90vw;
+            }
+        }
+        
+        /* Estilos para la tabla de usuarios */
+        #adminModal .table-responsive {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        #adminModal .table {
+            table-layout: auto;
+            width: 100%;
+            margin-bottom: 0;
+        }
+        
+        #adminModal .table th,
+        #adminModal .table td {
+            white-space: normal;
+            word-wrap: break-word;
+            vertical-align: middle;
+            padding: 0.75rem;
+        }
+        
+        /* Ajustes específicos por columna */
+        #adminModal .table th:nth-child(1),
+        #adminModal .table td:nth-child(1) {
+            width: 10%;
+            min-width: 80px;
+        }
+        
+        #adminModal .table th:nth-child(2),
+        #adminModal .table td:nth-child(2) {
+            width: 15%;
+            min-width: 150px;
+        }
+        
+        #adminModal .table th:nth-child(3),
+        #adminModal .table td:nth-child(3) {
+            width: 18%;
+            min-width: 180px;
+        }
+        
+        #adminModal .table th:nth-child(4),
+        #adminModal .table td:nth-child(4) {
+            width: 8%;
+            min-width: 80px;
+        }
+        
+        #adminModal .table th:nth-child(5),
+        #adminModal .table td:nth-child(5) {
+            width: 10%;
+            min-width: 100px;
+        }
+        
+        #adminModal .table th:nth-child(6),
+        #adminModal .table td:nth-child(6) {
+            width: 20%;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        
+        #adminModal .table th:nth-child(7),
+        #adminModal .table td:nth-child(7) {
+            width: 8%;
+            min-width: 70px;
+        }
+        
+        #adminModal .table th:nth-child(8),
+        #adminModal .table td:nth-child(8) {
+            width: 11%;
+            min-width: 90px;
+        }
+        
+        /* Asegurar que el texto del taller se ajuste */
+        #adminModal .table td:nth-child(6) {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        #adminModal .table td:nth-child(6) .text-break {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.4;
+        }
+        
+        /* Badges más compactos */
+        #adminModal .table .badge {
+            white-space: nowrap;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            #adminModal .modal-dialog {
+                max-width: 100vw;
+                width: 100vw;
+                margin: 0;
+            }
+            
+            #adminModal .table-responsive {
+                max-height: 60vh;
+            }
+            
+            #adminModal .table th,
+            #adminModal .table td {
+                font-size: 0.85rem;
+                padding: 0.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -961,14 +1086,24 @@
                     const talla = registro.tallaPlayera || participante.tallaPlayera || 'N/A';
                     const tallaBadge = talla !== 'N/A' ? `<span class="badge bg-primary">${talla}</span>` : '<span class="text-muted">N/A</span>';
                     
+                    // Obtener taller y formatearlo para que se ajuste
+                    const taller = registro.taller || participante.taller || 'N/A';
+                    // Reemplazar guiones bajos por espacios y capitalizar
+                    const tallerFormateado = taller !== 'N/A' 
+                        ? taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                        : 'N/A';
+                    const tallerDisplay = taller !== 'N/A' 
+                        ? `<small class="text-break">${tallerFormateado}</small>` 
+                        : '<span class="text-muted">N/A</span>';
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><small>${registro.id.substring(0, 8)}...</small></td>
                         <td>${registro.nombre || participante.nombre || 'N/A'}</td>
-                        <td>${registro.email || participante.email || 'N/A'}</td>
+                        <td><small>${registro.email || participante.email || 'N/A'}</small></td>
                         <td><span class="badge ${(registro.tipo || participante.tipoParticipante) === 'ipn' ? 'bg-primary' : 'bg-secondary'}">${(registro.tipo || participante.tipoParticipante) === 'ipn' ? 'IPN' : 'Externo'}</span></td>
                         <td><span class="badge ${(registro.paquete || participante.paquete) === 'ninguno' ? 'bg-secondary' : 'bg-success'}">${registro.paquete || participante.paquete || 'N/A'}</span></td>
-                        <td><span class="badge bg-info">${registro.taller || participante.taller || 'N/A'}</span></td>
+                        <td>${tallerDisplay}</td>
                         <td>${tallaBadge}</td>
                         <td>
                             <button class="btn btn-sm btn-warning" onclick="editarUsuario('${registro.id}')">
