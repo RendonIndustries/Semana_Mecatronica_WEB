@@ -109,6 +109,37 @@ function guardarAsistencias(datos) {
     }
 }
 
+function normalizarTextoClave(texto) {
+    if (!texto || typeof texto !== 'string') {
+        return '';
+    }
+
+    return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+}
+
+function generarClaveConferencia({ conferenciaId, conferenciaNombre, conferenciaDia, horarioOriginal }) {
+    if (conferenciaId && typeof conferenciaId === 'string' && conferenciaId.trim() !== '') {
+        return normalizarTextoClave(conferenciaId.trim());
+    }
+
+    const partes = [
+        normalizarTextoClave(conferenciaDia),
+        normalizarTextoClave(conferenciaNombre),
+        normalizarTextoClave(horarioOriginal)
+    ].filter(Boolean);
+
+    if (partes.length === 0) {
+        return 'general';
+    }
+
+    return partes.join('_').replace(/_+/g, '_');
+}
+
 // Función para cargar pagos
 function cargarPagos() {
     try {
@@ -533,7 +564,20 @@ app.get('/api/qr-data/:id', (req, res) => {
 // API para registrar asistencia
 app.post('/api/asistencia', (req, res) => {
     try {
-        const { id, tipo, taller } = req.body;
+        const {
+            id,
+            tipo,
+            taller,
+            conferenciaId,
+            conferenciaNombre,
+            horaInicio,
+            horaFin,
+            ventanaInicio,
+            ventanaFin,
+            conferenciaDia,
+            conferenciaFechaTexto,
+            horarioOriginal
+        } = req.body;
         
         if (!id || !tipo) {
             return res.status(400).json({
@@ -560,20 +604,102 @@ app.post('/api/asistencia', (req, res) => {
         // Verificar si ya existe la asistencia
         let yaRegistrado = false;
         let mensaje = '';
+        let conferenciaClave = null;
+        let nombreConferenciaEfectivo = null;
         
         if (tipo === 'conferencias') {
-            yaRegistrado = asistenciasData.asistencias.conferencias.some(a => a.id === id);
+            if (!Array.isArray(asistenciasData.asistencias.conferencias)) {
+                asistenciasData.asistencias.conferencias = [];
+            }
+
+            // Normalizar asistencias previas sin identificador específico
+            asistenciasData.asistencias.conferencias = asistenciasData.asistencias.conferencias.map(item => {
+                if (item && typeof item === 'object') {
+                    const claveNormalizada = generarClaveConferencia({
+                        conferenciaId: item.conferenciaId,
+                        conferenciaNombre: item.conferenciaNombre,
+                        conferenciaDia: item.conferenciaDia,
+                        horarioOriginal: item.horarioOriginal
+                    });
+
+                    return {
+                        ...item,
+                        conferenciaId: claveNormalizada || 'general',
+                        conferenciaNombre: item.conferenciaNombre || 'Conferencias Generales'
+                    };
+                }
+                return item;
+            });
+
+            conferenciaClave = generarClaveConferencia({
+                conferenciaId,
+                conferenciaNombre,
+                conferenciaDia,
+                horarioOriginal
+            });
+
+            nombreConferenciaEfectivo = (() => {
+                if (typeof conferenciaNombre === 'string' && conferenciaNombre.trim() !== '') {
+                    return conferenciaNombre.trim();
+                }
+
+                const existente = asistenciasData.asistencias.conferencias.find(a => {
+                    const keyExistente = generarClaveConferencia({
+                        conferenciaId: a.conferenciaId,
+                        conferenciaNombre: a.conferenciaNombre,
+                        conferenciaDia: a.conferenciaDia,
+                        horarioOriginal: a.horarioOriginal
+                    }) || 'general';
+
+                    return keyExistente === conferenciaClave && a.conferenciaNombre;
+                });
+
+                if (existente && existente.conferenciaNombre) {
+                    return existente.conferenciaNombre;
+                }
+
+                if (typeof conferenciaDia === 'string' && typeof horarioOriginal === 'string' &&
+                    conferenciaDia.trim() !== '' && horarioOriginal.trim() !== '') {
+                    return `${conferenciaDia.trim()} ${horarioOriginal.trim()}`;
+                }
+
+                return 'Conferencias';
+            })();
+
+            yaRegistrado = asistenciasData.asistencias.conferencias.some(a => {
+                const key = generarClaveConferencia({
+                    conferenciaId: a.conferenciaId,
+                    conferenciaNombre: a.conferenciaNombre,
+                    conferenciaDia: a.conferenciaDia,
+                    horarioOriginal: a.horarioOriginal
+                }) || 'general';
+                return a.id === id && key === conferenciaClave;
+            });
+
             if (!yaRegistrado) {
                 asistenciasData.asistencias.conferencias.push({
                     id: id,
                     nombre: registro.participante.nombre,
                     email: registro.participante.email,
                     fecha: ahora,
-                    tipo: 'conferencias'
+                    tipo: 'conferencias',
+                    conferenciaId: conferenciaClave,
+                    conferenciaNombre: nombreConferenciaEfectivo,
+                    horaInicio: horaInicio || null,
+                    horaFin: horaFin || null,
+                    ventanaInicio: ventanaInicio || null,
+                    ventanaFin: ventanaFin || null,
+                    conferenciaDia: conferenciaDia || null,
+                    conferenciaFechaTexto: conferenciaFechaTexto || null,
+                    horarioOriginal: horarioOriginal || null
                 });
-                mensaje = 'Asistencia a conferencias registrada exitosamente';
+                mensaje = nombreConferenciaEfectivo && nombreConferenciaEfectivo !== 'Conferencias'
+                    ? `Asistencia a "${nombreConferenciaEfectivo}" registrada exitosamente`
+                    : 'Asistencia a conferencias registrada exitosamente';
             } else {
-                mensaje = 'Ya se había registrado la asistencia a conferencias';
+                mensaje = nombreConferenciaEfectivo && nombreConferenciaEfectivo !== 'Conferencias'
+                    ? `Ya se había registrado la asistencia a "${nombreConferenciaEfectivo}"`
+                    : 'Ya se había registrado la asistencia a conferencias';
             }
         } else if (tipo === 'talleres') {
             if (!taller) {
@@ -621,7 +747,9 @@ app.post('/api/asistencia', (req, res) => {
                     nombre: registro.participante.nombre,
                     tipo: tipo,
                     taller: taller || null,
-                    fecha: ahora
+                    fecha: ahora,
+                    conferenciaId: tipo === 'conferencias' ? conferenciaClave : conferenciaId || null,
+                    conferenciaNombre: tipo === 'conferencias' ? nombreConferenciaEfectivo : conferenciaNombre || null
                 }
             });
         } else {

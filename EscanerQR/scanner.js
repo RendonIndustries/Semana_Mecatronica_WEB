@@ -53,6 +53,8 @@ class QRScanner {
         
         if (this.currentMode === 'talleres' && this.currentOptions && this.currentOptions.tallerName) {
             title = `Pase de Lista - ${this.currentOptions.tallerName}`;
+        } else if (this.currentMode === 'conferencias' && this.currentOptions && this.currentOptions.conferenciaNombre) {
+            title = `Pase de Lista - ${this.currentOptions.conferenciaNombre}`;
         } else {
             const titles = {
                 'conferencias': 'Pase de Lista - Conferencias',
@@ -143,11 +145,29 @@ class QRScanner {
             let response;
             let endpoint;
             let body;
+            const conferenciaDetalle = (this.currentMode === 'conferencias' && this.currentOptions?.conferenciaNombre)
+                ? `\nConferencia: ${this.currentOptions.conferenciaNombre}`
+                : '';
+            const conferenciaHorario = (this.currentMode === 'conferencias' && this.currentOptions?.horarioOriginal)
+                ? `\nHorario: ${this.currentOptions.horarioOriginal}`
+                : '';
             
             switch (this.currentMode) {
                 case 'conferencias':
                     endpoint = '../api/asistencia';
-                    body = { id: id, tipo: 'conferencias' };
+                    body = {
+                        id: id,
+                        tipo: 'conferencias',
+                        conferenciaId: this.currentOptions?.conferenciaId,
+                        conferenciaNombre: this.currentOptions?.conferenciaNombre,
+                        conferenciaDia: this.currentOptions?.conferenciaDia,
+                        conferenciaFechaTexto: this.currentOptions?.conferenciaFechaTexto,
+                        horarioOriginal: this.currentOptions?.horarioOriginal,
+                        horaInicio: this.currentOptions?.horaInicio,
+                        horaFin: this.currentOptions?.horaFin,
+                        ventanaInicio: this.currentOptions?.ventanaInicio,
+                        ventanaFin: this.currentOptions?.ventanaFin
+                    };
                     break;
                     
                 case 'talleres':
@@ -193,10 +213,10 @@ class QRScanner {
                 // Mostrar resultado según el tipo
                 if (result.yaRegistrado || result.yaEntregado) {
                     this.showResult('warning', 'Ya Procesado', 
-                        `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
+                        `${result.message}${conferenciaDetalle}${conferenciaHorario}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
                 } else {
                     this.showResult('success', 'Procesado Exitosamente', 
-                        `${result.message}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
+                        `${result.message}${conferenciaDetalle}${conferenciaHorario}\n\n${nombre}\nTipo: ${tipo === 'ipn' ? 'Estudiante IPN' : 'Externo'}\nPaquete: ${paquete}`);
                 }
             } else {
                 // Manejar error específico de taller incorrecto
@@ -285,13 +305,20 @@ class QRScanner {
 
 // Instancia global del escáner
 const qrScanner = new QRScanner();
+let conferenciasDisponibles = [];
 
 // Funciones globales para compatibilidad
 function iniciarEscaneo(mode) {
-    if (mode === 'talleres') {
-        mostrarSeleccionTaller();
-    } else {
-        qrScanner.init(mode);
+    switch (mode) {
+        case 'talleres':
+            mostrarSeleccionTaller();
+            break;
+        case 'conferencias':
+            mostrarSeleccionConferencia();
+            break;
+        default:
+            qrScanner.init(mode);
+            break;
     }
 }
 
@@ -395,6 +422,220 @@ function seleccionarTaller(taller, tallerName) {
     
     // Iniciar escaneo con el taller seleccionado
     qrScanner.init('talleres', { taller: taller, tallerName: tallerName });
+}
+
+// Función para mostrar selección de conferencias
+async function mostrarSeleccionConferencia() {
+    try {
+        const response = await fetch('../Docs/Programa_2025.json');
+        if (!response.ok) {
+            throw new Error('No se pudo cargar el programa de conferencias.');
+        }
+        const data = await response.json();
+        const dayKeys = {
+            'Lunes': 'monday',
+            'Martes': 'tuesday',
+            'Miércoles': 'wednesday',
+            'Miercoles': 'wednesday',
+            'Jueves': 'thursday',
+            'Viernes': 'friday',
+            'Sábado': 'saturday',
+            'Sabado': 'saturday',
+            'Domingo': 'sunday'
+        };
+        const months = {
+            'enero': 0,
+            'febrero': 1,
+            'marzo': 2,
+            'abril': 3,
+            'mayo': 4,
+            'junio': 5,
+            'julio': 6,
+            'agosto': 7,
+            'septiembre': 8,
+            'setiembre': 8,
+            'octubre': 9,
+            'noviembre': 10,
+            'diciembre': 11
+        };
+        const parseSpanishDate = (texto) => {
+            const match = texto.match(/(\d{1,2})\s+de\s+([A-Za-zÁÉÍÓÚáéíóúñÑ]+)(?:\s+de\s+(\d{4}))?/);
+            if (!match) return null;
+            const dia = parseInt(match[1], 10);
+            const mes = months[match[2].toLowerCase()] ?? null;
+            const anio = match[3] ? parseInt(match[3], 10) : 2025;
+            if (mes === null) return null;
+            return new Date(anio, mes, dia, 0, 0, 0, 0);
+        };
+        const parseHour = (texto, baseDate) => {
+            const match = texto.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+            if (!match) return null;
+            let hours = parseInt(match[1], 10);
+            const minutes = parseInt(match[2], 10);
+            const period = match[3].toLowerCase();
+            if (period === 'pm' && hours !== 12) {
+                hours += 12;
+            }
+            if (period === 'am' && hours === 12) {
+                hours = 0;
+            }
+            const fecha = new Date(baseDate);
+            fecha.setHours(hours, minutes, 0, 0);
+            return fecha;
+        };
+        const marginMinutes = 60;
+        const conferencias = [];
+        data.schedule.forEach(dayConfig => {
+            const dayName = dayConfig.day;
+            const dayKey = dayKeys[dayName];
+            const fechaTexto = dayKey ? data.dates?.[dayKey] : null;
+            const fechaBase = fechaTexto ? parseSpanishDate(fechaTexto) : null;
+            if (!fechaBase) {
+                return;
+            }
+            dayConfig.activities.forEach(activity => {
+                const eventLower = activity.event.toLowerCase();
+                if (!eventLower.includes('conferencia:')) {
+                    return;
+                }
+                const timeParts = activity.time.split('-').map(t => t.trim());
+                if (timeParts.length !== 2) {
+                    return;
+                }
+                const horaInicio = parseHour(timeParts[0], fechaBase);
+                const horaFin = parseHour(timeParts[1], fechaBase);
+                if (!horaInicio || !horaFin) {
+                    return;
+                }
+                const ventanaInicio = new Date(horaInicio.getTime() - marginMinutes * 60000);
+                const ventanaFin = new Date(horaFin.getTime() + marginMinutes * 60000);
+                const sanitizedName = activity.event.substring(activity.event.indexOf(':') + 1).trim();
+                const slugBase = `${dayName}_${timeParts[0]}`.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                const conferenciaId = `${slugBase}_${horaInicio.getHours()}${horaInicio.getMinutes()}`.replace(/_+/g, '_');
+                conferencias.push({
+                    id: conferenciaId,
+                    nombre: sanitizedName,
+                    descripcionCompleta: activity.event,
+                    dia: dayName,
+                    fechaTexto,
+                    horaInicio,
+                    horaFin,
+                    ventanaInicio,
+                    ventanaFin,
+                    horarioOriginal: activity.time
+                });
+            });
+        });
+        conferenciasDisponibles = conferencias;
+        if (conferenciasDisponibles.length === 0) {
+            alert('No se encontraron conferencias configuradas en el programa.');
+            return;
+        }
+
+        const now = new Date();
+        const formatearHora = (fecha) => fecha.toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        const conferenciasHTML = conferenciasDisponibles.map((conf, index) => {
+            const dentroVentana = now >= conf.ventanaInicio && now <= conf.ventanaFin;
+            let estadoTexto;
+            let estadoClase;
+            if (dentroVentana) {
+                estadoTexto = `Pase activo (${formatearHora(conf.ventanaInicio)} - ${formatearHora(conf.ventanaFin)})`;
+                estadoClase = 'text-success';
+            } else if (now < conf.ventanaInicio) {
+                estadoTexto = `Disponible desde ${formatearHora(conf.ventanaInicio)}`;
+                estadoClase = 'text-warning';
+            } else {
+                estadoTexto = `Horario finalizado a las ${formatearHora(conf.ventanaFin)}`;
+                estadoClase = 'text-muted';
+            }
+            const disabledAttr = dentroVentana ? '' : 'disabled';
+            const shortName = conf.nombre.length > 60 ? conf.nombre.substring(0, 57) + '...' : conf.nombre;
+            return `
+                <div class="col-12 mb-2">
+                    <button class="btn ${dentroVentana ? 'btn-outline-primary' : 'btn-outline-secondary'} w-100 text-start" ${disabledAttr} onclick="seleccionarConferencia(${index})">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap">
+                            <div>
+                                <strong><i class="fas fa-chalkboard-teacher me-2"></i>${shortName}</strong>
+                                <div class="small text-muted">${conf.dia} ${conf.fechaTexto} · ${conf.horarioOriginal}</div>
+                            </div>
+                            <span class="small ${estadoClase}">${estadoTexto}</span>
+                        </div>
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        const modalHTML = `
+            <div class="modal fade" id="conferenciaModal" tabindex="-1" aria-labelledby="conferenciaModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="conferenciaModalLabel">
+                                <i class="fas fa-chalkboard-teacher me-2"></i>Seleccionar Conferencia
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="mb-3">
+                                El pase de lista solo está disponible desde una hora antes y hasta una hora después del horario programado.
+                            </p>
+                            <div class="row">
+                                ${conferenciasHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const existingModal = document.getElementById('conferenciaModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        const modal = new bootstrap.Modal(document.getElementById('conferenciaModal'));
+        modal.show();
+
+        document.getElementById('conferenciaModal').addEventListener('hidden.bs.modal', function () {
+            this.remove();
+        });
+
+    } catch (error) {
+        console.error('Error al cargar conferencias:', error);
+        alert('Ocurrió un problema al cargar las conferencias. Intenta nuevamente.');
+    }
+}
+
+function seleccionarConferencia(index) {
+    if (!Array.isArray(conferenciasDisponibles) || !conferenciasDisponibles[index]) {
+        alert('No se encontró la conferencia seleccionada. Recarga la lista e intenta de nuevo.');
+        return;
+    }
+    const conferencia = conferenciasDisponibles[index];
+    const ahora = new Date();
+    if (ahora < conferencia.ventanaInicio || ahora > conferencia.ventanaFin) {
+        alert('Esta conferencia no está dentro del horario habilitado para pase de lista. Solo se permite desde una hora antes hasta una hora después del horario oficial.');
+        return;
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById('conferenciaModal'));
+    if (modal) {
+        modal.hide();
+    }
+    qrScanner.init('conferencias', {
+        conferenciaId: conferencia.id,
+        conferenciaNombre: conferencia.nombre,
+        conferenciaDia: conferencia.dia,
+        conferenciaFechaTexto: conferencia.fechaTexto,
+        horarioOriginal: conferencia.horarioOriginal,
+        horaInicio: conferencia.horaInicio.toISOString(),
+        horaFin: conferencia.horaFin.toISOString(),
+        ventanaInicio: conferencia.ventanaInicio.toISOString(),
+        ventanaFin: conferencia.ventanaFin.toISOString()
+    });
 }
 
 function cerrarScanner() {
