@@ -32,6 +32,34 @@
             padding: 120px 0 80px 0;
         }
         
+        .countdown-wrapper {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+        
+        .countdown-box {
+            min-width: 72px;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown-value {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .countdown-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        
         .text-guinda {
             color: var(--ipn-guinda) !important;
         }
@@ -336,6 +364,28 @@
                             <i class="fas fa-map-marker-alt me-2"></i>
                             UPIIZ - IPN Campus Zacatecas
                         </p>
+                        <div class="countdown-wrapper text-white mt-4">
+                            <p class="mb-2 fw-semibold text-uppercase small">Cuenta regresiva para el inicio de actividades</p>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap" id="countdown">
+                                <div class="countdown-box">
+                                    <span class="countdown-value" id="countdown-days">--</span>
+                                    <span class="countdown-label">Días</span>
+                                </div>
+                                <div class="countdown-box">
+                                    <span class="countdown-value" id="countdown-hours">--</span>
+                                    <span class="countdown-label">Horas</span>
+                                </div>
+                                <div class="countdown-box">
+                                    <span class="countdown-value" id="countdown-minutes">--</span>
+                                    <span class="countdown-label">Min</span>
+                                </div>
+                                <div class="countdown-box">
+                                    <span class="countdown-value" id="countdown-seconds">--</span>
+                                    <span class="countdown-label">Seg</span>
+                                </div>
+                            </div>
+                            <p class="small mt-3 mb-0" id="countdown-message"></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1076,6 +1126,55 @@
             `;
             
             container.innerHTML = html;
+        }
+        
+        // Inicializar cuenta regresiva
+        const countdownTarget = new Date('November 10, 2025 08:30:00').getTime();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            if (!countdownEl) {
+                clearInterval(countdownInterval);
+                return;
+            }
+            
+            const now = new Date().getTime();
+            const distance = countdownTarget - now;
+            const messageEl = document.getElementById('countdown-message');
+            
+            if (distance <= 0) {
+                clearInterval(countdownInterval);
+                setCountdownValues(0, 0, 0, 0);
+                if (messageEl) {
+                    messageEl.textContent = '¡Las actividades ya comenzaron! Consulta la agenda para saber qué está pasando ahora.';
+                }
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            setCountdownValues(days, hours, minutes, seconds);
+            
+            if (messageEl) {
+                messageEl.textContent = 'Prepárate: este es el tiempo restante para el arranque oficial.';
+            }
+        }
+        
+        function setCountdownValues(days, hours, minutes, seconds) {
+            const dayEl = document.getElementById('countdown-days');
+            const hourEl = document.getElementById('countdown-hours');
+            const minuteEl = document.getElementById('countdown-minutes');
+            const secondEl = document.getElementById('countdown-seconds');
+            
+            if (dayEl) dayEl.textContent = String(days).padStart(2, '0');
+            if (hourEl) hourEl.textContent = String(hours).padStart(2, '0');
+            if (minuteEl) minuteEl.textContent = String(minutes).padStart(2, '0');
+            if (secondEl) secondEl.textContent = String(seconds).padStart(2, '0');
         }
 
     </script>
