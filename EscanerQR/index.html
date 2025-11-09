@@ -1106,9 +1106,14 @@
                         <td>${tallerDisplay}</td>
                         <td>${tallaBadge}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning" onclick="editarUsuario('${registro.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-outline-success" title="Recuperar código QR" onclick="recuperarCodigoQR('${registro.id}')">
+                                    <i class="fas fa-qrcode"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning" title="Editar registro" onclick="editarUsuario('${registro.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -1301,6 +1306,297 @@
                     fila.style.display = 'none';
                 }
             });
+        }
+
+        async function recuperarCodigoQR(id) {
+            try {
+                const response = await fetch(`../api/qr-data/${id}`);
+                
+                if (!response.ok) {
+                    throw new Error('No se encontró la información del registro solicitado');
+                }
+                
+                const data = await response.json();
+                const qrUrl = `../api/qr/${id}?t=${Date.now()}`;
+                
+                mostrarModalRecuperacionQR({ ...data, id }, qrUrl);
+            } catch (error) {
+                console.error('Error al recuperar el código QR:', error);
+                alert(`No se pudo recuperar el código QR. Detalle: ${error.message}`);
+            }
+        }
+
+        function mostrarModalRecuperacionQR(data, qrUrl) {
+            const existingModal = document.getElementById('recuperarQRModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            const tipoTexto = data.tipo === 'ipn' ? 'Estudiante IPN' : 'Externo';
+            const paquetes = {
+                paquete1: 'Código de Registro 1',
+                paquete2: 'Código de Registro 2',
+                ninguno: 'Sin paquete'
+            };
+            const paqueteTexto = paquetes[data.paquete] || data.paquete || 'Sin paquete';
+            const tallerTexto = data.taller
+                ? data.taller.replace(/_/g, ' ').replace(/\b\w/g, letra => letra.toUpperCase())
+                : 'Sin registro';
+            const fechaTexto = data.fecha
+                ? new Date(data.fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
+                : 'Sin registro';
+
+            const modalHTML = `
+                <div class="modal fade" id="recuperarQRModal" tabindex="-1" aria-labelledby="recuperarQRModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="recuperarQRModalLabel">
+                                    <i class="fas fa-qrcode me-2"></i>Código QR recuperado
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-4">
+                                    <div class="col-md-5 text-center">
+                                        <div class="alert alert-success py-2">
+                                            <h6 class="mb-0"><i class="fas fa-id-card me-2"></i>ID de registro</h6>
+                                            <strong class="d-block fs-5">${data.id}</strong>
+                                        </div>
+                                        <div class="p-3 border rounded bg-light">
+                                            <img id="recuperarQRImagen" src="${qrUrl}" alt="Código QR" class="img-fluid" style="max-width:260px;">
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            Entrega este QR al asistente después de confirmar su identidad.
+                                        </small>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="card border-0 shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
+                                                <h6 class="text-uppercase fw-bold mb-3"><i class="fas fa-user me-2"></i>Datos del participante</h6>
+                                                <p class="mb-1"><strong>Nombre:</strong> ${data.nombre || 'Sin nombre'}</p>
+                                                <p class="mb-1"><strong>Correo:</strong> ${data.email || 'Sin correo'}</p>
+                                                <p class="mb-1"><strong>Tipo:</strong> ${tipoTexto}</p>
+                                                <p class="mb-1"><strong>Paquete:</strong> ${paqueteTexto}</p>
+                                                <p class="mb-1"><strong>Taller:</strong> ${tallerTexto}</p>
+                                                <p class="mb-3"><strong>Fecha de registro:</strong> ${fechaTexto}</p>
+                                                <div class="alert alert-info mb-4">
+                                                    <i class="fas fa-info-circle me-2"></i>Solo comparte este código con asistentes verificados o responsables de área.
+                                                </div>
+                                                <div class="d-grid gap-2 mt-auto">
+                                                    <button class="btn btn-outline-success" data-action="descargar-tarjeta">
+                                                        <i class="fas fa-id-card me-2"></i>Descargar tarjeta con QR
+                                                    </button>
+                                                    <button class="btn btn-outline-primary" data-action="descargar-qr">
+                                                        <i class="fas fa-download me-2"></i>Descargar imagen QR
+                                                    </button>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <small class="text-muted me-auto"><i class="fas fa-shield-alt me-1"></i>Uso exclusivo del staff del evento.</small>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            const modalElement = document.getElementById('recuperarQRModal');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                modalElement.remove();
+            });
+
+            modalElement.querySelector('[data-action="descargar-qr"]').addEventListener('click', () => {
+                descargarCodigoQR(qrUrl, data.id);
+            });
+
+            modalElement.querySelector('[data-action="descargar-tarjeta"]').addEventListener('click', () => {
+                descargarTarjetaIdentificacion(
+                    qrUrl,
+                    data.id,
+                    data.nombre || 'Participante',
+                    tipoTexto,
+                    paqueteTexto,
+                    tallerTexto
+                );
+            });
+
+            
+        }
+
+        async function descargarCodigoQR(qrUrl, id) {
+            try {
+                const response = await fetch(qrUrl.split('?')[0] + `?ts=${Date.now()}`);
+                if (!response.ok) {
+                    throw new Error('No se pudo descargar el código QR');
+                }
+
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = `qr_registro_${id}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                console.error('Error al descargar el QR:', error);
+                alert('No se pudo descargar el código QR. Intenta nuevamente.');
+            }
+        }
+
+        function descargarTarjetaIdentificacion(qrUrl, id, nombre, tipoTexto, paqueteTexto, tallerTexto) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 420;
+            canvas.height = 560;
+            const ctx = canvas.getContext('2d');
+
+            const imagenQR = new Image();
+            imagenQR.crossOrigin = 'anonymous';
+
+            imagenQR.onload = function () {
+                // Fondo
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Borde
+                ctx.strokeStyle = '#6A0032';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+
+                // Encabezado
+                ctx.fillStyle = '#6A0032';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('SEMANA DE MECATRÓNICA 2025', canvas.width / 2, 40);
+
+                ctx.font = '14px Arial';
+                ctx.fillText('UPIIZ - IPN Campus Zacatecas', canvas.width / 2, 62);
+
+                ctx.strokeStyle = '#6A0032';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(50, 75);
+                ctx.lineTo(canvas.width - 50, 75);
+                ctx.stroke();
+
+                // Código QR
+                const qrSize = 220;
+                const qrX = (canvas.width - qrSize) / 2;
+                const qrY = 95;
+                ctx.drawImage(imagenQR, qrX, qrY, qrSize, qrSize);
+
+                // Información
+                const drawWrappedText = (context, text, x, startY, maxWidth, lineHeight) => {
+                    if (!text) {
+                        return startY + lineHeight;
+                    }
+                    const words = text.split(' ');
+                    let line = '';
+                    let y = startY;
+
+                    words.forEach((word, index) => {
+                        const testLine = line ? `${line} ${word}` : word;
+                        if (context.measureText(testLine).width > maxWidth && index > 0) {
+                            context.fillText(line, x, y);
+                            line = word;
+                            y += lineHeight;
+                        } else {
+                            line = testLine;
+                        }
+                    });
+
+                    context.fillText(line, x, y);
+                    return y + lineHeight;
+                };
+
+                const nombreTarjeta = (nombre || 'Participante').toUpperCase();
+
+                ctx.fillStyle = '#6A0032';
+                ctx.font = 'bold 22px Arial';
+                const siguienteY = drawWrappedText(ctx, `ID: ${id}`, canvas.width / 2, qrY + qrSize + 40, 360, 26);
+
+                ctx.fillStyle = '#333333';
+                ctx.font = 'bold 18px Arial';
+                let progresoY = drawWrappedText(ctx, nombreTarjeta, canvas.width / 2, siguienteY + 5, 360, 24);
+
+                ctx.font = '14px Arial';
+                progresoY = drawWrappedText(ctx, `Tipo: ${tipoTexto}`, canvas.width / 2, progresoY + 5, 340, 20);
+                progresoY = drawWrappedText(ctx, `Paquete: ${paqueteTexto}`, canvas.width / 2, progresoY, 340, 20);
+                progresoY = drawWrappedText(ctx, `Taller: ${tallerTexto}`, canvas.width / 2, progresoY, 340, 20);
+
+                ctx.fillStyle = '#666666';
+                ctx.font = '12px Arial';
+                drawWrappedText(ctx, 'Presenta esta tarjeta en la entrada del evento.', canvas.width / 2, canvas.height - 70, 340, 18);
+                drawWrappedText(ctx, '10 - 14 de noviembre, 2025', canvas.width / 2, canvas.height - 45, 340, 18);
+
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        alert('No se pudo generar la tarjeta. Intenta nuevamente.');
+                        return;
+                    }
+
+                    const link = document.createElement('a');
+                    const blobUrl = URL.createObjectURL(blob);
+                    link.href = blobUrl;
+                    link.download = `tarjeta_identificacion_${id}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(blobUrl);
+                });
+            };
+
+            imagenQR.onerror = function () {
+                alert('No se pudo generar la tarjeta porque el código QR no está disponible. Descarga primero la imagen del QR.');
+            };
+
+            imagenQR.src = qrUrl.split('?')[0] + `?ts=${Date.now()}`;
+        }
+
+        function copiarEnlaceQR(url) {
+            const fallbackCopy = () => {
+                try {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = url;
+                    textarea.setAttribute('readonly', '');
+                    textarea.style.position = 'absolute';
+                    textarea.style.left = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    const exitoso = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+
+                    if (exitoso) {
+                        alert('Enlace copiado al portapapeles.');
+                    } else {
+                        throw new Error('execCommand falló');
+                    }
+                } catch (error) {
+                    console.error('Error al copiar el enlace:', error);
+                    alert(`No se pudo copiar automáticamente. Enlace: ${url}`);
+                }
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url)
+                    .then(() => alert('Enlace copiado al portapapeles.'))
+                    .catch(() => fallbackCopy());
+            } else {
+                fallbackCopy();
+            }
         }
         
         // ==================== FUNCIONES DE GESTIÓN DE PAGOS ====================
