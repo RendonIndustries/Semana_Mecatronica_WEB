@@ -649,7 +649,15 @@
             });
             
             // Convertir a array para renderizar
-            const workshopsArray = Array.from(allWorkshops.values());
+            const workshopsArray = Array.from(allWorkshops.values()).filter(workshop => {
+                const closedWorkshops = [
+                    'Mantenimiento Automotriz',
+                    'Diseño e impresión 3D',
+                    'Fabricación de PCB con película seca fotosensible para prototipado',
+                    'Fundición Investment Casting (técnica cera perdida)'
+                ];
+                return !closedWorkshops.includes(workshop.name);
+            });
             
             // Renderizar en el contenedor
             renderWorkshopCards(workshopsArray);
