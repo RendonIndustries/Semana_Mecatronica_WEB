@@ -325,6 +325,7 @@
                                     <select class="form-select" id="tipoParticipante" name="tipoParticipante" required onchange="toggleIPNFields()">
                                         <option value="">Selecciona una opción</option>
                                         <option value="ipn">Estudiante del IPN</option>
+                                        <option value="upiiz">UPIIZ - Administrativo / Docente / PAAE</option>
                                         <option value="externo">Externo</option>
                                     </select>
                                 </div>
@@ -901,10 +902,16 @@
             
             // Mostrar resumen de registro
             let resumen = 'Resumen de tu registro:\n\n';
+            const tipoParticipanteLabels = {
+                ipn: 'Estudiante del IPN',
+                upiiz: 'UPIIZ - Administrativo / Docente / PAAE',
+                externo: 'Externo'
+            };
+            
             resumen += `Nombre: ${data.nombre}\n`;
             resumen += `Email: ${data.email}\n`;
             resumen += `Teléfono: ${data.telefono}\n`;
-            resumen += `Tipo: ${data.tipoParticipante === 'ipn' ? 'Estudiante del IPN' : 'Externo'}\n`;
+            resumen += `Tipo: ${tipoParticipanteLabels[data.tipoParticipante] || data.tipoParticipante}\n`;
             
             if (data.tipoParticipante === 'ipn') {
                 resumen += `Boleta: ${data.boleta}\n`;
