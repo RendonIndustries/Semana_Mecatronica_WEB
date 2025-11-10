@@ -11,7 +11,7 @@
         {
             "day": "Lunes",
             "activities": [
-                {"time": "8:30 am - 9:15 am", "event": "Inauguración", "Participants": "Funcionarios, Comité de Organización, Staff, Docentes", "spaces": 250},
+                {"time": "8:00 am - 9:15 am", "event": "Inauguración", "Participants": "Funcionarios, Comité de Organización, Staff, Docentes", "spaces": 250},
                 {"time": "9:30 am - 10:30 am", "event": "Conferencia: I.A. en la Industria Automotriz - Dr. José María Celaya Padilla", "Participants": "Alumnos, académicos, docentes", "spaces": 250},
                 {"time": "10:00 am - 10:30 am", "event": "Receso", "Participants": "Todos los participantes", "spaces": 0},
                 {"time": "10:45 am - 1:45 pm", "event": "Inicio de Talleres", "Participants": "Alumnos, académicos, docentes", "spaces": 0},
