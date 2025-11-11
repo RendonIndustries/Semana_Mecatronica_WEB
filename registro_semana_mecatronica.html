@@ -610,12 +610,7 @@
                 renderWorkshops(data);
             } catch (error) {
                 console.error('Error cargando talleres:', error);
-                document.getElementById('workshops-container').innerHTML = `
-                    <div class="alert alert-danger" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Error al cargar los talleres. Por favor, recarga la página.
-                    </div>
-                `;
+                mostrarMensajeSinTalleres();
             }
         }
         
@@ -719,7 +714,7 @@
             }
             
             if (workshops.length === 0) {
-                container.innerHTML = html + '<p class="text-center text-muted">No hay talleres disponibles en este momento.</p>';
+                mostrarMensajeSinTalleres();
                 return;
             }
             
@@ -751,6 +746,16 @@
             }
             
             container.innerHTML = html;
+        }
+        
+        function mostrarMensajeSinTalleres() {
+            const container = document.getElementById('workshops-container');
+            container.innerHTML = `
+                <div class="alert alert-secondary" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Todos los talleres han completado su cupo. Si requieres un ajuste, comunícate por correo con el comité de organización.
+                </div>
+            `;
         }
         
         function enviarBusqueda() {
