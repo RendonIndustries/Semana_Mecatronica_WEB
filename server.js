@@ -140,6 +140,25 @@ function generarClaveConferencia({ conferenciaId, conferenciaNombre, conferencia
     return partes.join('_').replace(/_+/g, '_');
 }
 
+function generarClaveTaller({ tallerId, tallerSlug, tallerNombre, tallerDia, horarioOriginal }) {
+    if (tallerId && typeof tallerId === 'string' && tallerId.trim() !== '') {
+        return normalizarTextoClave(tallerId.trim());
+    }
+
+    const partes = [
+        normalizarTextoClave(tallerDia),
+        normalizarTextoClave(tallerSlug),
+        normalizarTextoClave(tallerNombre),
+        normalizarTextoClave(horarioOriginal)
+    ].filter(Boolean);
+
+    if (partes.length === 0) {
+        return 'general';
+    }
+
+    return partes.join('_').replace(/_+/g, '_');
+}
+
 // Función para cargar pagos
 function cargarPagos() {
     try {
@@ -568,6 +587,11 @@ app.post('/api/asistencia', (req, res) => {
             id,
             tipo,
             taller,
+            tallerId,
+            tallerSlug,
+            tallerNombre,
+            tallerDia,
+            tallerFechaTexto,
             conferenciaId,
             conferenciaNombre,
             horaInicio,
@@ -606,6 +630,9 @@ app.post('/api/asistencia', (req, res) => {
         let mensaje = '';
         let conferenciaClave = null;
         let nombreConferenciaEfectivo = null;
+        let tallerClave = null;
+        let nombreTallerEfectivo = null;
+        let slugTallerProporcionado = null;
         
         if (tipo === 'conferencias') {
             if (!Array.isArray(asistenciasData.asistencias.conferencias)) {
@@ -702,55 +729,164 @@ app.post('/api/asistencia', (req, res) => {
                     : 'Ya se había registrado la asistencia a conferencias';
             }
         } else if (tipo === 'talleres') {
-            if (!taller) {
+            if (!Array.isArray(asistenciasData.asistencias.talleres)) {
+                asistenciasData.asistencias.talleres = [];
+            }
+
+            asistenciasData.asistencias.talleres = asistenciasData.asistencias.talleres.map(item => {
+                if (item && typeof item === 'object') {
+                    const slugExistente = normalizarTextoClave(item.tallerSlug || item.taller);
+                    const claveExistente = generarClaveTaller({
+                        tallerId: item.tallerId,
+                        tallerSlug: slugExistente,
+                        tallerNombre: item.tallerNombre,
+                        tallerDia: item.tallerDia,
+                        horarioOriginal: item.horarioOriginal
+                    });
+
+                    return {
+                        ...item,
+                        tallerSlug: slugExistente || null,
+                        tallerId: item.tallerId || claveExistente,
+                        tallerClave: item.tallerClave || claveExistente
+                    };
+                }
+                return item;
+            });
+
+            slugTallerProporcionado = normalizarTextoClave(tallerSlug || taller || tallerNombre);
+            if (!slugTallerProporcionado && registro.participante.taller) {
+                slugTallerProporcionado = normalizarTextoClave(registro.participante.taller);
+            }
+
+            if (!tallerId && !slugTallerProporcionado && !horarioOriginal) {
                 return res.status(400).json({
                     error: 'Taller requerido',
-                    message: 'Se debe especificar el taller para registrar asistencia'
+                    message: 'Se debe especificar la información del taller para registrar asistencia'
                 });
             }
-            
-            // Validar que el participante esté inscrito en el taller correcto
-            const tallerInscrito = registro.participante.taller;
-            if (tallerInscrito !== taller) {
+
+            const tallerInscritoSlug = normalizarTextoClave(registro.participante.taller);
+            if (tallerInscritoSlug && slugTallerProporcionado && tallerInscritoSlug !== slugTallerProporcionado) {
+                const tallerCorrectoOriginal = registro.participante.taller || 'No especificado';
+                const tallerIntentadoNombre = tallerNombre || taller || tallerCorrectoOriginal;
+                const legible = (texto) => typeof texto === 'string'
+                    ? texto.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                    : texto;
+
                 return res.status(400).json({
                     error: 'Taller incorrecto',
-                    message: `Este participante no está inscrito en el ${taller}. Su taller asignado es: ${tallerInscrito}`,
-                    tallerCorrecto: tallerInscrito,
-                    tallerIntentado: taller
+                    message: `Este participante no está inscrito en el taller "${legible(tallerIntentadoNombre)}". Su taller asignado es: ${legible(tallerCorrectoOriginal)}`,
+                    tallerCorrecto: tallerCorrectoOriginal,
+                    tallerIntentado: tallerIntentadoNombre
                 });
             }
-            
-            yaRegistrado = asistenciasData.asistencias.talleres.some(a => a.id === id && a.taller === taller);
+
+            tallerClave = generarClaveTaller({
+                tallerId,
+                tallerSlug: slugTallerProporcionado,
+                tallerNombre,
+                tallerDia,
+                horarioOriginal
+            });
+
+            yaRegistrado = asistenciasData.asistencias.talleres.some(a => {
+                const slugExistente = normalizarTextoClave(a.tallerSlug || a.taller);
+                const claveExistente = a.tallerClave || generarClaveTaller({
+                    tallerId: a.tallerId,
+                    tallerSlug: slugExistente,
+                    tallerNombre: a.tallerNombre,
+                    tallerDia: a.tallerDia,
+                    horarioOriginal: a.horarioOriginal
+                });
+                return a.id === id && claveExistente === tallerClave;
+            });
+
+            nombreTallerEfectivo = (() => {
+                if (typeof tallerNombre === 'string' && tallerNombre.trim() !== '') {
+                    return tallerNombre.trim();
+                }
+                if (registro.participante.tallerNombre && typeof registro.participante.tallerNombre === 'string') {
+                    return registro.participante.tallerNombre.trim();
+                }
+                if (registro.participante.taller && typeof registro.participante.taller === 'string') {
+                    return registro.participante.taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                }
+                if (typeof taller === 'string' && taller.trim() !== '') {
+                    return taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                }
+                return 'Taller';
+            })();
+
             if (!yaRegistrado) {
                 asistenciasData.asistencias.talleres.push({
                     id: id,
                     nombre: registro.participante.nombre,
                     email: registro.participante.email,
-                    taller: taller,
+                    taller: slugTallerProporcionado || null,
+                    tallerSlug: slugTallerProporcionado || null,
+                    tallerId: tallerId || tallerClave,
+                    tallerClave: tallerClave,
+                    tallerNombre: nombreTallerEfectivo,
+                    tallerDia: tallerDia || null,
+                    tallerFechaTexto: tallerFechaTexto || null,
+                    horaInicio: horaInicio || null,
+                    horaFin: horaFin || null,
+                    ventanaInicio: ventanaInicio || null,
+                    ventanaFin: ventanaFin || null,
+                    horarioOriginal: horarioOriginal || null,
                     fecha: ahora,
                     tipo: 'talleres'
                 });
-                mensaje = `Asistencia al taller ${taller} registrada exitosamente`;
+                mensaje = `Asistencia al taller "${nombreTallerEfectivo}" registrada exitosamente`;
             } else {
-                mensaje = `Ya se había registrado la asistencia al taller ${taller}`;
+                mensaje = `Ya se había registrado la asistencia al taller "${nombreTallerEfectivo}"`;
             }
         }
 
         // Guardar asistencias
         if (guardarAsistencias(asistenciasData)) {
+            const datosRespuesta = {
+                id: id,
+                nombre: registro.participante.nombre,
+                tipo: tipo,
+                fecha: ahora
+            };
+
+            if (tipo === 'talleres') {
+                datosRespuesta.taller = slugTallerProporcionado || taller || null;
+                datosRespuesta.tallerId = tallerClave;
+                datosRespuesta.tallerClave = tallerClave;
+                datosRespuesta.tallerNombre = nombreTallerEfectivo;
+                datosRespuesta.tallerDia = tallerDia || null;
+                datosRespuesta.tallerFechaTexto = tallerFechaTexto || null;
+                datosRespuesta.horarioOriginal = horarioOriginal || null;
+                datosRespuesta.horaInicio = horaInicio || null;
+                datosRespuesta.horaFin = horaFin || null;
+                datosRespuesta.ventanaInicio = ventanaInicio || null;
+                datosRespuesta.ventanaFin = ventanaFin || null;
+            }
+
+            if (tipo === 'conferencias') {
+                datosRespuesta.conferenciaId = conferenciaClave;
+                datosRespuesta.conferenciaNombre = nombreConferenciaEfectivo;
+                datosRespuesta.conferenciaDia = conferenciaDia || null;
+                datosRespuesta.conferenciaFechaTexto = conferenciaFechaTexto || null;
+                datosRespuesta.horarioOriginal = horarioOriginal || null;
+                datosRespuesta.horaInicio = horaInicio || null;
+                datosRespuesta.horaFin = horaFin || null;
+                datosRespuesta.ventanaInicio = ventanaInicio || null;
+                datosRespuesta.ventanaFin = ventanaFin || null;
+            } else {
+                datosRespuesta.conferenciaId = conferenciaId || null;
+                datosRespuesta.conferenciaNombre = conferenciaNombre || null;
+            }
+
             res.json({
                 success: true,
                 message: mensaje,
                 yaRegistrado: yaRegistrado,
-                datos: {
-                    id: id,
-                    nombre: registro.participante.nombre,
-                    tipo: tipo,
-                    taller: taller || null,
-                    fecha: ahora,
-                    conferenciaId: tipo === 'conferencias' ? conferenciaClave : conferenciaId || null,
-                    conferenciaNombre: tipo === 'conferencias' ? nombreConferenciaEfectivo : conferenciaNombre || null
-                }
+                datos: datosRespuesta
             });
         } else {
             res.status(500).json({
@@ -762,6 +898,173 @@ app.post('/api/asistencia', (req, res) => {
     } catch (error) {
         console.error('Error al registrar asistencia:', error);
         res.status(500).json({
+            error: 'Error interno del servidor',
+            message: error.message
+        });
+    }
+});
+
+app.post('/api/asistencia/taller-masiva', (req, res) => {
+    try {
+        const {
+            taller,
+            tallerId,
+            tallerSlug,
+            tallerNombre,
+            tallerDia,
+            tallerFechaTexto,
+            horarioOriginal,
+            horaInicio,
+            horaFin,
+            ventanaInicio,
+            ventanaFin
+        } = req.body;
+
+        const slugPeticion = normalizarTextoClave(tallerSlug || taller || tallerNombre);
+
+        if (!slugPeticion) {
+            return res.status(400).json({
+                success: false,
+                error: 'Datos requeridos',
+                message: 'Debe proporcionar la identificación del taller'
+            });
+        }
+
+        const registrosData = cargarRegistros();
+        const asistenciasData = cargarAsistencias();
+
+        if (!Array.isArray(asistenciasData.asistencias.talleres)) {
+            asistenciasData.asistencias.talleres = [];
+        }
+
+        asistenciasData.asistencias.talleres = asistenciasData.asistencias.talleres.map(item => {
+            if (item && typeof item === 'object') {
+                const slugExistente = normalizarTextoClave(item.tallerSlug || item.taller);
+                const claveExistente = generarClaveTaller({
+                    tallerId: item.tallerId,
+                    tallerSlug: slugExistente,
+                    tallerNombre: item.tallerNombre,
+                    tallerDia: item.tallerDia,
+                    horarioOriginal: item.horarioOriginal
+                });
+
+                return {
+                    ...item,
+                    tallerSlug: slugExistente || null,
+                    tallerId: item.tallerId || claveExistente,
+                    tallerClave: item.tallerClave || claveExistente
+                };
+            }
+            return item;
+        });
+
+        const participantesCoincidentes = registrosData.registros.filter(registro => {
+            const tallerRegistro = normalizarTextoClave(registro.participante?.taller);
+            return tallerRegistro && tallerRegistro === slugPeticion;
+        });
+
+        if (participantesCoincidentes.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Sin participantes',
+                message: 'No se encontraron participantes inscritos en este taller'
+            });
+        }
+
+        const ahora = new Date().toISOString();
+        let totalProcesados = 0;
+        let totalYaRegistradas = 0;
+        let totalNuevas = 0;
+
+        const tallerClave = generarClaveTaller({
+            tallerId,
+            tallerSlug: slugPeticion,
+            tallerNombre,
+            tallerDia,
+            horarioOriginal
+        });
+
+        participantesCoincidentes.forEach(registro => {
+            totalProcesados += 1;
+
+            const slugRegistro = normalizarTextoClave(registro.participante.taller);
+            const claveParticipante = generarClaveTaller({
+                tallerId,
+                tallerSlug: slugRegistro || slugPeticion,
+                tallerNombre: tallerNombre || registro.participante.tallerNombre || registro.participante.taller,
+                tallerDia,
+                horarioOriginal
+            });
+
+            const yaRegistrado = asistenciasData.asistencias.talleres.some(a => {
+                const slugExistente = normalizarTextoClave(a.tallerSlug || a.taller);
+                const claveExistente = a.tallerClave || generarClaveTaller({
+                    tallerId: a.tallerId,
+                    tallerSlug: slugExistente,
+                    tallerNombre: a.tallerNombre,
+                    tallerDia: a.tallerDia,
+                    horarioOriginal: a.horarioOriginal
+                });
+                return a.id === registro.id && claveExistente === claveParticipante;
+            });
+
+            if (yaRegistrado) {
+                totalYaRegistradas += 1;
+                return;
+            }
+
+            const nombreTallerEfectivo = (() => {
+                if (typeof tallerNombre === 'string' && tallerNombre.trim() !== '') {
+                    return tallerNombre.trim();
+                }
+                if (registro.participante.tallerNombre && typeof registro.participante.tallerNombre === 'string') {
+                    return registro.participante.tallerNombre.trim();
+                }
+                if (registro.participante.taller && typeof registro.participante.taller === 'string') {
+                    return registro.participante.taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                }
+                return 'Taller';
+            })();
+
+            asistenciasData.asistencias.talleres.push({
+                id: registro.id,
+                nombre: registro.participante.nombre,
+                email: registro.participante.email,
+                taller: slugRegistro || slugPeticion,
+                tallerSlug: slugRegistro || slugPeticion,
+                tallerId: tallerId || tallerClave,
+                tallerClave: claveParticipante,
+                tallerNombre: nombreTallerEfectivo,
+                tallerDia: tallerDia || null,
+                tallerFechaTexto: tallerFechaTexto || null,
+                horaInicio: horaInicio || null,
+                horaFin: horaFin || null,
+                ventanaInicio: ventanaInicio || null,
+                ventanaFin: ventanaFin || null,
+                horarioOriginal: horarioOriginal || null,
+                fecha: ahora,
+                tipo: 'talleres'
+            });
+
+            totalNuevas += 1;
+        });
+
+        if (!guardarAsistencias(asistenciasData)) {
+            throw new Error('No se pudo guardar la asistencia masiva');
+        }
+
+        res.json({
+            success: true,
+            message: 'Asistencia masiva registrada correctamente',
+            totalProcesados,
+            totalNuevas,
+            totalYaRegistradas
+        });
+
+    } catch (error) {
+        console.error('Error en asistencia masiva de taller:', error);
+        res.status(500).json({
+            success: false,
             error: 'Error interno del servidor',
             message: error.message
         });
