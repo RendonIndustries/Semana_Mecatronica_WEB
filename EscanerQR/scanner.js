@@ -495,38 +495,56 @@ async function mostrarSeleccionTaller() {
                 const ventanaInicioDate = horaInicioDate ? new Date(horaInicioDate.getTime() - marginMinutes * 60000) : null;
                 const ventanaFinDate = horaFinDate ? new Date(horaFinDate.getTime() + marginMinutes * 60000) : null;
 
-                const match = eventText.match(/Taller:\s*(.+?)(?:\s*-|$)/i);
-                const tallerNombre = match ? match[1].trim() : eventText.replace(/Taller:\s*/i, '').trim();
+        const match = eventText.match(/Taller:\s*(.+?)(?:\s*-|$)/i);
+        let tallerNombre = match ? match[1].trim() : eventText.replace(/Taller:\s*/i, '').trim();
+        if (!tallerNombre) {
+            return;
+        }
+
+        const tallerNombreNormalizado = tallerNombre.replace(/\(cupo lleno\)/i, '').trim();
+        const variacionesNombre = [
+            tallerNombreNormalizado,
+            tallerNombre
+        ];
+
+        const officeKey = variacionesNombre
+            .map(nombre => normalize(nombre))
+            .find(slug => cursosMap.has(slug));
+
+        const tallerSlug = normalize(tallerNombreNormalizado);
+
+        const idBase = `${dayName}_${timeParts[0]}_${tallerSlug}`;
+        const tallerId = normalize(idBase);
+
+        const sesion = {
+            id: tallerId,
+            slug: tallerSlug,
+            nombre: tallerNombreNormalizado,
+            nombreOriginal: tallerNombre,
+            dia: dayName,
+            fechaTexto,
+            horarioOriginal: activity.time,
+            descripcionCompleta: eventText,
+            horaInicio: horaInicioDate,
+            horaFin: horaFinDate,
+            ventanaInicio: ventanaInicioDate,
+            ventanaFin: ventanaFinDate
+        };
+
+        const slugCurso = officeKey || tallerSlug;
+
+        if (!cursosMap.has(slugCurso)) {
+            cursosMap.set(slugCurso, {
+                nombre: tallerNombreNormalizado,
+                slug: slugCurso,
+                sesiones: []
+            });
+        }
+        cursosMap.get(slugCurso).sesiones.push(sesion);
                 if (!tallerNombre) {
                     return;
                 }
 
-                const tallerSlug = normalize(tallerNombre);
-                const idBase = `${dayName}_${timeParts[0]}_${tallerSlug}`;
-                const tallerId = normalize(idBase);
-
-                const sesion = {
-                    id: tallerId,
-                    slug: tallerSlug,
-                    nombre: tallerNombre,
-                    dia: dayName,
-                    fechaTexto,
-                    horarioOriginal: activity.time,
-                    descripcionCompleta: eventText,
-                    horaInicio: horaInicioDate,
-                    horaFin: horaFinDate,
-                    ventanaInicio: ventanaInicioDate,
-                    ventanaFin: ventanaFinDate
-                };
-
-                if (!cursosMap.has(tallerSlug)) {
-                    cursosMap.set(tallerSlug, {
-                        nombre: tallerNombre,
-                        slug: tallerSlug,
-                        sesiones: []
-                    });
-                }
-                cursosMap.get(tallerSlug).sesiones.push(sesion);
             });
         });
 
