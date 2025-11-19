@@ -519,6 +519,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-end">
+                                    <button class="btn btn-primary me-2" onclick="exportarRegistrosXLSX()">
+                                        <i class="fas fa-file-excel me-2"></i>Exportar XLSX
+                                    </button>
                                     <button class="btn btn-success" onclick="actualizarListaUsuarios()">
                                         <i class="fas fa-sync-alt me-2"></i>Actualizar
                                     </button>
@@ -945,6 +948,9 @@
     
     <!-- QR Scanner Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    
+    <!-- SheetJS Library para exportar a XLSX -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
     <!-- Scanner Logic -->
     <script src="config.js"></script>
@@ -1943,6 +1949,130 @@
             });
         }
         
+        async function exportarRegistrosXLSX() {
+            // Obtener el botón que activó la función
+            const btnExportar = document.querySelector('button[onclick="exportarRegistrosXLSX()"]');
+            const originalHTML = btnExportar ? btnExportar.innerHTML : '';
+            
+            try {
+                // Mostrar indicador de carga
+                if (btnExportar) {
+                    btnExportar.disabled = true;
+                    btnExportar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Exportando...';
+                }
+                
+                // Obtener todos los registros
+                const response = await fetch('../api/registros');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.registros || !Array.isArray(data.registros)) {
+                    throw new Error('No se encontraron registros válidos');
+                }
+                
+                // Preparar datos para Excel
+                const registrosFormateados = data.registros.map(registro => {
+                    // Formatear taller (reemplazar guiones bajos y capitalizar)
+                    const tallerFormateado = registro.taller && registro.taller !== 'Sin taller' && registro.taller !== 'N/A'
+                        ? registro.taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                        : registro.taller || 'N/A';
+                    
+                    // Formatear tipo
+                    const tipoFormateado = registro.tipo === 'ipn' ? 'Estudiante IPN' : 'Externo';
+                    
+                    // Formatear paquete
+                    const paqueteFormateado = registro.paquete === 'ninguno' ? 'Ninguno' : 
+                                             registro.paquete === 'paquete1' ? 'Paquete 1' :
+                                             registro.paquete === 'paquete2' ? 'Paquete 2' : registro.paquete;
+                    
+                    // Formatear fecha
+                    const fechaFormateada = registro.fecha && registro.fecha !== 'Desconocida'
+                        ? new Date(registro.fecha).toLocaleString('es-MX', { 
+                            dateStyle: 'short', 
+                            timeStyle: 'short' 
+                          })
+                        : 'N/A';
+                    
+                    return {
+                        'ID Registro': registro.id,
+                        'Nombre Completo': registro.nombre || 'N/A',
+                        'Email': registro.email || 'N/A',
+                        'Teléfono': registro.telefono || 'N/A',
+                        'Tipo de Participante': tipoFormateado,
+                        'Número de Boleta': registro.boleta || 'N/A',
+                        'Carrera': registro.carrera || 'N/A',
+                        'Paquete': paqueteFormateado,
+                        'Taller': tallerFormateado,
+                        'Talla de Playera': registro.tallaPlayera || 'N/A',
+                        'Fecha de Registro': fechaFormateada,
+                        'Fecha de Guardado': registro.fechaGuardado 
+                            ? new Date(registro.fechaGuardado).toLocaleString('es-MX', { 
+                                dateStyle: 'short', 
+                                timeStyle: 'short' 
+                              })
+                            : 'N/A'
+                    };
+                });
+                
+                // Crear libro de trabajo
+                const wb = XLSX.utils.book_new();
+                
+                // Crear hoja de datos
+                const ws = XLSX.utils.json_to_sheet(registrosFormateados);
+                
+                // Ajustar ancho de columnas
+                const colWidths = [
+                    { wch: 20 },  // ID Registro
+                    { wch: 30 },  // Nombre Completo
+                    { wch: 30 },  // Email
+                    { wch: 15 },  // Teléfono
+                    { wch: 20 },  // Tipo de Participante
+                    { wch: 15 },  // Número de Boleta
+                    { wch: 30 },  // Carrera
+                    { wch: 15 },  // Paquete
+                    { wch: 40 },  // Taller
+                    { wch: 15 },  // Talla de Playera
+                    { wch: 20 },  // Fecha de Registro
+                    { wch: 20 }   // Fecha de Guardado
+                ];
+                ws['!cols'] = colWidths;
+                
+                // Agregar hoja al libro
+                XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+                
+                // Generar nombre de archivo con fecha
+                const fechaActual = new Date().toISOString().split('T')[0];
+                const nombreArchivo = `registros_semana_mecatronica_${fechaActual}.xlsx`;
+                
+                // Descargar archivo
+                XLSX.writeFile(wb, nombreArchivo);
+                
+                // Restaurar botón
+                if (btnExportar) {
+                    btnExportar.disabled = false;
+                    btnExportar.innerHTML = originalHTML;
+                }
+                
+                // Mostrar mensaje de éxito
+                alert(`Exportación exitosa!\n\nTotal de registros exportados: ${data.registros.length}\nArchivo: ${nombreArchivo}`);
+                
+            } catch (error) {
+                console.error('Error al exportar registros:', error);
+                
+                // Restaurar botón en caso de error
+                if (btnExportar) {
+                    btnExportar.disabled = false;
+                    btnExportar.innerHTML = '<i class="fas fa-file-excel me-2"></i>Exportar XLSX';
+                }
+                
+                alert(`Error al exportar registros: ${error.message}`);
+            }
+        }
+
         async function exportarConcursos() {
             try {
                 const response = await fetch('../api/concursos');
