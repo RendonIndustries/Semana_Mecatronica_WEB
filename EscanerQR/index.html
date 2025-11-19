@@ -551,6 +551,13 @@
                         
                         <!-- Pestaña Estadísticas -->
                         <div class="tab-pane fade" id="estadisticas" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-12 text-end">
+                                    <button class="btn btn-primary" onclick="exportarAsistenciasXLSX()">
+                                        <i class="fas fa-file-excel me-2"></i>Exportar Asistencias XLSX
+                                    </button>
+                                </div>
+                            </div>
                             <div class="row" id="estadisticasContainer">
                                 <!-- Se llena dinámicamente -->
                             </div>
@@ -1949,6 +1956,284 @@
             });
         }
         
+        async function exportarAsistenciasXLSX() {
+            // Obtener el botón que activó la función
+            const btnExportar = document.querySelector('button[onclick="exportarAsistenciasXLSX()"]');
+            const originalHTML = btnExportar ? btnExportar.innerHTML : '';
+            
+            try {
+                // Mostrar indicador de carga
+                if (btnExportar) {
+                    btnExportar.disabled = true;
+                    btnExportar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Exportando...';
+                }
+                
+                // Obtener asistencias y registros en paralelo
+                const [responseAsistencias, responseRegistros] = await Promise.all([
+                    fetch('../api/asistencias'),
+                    fetch('../api/registros')
+                ]);
+                
+                if (!responseAsistencias.ok || !responseRegistros.ok) {
+                    throw new Error('Error al obtener los datos del servidor');
+                }
+                
+                const asistenciasData = await responseAsistencias.json();
+                const registrosData = await responseRegistros.json();
+                
+                // Crear mapa de registros para búsqueda rápida
+                const registrosMap = new Map();
+                if (registrosData.registros && Array.isArray(registrosData.registros)) {
+                    registrosData.registros.forEach(reg => {
+                        registrosMap.set(reg.id, reg);
+                    });
+                }
+                
+                // Función auxiliar para obtener información del participante
+                const obtenerInfoParticipante = (id) => {
+                    const registro = registrosMap.get(id);
+                    if (!registro) return null;
+                    
+                    return {
+                        nombre: registro.nombre || 'N/A',
+                        email: registro.email || 'N/A',
+                        telefono: registro.telefono || 'N/A',
+                        tipo: registro.tipo === 'ipn' ? 'Estudiante IPN' : 'Externo',
+                        paquete: registro.paquete === 'ninguno' ? 'Ninguno' : 
+                                registro.paquete === 'paquete1' ? 'Paquete 1' :
+                                registro.paquete === 'paquete2' ? 'Paquete 2' : registro.paquete,
+                        boleta: registro.boleta || 'N/A',
+                        carrera: registro.carrera || 'N/A'
+                    };
+                };
+                
+                // Función para formatear fecha
+                const formatearFecha = (fecha) => {
+                    if (!fecha || fecha === 'N/A') return 'N/A';
+                    try {
+                        return new Date(fecha).toLocaleString('es-MX', { 
+                            dateStyle: 'short', 
+                            timeStyle: 'short' 
+                        });
+                    } catch {
+                        return fecha;
+                    }
+                };
+                
+                // Función para formatear taller
+                const formatearTaller = (taller) => {
+                    if (!taller || taller === 'N/A' || taller === 'Sin taller') return 'N/A';
+                    return taller.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                };
+                
+                // Preparar datos de Conferencias
+                const conferenciasFormateadas = (asistenciasData.asistencias?.conferencias || []).map(asistencia => {
+                    const info = obtenerInfoParticipante(asistencia.id);
+                    return {
+                        'ID Registro': asistencia.id,
+                        'Nombre Completo': info?.nombre || asistencia.nombre || 'N/A',
+                        'Email': info?.email || asistencia.email || 'N/A',
+                        'Teléfono': info?.telefono || 'N/A',
+                        'Tipo': info?.tipo || 'N/A',
+                        'Conferencia': asistencia.conferenciaNombre || 'Conferencia General',
+                        'Día': asistencia.conferenciaDia || 'N/A',
+                        'Fecha': asistencia.conferenciaFechaTexto || 'N/A',
+                        'Horario': asistencia.horarioOriginal || 'N/A',
+                        'Fecha de Registro': formatearFecha(asistencia.fecha)
+                    };
+                });
+                
+                // Preparar datos de Talleres
+                const talleresFormateados = (asistenciasData.asistencias?.talleres || []).map(asistencia => {
+                    const info = obtenerInfoParticipante(asistencia.id);
+                    const tallerNombre = asistencia.tallerNombre || formatearTaller(asistencia.taller || asistencia.tallerSlug);
+                    return {
+                        'ID Registro': asistencia.id,
+                        'Nombre Completo': info?.nombre || asistencia.nombre || 'N/A',
+                        'Email': info?.email || asistencia.email || 'N/A',
+                        'Teléfono': info?.telefono || 'N/A',
+                        'Tipo': info?.tipo || 'N/A',
+                        'Taller': tallerNombre,
+                        'Día': asistencia.tallerDia || 'N/A',
+                        'Fecha': asistencia.tallerFechaTexto || 'N/A',
+                        'Horario': asistencia.horarioOriginal || 'N/A',
+                        'Fecha de Registro': formatearFecha(asistencia.fecha)
+                    };
+                });
+                
+                // Preparar datos de Kits
+                const kitsFormateados = (asistenciasData.entregas?.kits || []).map(entrega => {
+                    const info = obtenerInfoParticipante(entrega.id);
+                    return {
+                        'ID Registro': entrega.id,
+                        'Nombre Completo': info?.nombre || entrega.nombre || 'N/A',
+                        'Email': info?.email || entrega.email || 'N/A',
+                        'Teléfono': info?.telefono || 'N/A',
+                        'Tipo': info?.tipo || 'N/A',
+                        'Paquete': info?.paquete || 'N/A',
+                        'Fecha de Entrega': formatearFecha(entrega.fecha)
+                    };
+                });
+                
+                // Preparar datos de Comida
+                const comidaFormateada = (asistenciasData.entregas?.comida || []).map(entrega => {
+                    const info = obtenerInfoParticipante(entrega.id);
+                    return {
+                        'ID Registro': entrega.id,
+                        'Nombre Completo': info?.nombre || entrega.nombre || 'N/A',
+                        'Email': info?.email || entrega.email || 'N/A',
+                        'Teléfono': info?.telefono || 'N/A',
+                        'Tipo': info?.tipo || 'N/A',
+                        'Paquete': info?.paquete || 'N/A',
+                        'Fecha de Entrega': formatearFecha(entrega.fecha)
+                    };
+                });
+                
+                // Crear libro de trabajo
+                const wb = XLSX.utils.book_new();
+                
+                // Hoja 1: Conferencias
+                if (conferenciasFormateadas.length > 0) {
+                    const wsConferencias = XLSX.utils.json_to_sheet(conferenciasFormateadas);
+                    wsConferencias['!cols'] = [
+                        { wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 15 },
+                        { wch: 15 }, { wch: 40 }, { wch: 15 }, { wch: 20 },
+                        { wch: 20 }, { wch: 20 }
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsConferencias, 'Conferencias');
+                }
+                
+                // Hoja 2: Talleres
+                if (talleresFormateados.length > 0) {
+                    const wsTalleres = XLSX.utils.json_to_sheet(talleresFormateados);
+                    wsTalleres['!cols'] = [
+                        { wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 15 },
+                        { wch: 15 }, { wch: 40 }, { wch: 15 }, { wch: 20 },
+                        { wch: 20 }, { wch: 20 }
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsTalleres, 'Talleres');
+                }
+                
+                // Hoja 3: Kits
+                if (kitsFormateados.length > 0) {
+                    const wsKits = XLSX.utils.json_to_sheet(kitsFormateados);
+                    wsKits['!cols'] = [
+                        { wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 15 },
+                        { wch: 15 }, { wch: 15 }, { wch: 20 }
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsKits, 'Kits');
+                }
+                
+                // Hoja 4: Comida
+                if (comidaFormateada.length > 0) {
+                    const wsComida = XLSX.utils.json_to_sheet(comidaFormateada);
+                    wsComida['!cols'] = [
+                        { wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 15 },
+                        { wch: 15 }, { wch: 15 }, { wch: 20 }
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsComida, 'Comida');
+                }
+                
+                // Hoja 5: Resumen Consolidado
+                const resumenConsolidado = [];
+                
+                // Agregar todos los participantes únicos
+                const participantesUnicos = new Set();
+                
+                [...conferenciasFormateadas, ...talleresFormateados, ...kitsFormateados, ...comidaFormateada].forEach(item => {
+                    participantesUnicos.add(item['ID Registro']);
+                });
+                
+                participantesUnicos.forEach(id => {
+                    const registro = registrosMap.get(id);
+                    const info = obtenerInfoParticipante(id);
+                    
+                    // Contar asistencias
+                    const numConferencias = conferenciasFormateadas.filter(c => c['ID Registro'] === id).length;
+                    const numTalleres = talleresFormateados.filter(t => t['ID Registro'] === id).length;
+                    const tieneKit = kitsFormateados.some(k => k['ID Registro'] === id);
+                    const tieneComida = comidaFormateada.some(c => c['ID Registro'] === id);
+                    
+                    // Obtener talleres únicos a los que asistió
+                    const talleresAsistidos = [...new Set(
+                        talleresFormateados
+                            .filter(t => t['ID Registro'] === id)
+                            .map(t => t['Taller'])
+                    )].join('; ');
+                    
+                    // Obtener conferencias únicas a las que asistió
+                    const conferenciasAsistidas = [...new Set(
+                        conferenciasFormateadas
+                            .filter(c => c['ID Registro'] === id)
+                            .map(c => c['Conferencia'])
+                    )].join('; ');
+                    
+                    resumenConsolidado.push({
+                        'ID Registro': id,
+                        'Nombre Completo': info?.nombre || 'N/A',
+                        'Email': info?.email || 'N/A',
+                        'Teléfono': info?.telefono || 'N/A',
+                        'Tipo': info?.tipo || 'N/A',
+                        'Paquete': info?.paquete || 'N/A',
+                        'Asistencias a Conferencias': numConferencias,
+                        'Conferencias': conferenciasAsistidas || 'Ninguna',
+                        'Asistencias a Talleres': numTalleres,
+                        'Talleres': talleresAsistidos || 'Ninguno',
+                        'Kit Entregado': tieneKit ? 'Sí' : 'No',
+                        'Comida Entregada': tieneComida ? 'Sí' : 'No'
+                    });
+                });
+                
+                if (resumenConsolidado.length > 0) {
+                    const wsResumen = XLSX.utils.json_to_sheet(resumenConsolidado);
+                    wsResumen['!cols'] = [
+                        { wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 15 },
+                        { wch: 15 }, { wch: 15 }, { wch: 20 }, { wch: 50 },
+                        { wch: 20 }, { wch: 50 }, { wch: 15 }, { wch: 15 }
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
+                }
+                
+                // Generar nombre de archivo con fecha
+                const fechaActual = new Date().toISOString().split('T')[0];
+                const nombreArchivo = `asistencias_semana_mecatronica_${fechaActual}.xlsx`;
+                
+                // Descargar archivo
+                XLSX.writeFile(wb, nombreArchivo);
+                
+                // Restaurar botón
+                if (btnExportar) {
+                    btnExportar.disabled = false;
+                    btnExportar.innerHTML = originalHTML;
+                }
+                
+                // Mostrar mensaje de éxito
+                const totalConferencias = conferenciasFormateadas.length;
+                const totalTalleres = talleresFormateados.length;
+                const totalKits = kitsFormateados.length;
+                const totalComida = comidaFormateada.length;
+                
+                alert(`Exportación exitosa!\n\n` +
+                      `Conferencias: ${totalConferencias} asistencias\n` +
+                      `Talleres: ${totalTalleres} asistencias\n` +
+                      `Kits: ${totalKits} entregas\n` +
+                      `Comida: ${totalComida} entregas\n` +
+                      `Participantes únicos: ${participantesUnicos.size}\n\n` +
+                      `Archivo: ${nombreArchivo}`);
+                
+            } catch (error) {
+                console.error('Error al exportar asistencias:', error);
+                
+                // Restaurar botón en caso de error
+                if (btnExportar) {
+                    btnExportar.disabled = false;
+                    btnExportar.innerHTML = '<i class="fas fa-file-excel me-2"></i>Exportar Asistencias XLSX';
+                }
+                
+                alert(`Error al exportar asistencias: ${error.message}`);
+            }
+        }
+
         async function exportarRegistrosXLSX() {
             // Obtener el botón que activó la función
             const btnExportar = document.querySelector('button[onclick="exportarRegistrosXLSX()"]');
