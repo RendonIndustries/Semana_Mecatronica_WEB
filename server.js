@@ -4,6 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const QRCode = require('qrcode');
 
+// Cargar configuración del sistema
+const SYSTEM_CONFIG = require('./config.js');
+
 const app = express();
 const PORT = 3000;
 
@@ -273,13 +276,66 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'semana_mecatronica_2025.html'));
 });
 
-// Ruta para el escáner QR - redirigir a login
+// Ruta para el escáner QR - verificar si está habilitado
 app.get('/EscanerQR', (req, res) => {
-    res.redirect('/EscanerQR/login.html');
+    if (!SYSTEM_CONFIG.escanerQR.habilitado) {
+        // Servir una página de error o redirigir
+        res.status(503).send(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Escáner QR Deshabilitado</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body { background: linear-gradient(135deg, #6A0032 0%, #8B0040 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+                    .error-container { background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="error-container">
+                    <i class="fas fa-ban fa-3x text-danger mb-3"></i>
+                    <h2 class="text-danger mb-3">Escáner QR Deshabilitado</h2>
+                    <p class="lead">${SYSTEM_CONFIG.escanerQR.mensajeDeshabilitado}</p>
+                    <a href="/" class="btn btn-primary mt-3">Volver al Inicio</a>
+                </div>
+            </body>
+            </html>
+        `);
+    } else {
+        res.redirect('/EscanerQR/login.html');
+    }
 });
 
 app.get('/EscanerQR/', (req, res) => {
-    res.redirect('/EscanerQR/login.html');
+    if (!SYSTEM_CONFIG.escanerQR.habilitado) {
+        res.status(503).send(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Escáner QR Deshabilitado</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body { background: linear-gradient(135deg, #6A0032 0%, #8B0040 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+                    .error-container { background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="error-container">
+                    <i class="fas fa-ban fa-3x text-danger mb-3"></i>
+                    <h2 class="text-danger mb-3">Escáner QR Deshabilitado</h2>
+                    <p class="lead">${SYSTEM_CONFIG.escanerQR.mensajeDeshabilitado}</p>
+                    <a href="/" class="btn btn-primary mt-3">Volver al Inicio</a>
+                </div>
+            </body>
+            </html>
+        `);
+    } else {
+        res.redirect('/EscanerQR/login.html');
+    }
 });
 
 // Ruta para el escáner principal (después del login)
@@ -293,6 +349,14 @@ app.use('/EscanerQR', express.static(path.join(__dirname, 'EscanerQR')));
 // API para guardar registros
 app.post('/api/registro', (req, res) => {
     try {
+        // Verificar si el registro está habilitado
+        if (!SYSTEM_CONFIG.registro.habilitado) {
+            return res.status(503).json({
+                error: 'Registro deshabilitado',
+                message: SYSTEM_CONFIG.registro.mensajeDeshabilitado
+            });
+        }
+        
         const data = req.body;
         
         // Validar datos
@@ -1859,6 +1923,430 @@ app.get('/api/concursos/:tipo', (req, res) => {
     }
 });
 
+// ============================================
+// API DE CONSTANCIAS
+// ============================================
+
+// Rutas de carpetas de constancias individuales
+const constanciasConferenciasDir = path.join(__dirname, 'Constancias', 'Conferencias', 'Individuales');
+const constanciasTalleresDir = path.join(__dirname, 'Constancias', 'Talleres', 'Individuales');
+
+// Función para obtener todos los nombres de archivos PDF
+function obtenerNombresConstancias() {
+    const nombres = new Set();
+    
+    // Obtener nombres de conferencias
+    if (fs.existsSync(constanciasConferenciasDir)) {
+        const archivosConf = fs.readdirSync(constanciasConferenciasDir)
+            .filter(archivo => archivo.endsWith('.pdf'));
+        
+        archivosConf.forEach(archivo => {
+            // Extraer nombre del participante del nombre del archivo
+            // Formato: "Nombre Participante - Nombre Conferencia.pdf"
+            const nombreBase = archivo.replace('.pdf', '');
+            const partes = nombreBase.split(' - ');
+            if (partes.length > 0) {
+                nombres.add(partes[0].trim());
+            }
+        });
+    }
+    
+    // Obtener nombres de talleres
+    if (fs.existsSync(constanciasTalleresDir)) {
+        const archivosTall = fs.readdirSync(constanciasTalleresDir)
+            .filter(archivo => archivo.endsWith('.pdf'));
+        
+        archivosTall.forEach(archivo => {
+            const nombreBase = archivo.replace('.pdf', '');
+            const partes = nombreBase.split(' - ');
+            if (partes.length > 0) {
+                nombres.add(partes[0].trim());
+            }
+        });
+    }
+    
+    return Array.from(nombres).sort();
+}
+
+// Endpoint: Obtener lista de nombres para autocompletado
+app.get('/api/constancias/nombres', (req, res) => {
+    try {
+        const nombres = obtenerNombresConstancias();
+        res.json({
+            success: true,
+            nombres: nombres,
+            total: nombres.length
+        });
+    } catch (error) {
+        console.error('Error al obtener nombres:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al obtener lista de nombres',
+            message: error.message
+        });
+    }
+});
+
+// Función para normalizar y dividir nombre en palabras
+function normalizarNombre(nombre) {
+    return nombre.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remover acentos
+        .trim();
+}
+
+function dividirEnPalabras(nombre) {
+    return normalizarNombre(nombre)
+        .split(/\s+/)
+        .filter(palabra => palabra.length > 0);
+}
+
+// Función mejorada para buscar coincidencias
+function coincideNombre(busqueda, nombreCompleto) {
+    const busquedaLower = normalizarNombre(busqueda);
+    const nombreCompletoLower = normalizarNombre(nombreCompleto);
+    
+    // 1. Coincidencia exacta o contiene la búsqueda completa
+    if (nombreCompletoLower === busquedaLower || nombreCompletoLower.includes(busquedaLower)) {
+        return true;
+    }
+    
+    // 2. Dividir en palabras
+    const palabrasBusqueda = dividirEnPalabras(busqueda);
+    const palabrasNombre = dividirEnPalabras(nombreCompleto);
+    
+    if (palabrasBusqueda.length === 0) {
+        return false;
+    }
+    
+    // 3. Si solo hay una palabra, buscar coincidencia exacta de palabra
+    if (palabrasBusqueda.length === 1) {
+        const palabraBusqueda = palabrasBusqueda[0];
+        // Para una sola palabra, buscar coincidencia exacta o que sea parte de una palabra del nombre
+        return palabrasNombre.some(palabra => 
+            palabra === palabraBusqueda || palabra.startsWith(palabraBusqueda) || palabraBusqueda.startsWith(palabra)
+        );
+    }
+    
+    // 4. Si hay múltiples palabras, verificar que TODAS estén presentes
+    // Esto es más estricto: todas las palabras deben coincidir
+    const todasPalabrasCoinciden = palabrasBusqueda.every(palabraBusq => {
+        // Buscar si alguna palabra del nombre coincide exactamente o contiene la palabra de búsqueda
+        return palabrasNombre.some(palabraNom => {
+            // Coincidencia exacta
+            if (palabraNom === palabraBusq) return true;
+            // La palabra del nombre contiene la búsqueda (ej: "fernandez" contiene "fernandez")
+            if (palabraNom.includes(palabraBusq) && palabraBusq.length >= 3) return true;
+            // La búsqueda contiene la palabra del nombre (ej: "maria" contiene "maria")
+            if (palabraBusq.includes(palabraNom) && palabraNom.length >= 3) return true;
+            return false;
+        });
+    });
+    
+    if (todasPalabrasCoinciden) {
+        return true;
+    }
+    
+    // 5. Si hay 2 o más palabras y no todas coinciden, verificar si al menos 2 palabras coinciden
+    // PERO solo si la búsqueda tiene 2-3 palabras (para evitar falsos positivos)
+    if (palabrasBusqueda.length >= 2 && palabrasBusqueda.length <= 4) {
+        const palabrasCoincidentes = palabrasBusqueda.filter(palabraBusq => {
+            return palabrasNombre.some(palabraNom => {
+                if (palabraNom === palabraBusq) return true;
+                if (palabraNom.includes(palabraBusq) && palabraBusq.length >= 3) return true;
+                if (palabraBusq.includes(palabraNom) && palabraNom.length >= 3) return true;
+                return false;
+            });
+        });
+        
+        // Si al menos 2 palabras coinciden Y la búsqueda tiene 2-3 palabras, considerarlo válido
+        // Esto permite búsquedas como "Juan Pérez" para "Juan Pérez García"
+        if (palabrasCoincidentes.length >= 2 && palabrasBusqueda.length <= 3) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// Endpoint: Buscar constancias por nombre (búsqueda flexible)
+app.get('/api/constancias/buscar', (req, res) => {
+    try {
+        const nombreBusqueda = req.query.nombre;
+        
+        if (!nombreBusqueda || nombreBusqueda.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                error: 'Nombre requerido',
+                message: 'Debes proporcionar un nombre para buscar'
+            });
+        }
+        
+        const constanciasEncontradas = [];
+        const nombreBusquedaTrim = nombreBusqueda.trim();
+        
+        // Buscar en conferencias
+        try {
+            if (fs.existsSync(constanciasConferenciasDir)) {
+                const archivosConf = fs.readdirSync(constanciasConferenciasDir)
+                    .filter(archivo => archivo.endsWith('.pdf'));
+                
+                archivosConf.forEach(archivo => {
+                    try {
+                        const nombreBase = archivo.replace('.pdf', '');
+                        const partes = nombreBase.split(' - ');
+                        const nombreParticipante = partes[0].trim();
+                        
+                        // Usar función de búsqueda flexible
+                        if (coincideNombre(nombreBusquedaTrim, nombreParticipante)) {
+                            constanciasEncontradas.push({
+                                tipo: 'conferencias',
+                                nombre: nombreParticipante,
+                                actividad: partes.length > 1 ? partes.slice(1).join(' - ') : null,
+                                archivo: archivo
+                            });
+                        }
+                    } catch (err) {
+                        console.error(`Error procesando archivo ${archivo}:`, err);
+                    }
+                });
+            }
+        } catch (err) {
+            console.error('Error al buscar en conferencias:', err);
+        }
+        
+        // Buscar en talleres
+        try {
+            if (fs.existsSync(constanciasTalleresDir)) {
+                const archivosTall = fs.readdirSync(constanciasTalleresDir)
+                    .filter(archivo => archivo.endsWith('.pdf'));
+                
+                archivosTall.forEach(archivo => {
+                    try {
+                        const nombreBase = archivo.replace('.pdf', '');
+                        const partes = nombreBase.split(' - ');
+                        const nombreParticipante = partes[0].trim();
+                        
+                        if (coincideNombre(nombreBusquedaTrim, nombreParticipante)) {
+                            constanciasEncontradas.push({
+                                tipo: 'talleres',
+                                nombre: nombreParticipante,
+                                actividad: partes.length > 1 ? partes.slice(1).join(' - ') : null,
+                                archivo: archivo
+                            });
+                        }
+                    } catch (err) {
+                        console.error(`Error procesando archivo ${archivo}:`, err);
+                    }
+                });
+            }
+        } catch (err) {
+            console.error('Error al buscar en talleres:', err);
+        }
+        
+        // Ordenar resultados: primero los que tienen más coincidencias
+        try {
+            constanciasEncontradas.sort((a, b) => {
+                try {
+                    const palabrasBusq = dividirEnPalabras(nombreBusquedaTrim);
+                    if (!a.nombre || !b.nombre) return 0;
+                    
+                    const coincidenciasA = palabrasBusq.filter(p => {
+                        const palabrasNom = dividirEnPalabras(a.nombre);
+                        return palabrasNom.some(n => n.includes(p) || p.includes(n));
+                    }).length;
+                    
+                    const coincidenciasB = palabrasBusq.filter(p => {
+                        const palabrasNom = dividirEnPalabras(b.nombre);
+                        return palabrasNom.some(n => n.includes(p) || p.includes(n));
+                    }).length;
+                    
+                    return coincidenciasB - coincidenciasA;
+                } catch (sortError) {
+                    console.error('Error en sort:', sortError);
+                    return 0;
+                }
+            });
+        } catch (sortError) {
+            console.error('Error al ordenar resultados:', sortError);
+            // Continuar sin ordenar si hay error
+        }
+        
+        res.json({
+            success: true,
+            constancias: constanciasEncontradas,
+            total: constanciasEncontradas.length
+        });
+    } catch (error) {
+        console.error('Error al buscar constancias:', error);
+        console.error('Stack trace:', error.stack);
+        res.status(500).json({
+            success: false,
+            error: 'Error al buscar constancias',
+            message: error.message
+        });
+    }
+});
+
+// Endpoint: Descargar constancia específica
+app.get('/api/constancias/descargar/:tipo/:archivo', (req, res) => {
+    try {
+        const tipo = req.params.tipo;
+        const nombreArchivo = decodeURIComponent(req.params.archivo);
+        
+        // Validar tipo
+        if (tipo !== 'conferencias' && tipo !== 'talleres') {
+            return res.status(400).json({
+                error: 'Tipo inválido',
+                message: 'El tipo debe ser "conferencias" o "talleres"'
+            });
+        }
+        
+        // Determinar carpeta según tipo
+        const carpetaConstancias = tipo === 'conferencias' 
+            ? constanciasConferenciasDir 
+            : constanciasTalleresDir;
+        
+        const rutaArchivo = path.join(carpetaConstancias, nombreArchivo);
+        
+        // Verificar que el archivo existe
+        if (!fs.existsSync(rutaArchivo)) {
+            return res.status(404).json({
+                error: 'Archivo no encontrado',
+                message: 'La constancia solicitada no existe'
+            });
+        }
+        
+        // Verificar que es un archivo PDF
+        if (!nombreArchivo.endsWith('.pdf')) {
+            return res.status(400).json({
+                error: 'Tipo de archivo inválido',
+                message: 'Solo se pueden descargar archivos PDF'
+            });
+        }
+        
+        // Enviar el archivo
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${nombreArchivo}"`);
+        res.sendFile(path.resolve(rutaArchivo));
+        
+    } catch (error) {
+        console.error('Error al descargar constancia:', error);
+        res.status(500).json({
+            error: 'Error al descargar constancia',
+            message: error.message
+        });
+    }
+});
+
+// ============================================
+// VALIDACIÓN DE CONSTANCIAS CON QR
+// ============================================
+
+// Función para cargar hashes de validación
+function cargarHashesValidacion() {
+    const hashes = {};
+    
+    // Cargar hashes de conferencias
+    const hashesConfPath = path.join(constanciasConferenciasDir, 'hashes_validacion.json');
+    if (fs.existsSync(hashesConfPath)) {
+        try {
+            const data = JSON.parse(fs.readFileSync(hashesConfPath, 'utf8'));
+            data.forEach(item => {
+                hashes[item.hash] = {
+                    ...item,
+                    tipo: 'conferencias'
+                };
+            });
+        } catch (error) {
+            console.error('Error cargando hashes de conferencias:', error);
+        }
+    }
+    
+    // Cargar hashes de talleres
+    const hashesTallPath = path.join(constanciasTalleresDir, 'hashes_validacion.json');
+    if (fs.existsSync(hashesTallPath)) {
+        try {
+            const data = JSON.parse(fs.readFileSync(hashesTallPath, 'utf8'));
+            data.forEach(item => {
+                hashes[item.hash] = {
+                    ...item,
+                    tipo: 'talleres'
+                };
+            });
+        } catch (error) {
+            console.error('Error cargando hashes de talleres:', error);
+        }
+    }
+    
+    return hashes;
+}
+
+// Endpoint: Validar constancia por hash del QR
+app.get('/api/constancias/validar', (req, res) => {
+    try {
+        const hash = req.query.hash;
+        
+        if (!hash || hash.trim() === '') {
+            // Si es una petición de navegador, redirigir a la página de validación
+            const userAgent = req.headers['user-agent'] || '';
+            const isBrowser = userAgent.includes('Mozilla') || userAgent.includes('Safari') || userAgent.includes('Chrome');
+            
+            if (isBrowser) {
+                return res.redirect('/validar_qr.html?hash=');
+            }
+            
+            return res.status(400).json({
+                success: false,
+                error: 'Hash requerido',
+                message: 'Debes proporcionar un hash para validar'
+            });
+        }
+        
+        // Si es una petición de navegador (escaneo de QR), redirigir a la página HTML
+        const userAgent = req.headers['user-agent'] || '';
+        const isBrowser = userAgent.includes('Mozilla') || userAgent.includes('Safari') || userAgent.includes('Chrome') || userAgent.includes('iPhone') || userAgent.includes('iPad') || userAgent.includes('Android');
+        
+        if (isBrowser) {
+            return res.redirect(`/validar_qr.html?hash=${encodeURIComponent(hash)}`);
+        }
+        
+        // Si es una petición de API (fetch/ajax), devolver JSON
+        const hashes = cargarHashesValidacion();
+        const hashUpper = hash.trim().toUpperCase();
+        
+        if (hashes[hashUpper]) {
+            const constancia = hashes[hashUpper];
+            res.json({
+                success: true,
+                valida: true,
+                mensaje: 'Constancia válida',
+                constancia: {
+                    nombre: constancia.nombre || 'No disponible',
+                    actividad: constancia.actividad || 'No disponible',
+                    tipo: constancia.tipo,
+                    archivo: constancia.archivo
+                },
+                fecha_validacion: new Date().toISOString()
+            });
+        } else {
+            res.json({
+                success: true,
+                valida: false,
+                mensaje: 'Constancia no válida o no encontrada',
+                error: 'El hash proporcionado no corresponde a ninguna constancia registrada'
+            });
+        }
+    } catch (error) {
+        console.error('Error al validar constancia:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al validar constancia',
+            message: error.message
+        });
+    }
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor de la Semana de Mecatrónica 2025 corriendo en:`);
@@ -1867,6 +2355,9 @@ app.listen(PORT, () => {
     console.log(`   🏆 Concursos: http://localhost:${PORT}/concursos_semana_mecatronica.html`);
     console.log(`   👥 Administración: http://localhost:${PORT}/admin_registros.html`);
     console.log(`   📱 Escáner QR: http://localhost:${PORT}/EscanerQR/index.html`);
+    console.log(`   📜 Constancias: http://localhost:${PORT}/descargar_constancias.html`);
+    console.log(`   🔐 Validar Constancia: http://localhost:${PORT}/validar_constancia.html`);
+    console.log(`   🔍 Validación QR: http://localhost:${PORT}/validar_qr.html`);
     console.log(`   📊 API Registros: http://localhost:${PORT}/api/registros`);
     console.log(`\n📁 Registros se guardan en: ${registrosDir}`);
     console.log(`\n🔗 Enlaces de Acceso:`);

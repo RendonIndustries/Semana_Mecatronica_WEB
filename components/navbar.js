@@ -3,37 +3,85 @@ function loadNavbar(activeElement = null) {
     // Detectar la ruta correcta basada en la ubicación actual
     const currentPath = window.location.pathname;
     let navbarPath = 'components/navbar.html';
+    let configPath = 'config.js';
     
     // Si estamos en una subcarpeta, ajustar la ruta
     if (currentPath.includes('/conocenos/')) {
         navbarPath = '../components/navbar.html';
+        configPath = '../config.js';
     }
     
-    // Cargar el navbar desde el archivo HTML
-    fetch(navbarPath)
-        .then(response => response.text())
-        .then(data => {
-            // Insertar el navbar en el elemento con id 'navbar-container'
-            document.getElementById('navbar-container').innerHTML = data;
-            
-            // Ajustar las rutas de los enlaces si estamos en una subcarpeta
-            if (currentPath.includes('/conocenos/')) {
-                adjustNavbarLinks('../');
-            }
-            
-            // Configurar el elemento activo si se especifica
-            if (activeElement) {
-                setActiveNavItem(activeElement);
-            }
+    // Cargar configuración primero
+    const configScript = document.createElement('script');
+    configScript.src = configPath;
+    
+    configScript.onload = () => {
+        // Cargar el navbar desde el archivo HTML
+        fetch(navbarPath)
+            .then(response => response.text())
+            .then(data => {
+                // Insertar el navbar en el elemento con id 'navbar-container'
+                document.getElementById('navbar-container').innerHTML = data;
+                
+                // Ajustar las rutas de los enlaces si estamos en una subcarpeta
+                if (currentPath.includes('/conocenos/')) {
+                    adjustNavbarLinks('../');
+                }
+                
+                // Ocultar elementos deshabilitados según la configuración
+                if (typeof window.SYSTEM_CONFIG !== 'undefined') {
+                    if (!window.SYSTEM_CONFIG.registro.habilitado) {
+                        const registroItem = document.querySelector('[data-active="registro"]');
+                        if (registroItem) {
+                            registroItem.style.display = 'none';
+                        }
+                    }
+                    
+                    if (!window.SYSTEM_CONFIG.escanerQR.habilitado) {
+                        const escanerItem = document.querySelector('[data-active="escaner"]');
+                        if (escanerItem) {
+                            escanerItem.style.display = 'none';
+                        }
+                    }
+                }
+                
+                // Configurar el elemento activo si se especifica
+                if (activeElement) {
+                    setActiveNavItem(activeElement);
+                }
 
-            // Inicializar comportamiento fijo bajo el navbar de gobierno
-            initStickyMenuUnderGovBar();
-        })
-        .catch(error => {
-            console.error('Error cargando el navbar:', error);
-            // Fallback: mostrar un mensaje de error o navbar básico
-            document.getElementById('navbar-container').innerHTML = '<div class="alert alert-warning">Error cargando el menú de navegación</div>';
-        });
+                // Inicializar comportamiento fijo bajo el navbar de gobierno
+                initStickyMenuUnderGovBar();
+            })
+            .catch(error => {
+                console.error('Error cargando el navbar:', error);
+                // Fallback: mostrar un mensaje de error o navbar básico
+                document.getElementById('navbar-container').innerHTML = '<div class="alert alert-warning">Error cargando el menú de navegación</div>';
+            });
+    };
+    
+    configScript.onerror = () => {
+        console.warn('No se pudo cargar config.js, continuando sin ocultar elementos');
+        // Cargar navbar sin configuración
+        fetch(navbarPath)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-container').innerHTML = data;
+                if (currentPath.includes('/conocenos/')) {
+                    adjustNavbarLinks('../');
+                }
+                if (activeElement) {
+                    setActiveNavItem(activeElement);
+                }
+                initStickyMenuUnderGovBar();
+            })
+            .catch(error => {
+                console.error('Error cargando el navbar:', error);
+                document.getElementById('navbar-container').innerHTML = '<div class="alert alert-warning">Error cargando el menú de navegación</div>';
+            });
+    };
+    
+    document.head.appendChild(configScript);
 }
 
 // Función para ajustar las rutas de los enlaces del navbar
@@ -179,6 +227,10 @@ function autoDetectActiveNav() {
             break;
         case 'registro_semana_mecatronica.html':
             activeElement = 'registro';
+            break;
+        case 'descargar_constancias.html':
+        case 'validar_constancia.html':
+            activeElement = 'constancias';
             break;
         default:
             activeElement = 'inicio';

@@ -961,11 +961,30 @@
     
     <!-- Scanner Logic -->
     <script src="config.js"></script>
+    <script src="../config.js"></script>
     <script src="scanner.js"></script>
     
     <script>
         // Verificar autenticación al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si el escáner QR está habilitado
+            if (typeof window.SYSTEM_CONFIG !== 'undefined' && !window.SYSTEM_CONFIG.escanerQR.habilitado) {
+                // Ocultar todo el contenido y mostrar mensaje
+                document.body.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #6A0032 0%, #8B0040 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                        <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; text-align: center;">
+                            <i class="fas fa-ban fa-4x text-danger mb-3"></i>
+                            <h2 class="text-danger mb-3">Escáner QR Deshabilitado</h2>
+                            <p class="lead mb-4">${window.SYSTEM_CONFIG.escanerQR.mensajeDeshabilitado}</p>
+                            <a href="../semana_mecatronica_2025.html" class="btn btn-primary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
             const isAuthenticated = localStorage.getItem(CONFIG.session.storageKey) === 'true';
             const timestamp = parseInt(localStorage.getItem(CONFIG.session.timestampKey));
             const now = Date.now();

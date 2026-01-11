@@ -592,11 +592,45 @@
     <!-- Script del navbar modular -->
     <script src="components/navbar.js"></script>
     
+    <!-- Script de configuración -->
+    <script src="config.js"></script>
+    
     <!-- Script personalizado -->
     <script>
-        // Cargar talleres al iniciar la página
+        // Verificar si el registro está habilitado
         document.addEventListener('DOMContentLoaded', function() {
-            loadWorkshops();
+            // Verificar configuración
+            if (typeof window.SYSTEM_CONFIG !== 'undefined' && !window.SYSTEM_CONFIG.registro.habilitado) {
+                // Ocultar el formulario y mostrar mensaje
+                const formSection = document.querySelector('.form-section');
+                const heroSection = document.querySelector('.hero-section');
+                
+                if (formSection) {
+                    formSection.innerHTML = `
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="card border-0 shadow-lg">
+                                        <div class="card-body text-center p-5">
+                                            <div class="mb-4">
+                                                <i class="fas fa-lock fa-4x text-guinda mb-3"></i>
+                                            </div>
+                                            <h2 class="text-guinda mb-4">Registro Temporalmente Deshabilitado</h2>
+                                            <p class="lead mb-4">${window.SYSTEM_CONFIG.registro.mensajeDeshabilitado}</p>
+                                            <a href="semana_mecatronica_2025.html" class="btn btn-register btn-lg">
+                                                <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // Cargar talleres solo si el registro está habilitado
+                loadWorkshops();
+            }
         });
         
         // Función para cargar talleres desde el JSON

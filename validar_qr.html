@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Constancia - Semana de Mecatrónica 2025</title>
+    <meta name="description" content="Validación de constancia de la Semana de Mecatrónica 2025 - UPIIZ IPN">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ipn-guinda: #6A0032;
+            --ipn-blanco: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #6A0032 0%, #8B0040 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .validacion-container {
+            background: var(--ipn-blanco);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: var(--ipn-guinda);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+        
+        h1 {
+            color: var(--ipn-guinda);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .spinner-container {
+            padding: 3rem 2rem;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3rem;
+            border-color: var(--ipn-guinda);
+            border-right-color: transparent;
+        }
+        
+        .resultado-valido {
+            padding: 2rem 1rem;
+        }
+        
+        .resultado-valido .icono {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: #d4edda;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #28a745;
+            font-size: 3.5rem;
+        }
+        
+        .resultado-invalido {
+            padding: 2rem 1rem;
+        }
+        
+        .resultado-invalido .icono {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: #f8d7da;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc3545;
+            font-size: 3.5rem;
+        }
+        
+        .resultado-error {
+            padding: 2rem 1rem;
+        }
+        
+        .resultado-error .icono {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: #fff3cd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffc107;
+            font-size: 3.5rem;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .info-value {
+            color: #212529;
+            text-align: right;
+            flex: 1;
+        }
+        
+        .mensaje {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: 1rem;
+        }
+        
+        .hash-code {
+            background: #e9ecef;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            color: #495057;
+        }
+        
+        .btn-volver {
+            background: var(--ipn-guinda);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-volver:hover {
+            background: #8B0040;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 0, 50, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 576px) {
+            .validacion-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-value {
+                text-align: left;
+                margin-top: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="validacion-container">
+        <!-- Logo -->
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        
+        <!-- Título -->
+        <h1>Validación de Constancia</h1>
+        <p class="subtitle">Semana de Mecatrónica 2025 - UPIIZ IPN</p>
+        
+        <!-- Loading -->
+        <div id="loading" class="spinner-container">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Validando...</span>
+            </div>
+            <p class="mensaje mt-3">Validando constancia...</p>
+        </div>
+        
+        <!-- Resultado Válido -->
+        <div id="resultado-valido" class="resultado-valido" style="display: none;">
+            <div class="icono">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 style="color: #28a745; margin-bottom: 1rem;">✅ Constancia Válida</h2>
+            <p class="mensaje">Esta constancia es auténtica y ha sido verificada.</p>
+            
+            <div class="info-card">
+                <div class="info-item">
+                    <span class="info-label">Nombre:</span>
+                    <span class="info-value" id="nombre-valido"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Actividad:</span>
+                    <span class="info-value" id="actividad-valida"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tipo:</span>
+                    <span class="info-value" id="tipo-valido"></span>
+                </div>
+            </div>
+            
+            <a href="/" class="btn-volver">
+                <i class="fas fa-home me-2"></i>Volver al inicio
+            </a>
+        </div>
+        
+        <!-- Resultado Inválido -->
+        <div id="resultado-invalido" class="resultado-invalido" style="display: none;">
+            <div class="icono">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h2 style="color: #dc3545; margin-bottom: 1rem;">❌ Constancia No Válida</h2>
+            <p class="mensaje" id="mensaje-invalido">La constancia no pudo ser validada.</p>
+            
+            <a href="/validar_constancia.html" class="btn-volver">
+                <i class="fas fa-redo me-2"></i>Intentar otra validación
+            </a>
+        </div>
+        
+        <!-- Resultado Error -->
+        <div id="resultado-error" class="resultado-error" style="display: none;">
+            <div class="icono">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 style="color: #ffc107; margin-bottom: 1rem;">⚠️ Error de Validación</h2>
+            <p class="mensaje" id="mensaje-error">No se pudo validar la constancia. Por favor, intenta nuevamente.</p>
+            
+            <a href="/validar_constancia.html" class="btn-volver">
+                <i class="fas fa-redo me-2"></i>Intentar nuevamente
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Obtener hash de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const hash = urlParams.get('hash');
+        
+        const loading = document.getElementById('loading');
+        const resultadoValido = document.getElementById('resultado-valido');
+        const resultadoInvalido = document.getElementById('resultado-invalido');
+        const resultadoError = document.getElementById('resultado-error');
+        
+        // Función para validar
+        async function validar() {
+            if (!hash) {
+                mostrarError('No se proporcionó un código hash para validar');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/constancias/validar?hash=${encodeURIComponent(hash)}`);
+                const data = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (data.success && data.valida) {
+                    // Constancia válida
+                    document.getElementById('nombre-valido').textContent = data.constancia.nombre || 'No disponible';
+                    document.getElementById('actividad-valida').textContent = data.constancia.actividad || 'No especificada';
+                    document.getElementById('tipo-valido').textContent = data.constancia.tipo === 'conferencias' ? 'Conferencia' : 'Taller';
+                    resultadoValido.style.display = 'block';
+                } else {
+                    // Constancia no válida
+                    document.getElementById('mensaje-invalido').textContent = data.mensaje || 'La constancia no pudo ser validada';
+                    resultadoInvalido.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error al validar:', error);
+                loading.style.display = 'none';
+                mostrarError('Error de conexión. Por favor, verifica tu conexión a internet e intenta nuevamente.');
+            }
+        }
+        
+        function mostrarError(mensaje) {
+            loading.style.display = 'none';
+            document.getElementById('mensaje-error').textContent = mensaje;
+            resultadoError.style.display = 'block';
+        }
+        
+        // Validar automáticamente al cargar la página
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', validar);
+        } else {
+            validar();
+        }
+    </script>
+</body>
+</html>
