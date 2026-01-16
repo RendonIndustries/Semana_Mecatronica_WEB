@@ -1,5 +1,40 @@
 # 🎓 Semana de Mecatrónica 2025 - Sistema Web
 
+## 🧾 Generación de constancias de posters
+
+### Instalación de dependencias (pip)
+```bash
+pip install python-pptx pandas qrcode[pil]
+```
+
+### Cómo correr el script
+```bash
+python generar_constancias_posters.py
+```
+
+### Requisitos
+- `plantilla_constancia.pptx` y `posters.csv` deben estar en el mismo folder que `generar_constancias_posters.py`.
+
+### Nota sobre marcadores
+- La plantilla debe contener exactamente `{{NOMBRE}}` y `{{TITULO}}`.
+
+## 🪟 Generador con ventanas (GUI)
+
+### Instalación de dependencias (pip)
+```bash
+pip install python-pptx pandas
+```
+
+### Cómo correr la interfaz
+```bash
+python generar_constancias_posters_gui.py
+```
+
+### Requisitos
+- Selecciona la plantilla, el CSV y la carpeta de salida desde la ventana.
+- Para exportar a PDF en Windows: instalar `comtypes` y tener PowerPoint.
+- Para validación con QR: configura la URL base y un secreto; se genera `hashes_validacion.json` en la carpeta de salida.
+
 Sistema completo de registro y gestión para la **Semana de Mecatrónica 2025** de la UPIIZ IPN Campus Zacatecas.
 
 ## 📋 Descripción

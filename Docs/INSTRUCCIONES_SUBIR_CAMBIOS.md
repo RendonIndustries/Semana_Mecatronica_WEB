@@ -29,17 +29,40 @@ git push origin main
 
 Una vez que los cambios estén en GitHub, conecta al servidor y ejecuta:
 
-```bash
-# Conectar al servidor
-ssh rootupiiz@148.204.142.27
+#### **🔌 Cómo conectarse al servidor:**
 
-# Actualizar el sitio web
-cd /var/www/semana-mecatronica
-sudo git stash
-sudo git pull origin main
-pm2 restart semana-mecatronica
-curl http://148.204.142.27
-```
+1. **Abre PowerShell** (o Git Bash si tienes Git instalado)
+
+2. **Ejecuta el comando de conexión:**
+   ```powershell
+   ssh rootupiiz@148.204.142.27
+   ```
+
+3. **Cuando te pida la contraseña:**
+   - Escribe la contraseña del servidor (no se verá mientras la escribes, es normal)
+   - Presiona Enter
+   - Si no recuerdas la contraseña, pídela al administrador del servidor
+
+4. **Una vez conectado**, verás un prompt como:
+   ```
+   rootupiiz@servidor:~$
+   ```
+   ¡Ya estás conectado! 🎉
+
+5. **Ahora ejecuta los comandos para actualizar:**
+   ```bash
+   # Actualizar el sitio web
+   cd /var/www/semana-mecatronica
+   sudo git stash
+   sudo git pull origin main
+   pm2 restart semana-mecatronica
+   curl http://148.204.142.27
+   ```
+
+6. **Para desconectarte** del servidor:
+   ```bash
+   exit
+   ```
 
 ---
 
@@ -133,11 +156,22 @@ curl http://148.204.142.27
 
 ## 🐛 Solución de Problemas
 
-### Error: "remote: Support for password authentication was removed"
-- **Solución:** Usa un Personal Access Token en lugar de tu contraseña
+### Error: "ssh: command not found" en PowerShell
+- **Solución 1:** Usa Git Bash (viene con Git) - Abre Git Bash y ejecuta el comando SSH
+- **Solución 2:** Instala OpenSSH en Windows:
+  ```powershell
+  # En PowerShell como Administrador
+  Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+  ```
 
-### Error: "Permission denied (publickey)"
-- **Solución:** Verifica que tengas acceso SSH al servidor
+### Error: "Permission denied (publickey)" o "Permission denied (password)"
+- **Solución:** 
+  - Verifica que tengas acceso SSH al servidor
+  - Verifica que la contraseña sea correcta
+  - Si no tienes acceso, pídele al administrador del servidor que te dé acceso
+
+### Error: "remote: Support for password authentication was removed"
+- **Solución:** Este es para GitHub, usa un Personal Access Token en lugar de tu contraseña
 
 ### Error: "Your branch is ahead of 'origin/main'"
 - **Solución:** Ejecuta `git push origin main` para subir tus commits
@@ -147,3 +181,6 @@ curl http://148.204.142.27
   1. Verifica que el push fue exitoso en GitHub
   2. Verifica que ejecutaste `git pull` en el servidor
   3. Verifica que reiniciaste PM2: `pm2 restart semana-mecatronica`
+
+### No recuerdo la contraseña del servidor
+- **Solución:** Contacta al administrador del servidor para obtener/reestablecer la contraseña

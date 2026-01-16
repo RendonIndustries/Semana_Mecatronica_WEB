@@ -1930,6 +1930,7 @@ app.get('/api/concursos/:tipo', (req, res) => {
 // Rutas de carpetas de constancias individuales
 const constanciasConferenciasDir = path.join(__dirname, 'Constancias', 'Conferencias', 'Individuales');
 const constanciasTalleresDir = path.join(__dirname, 'Constancias', 'Talleres', 'Individuales');
+const constanciasPostersDir = path.join(__dirname, 'Constancias', 'Posters', 'salida_pptx');
 
 // Función para obtener todos los nombres de archivos PDF
 function obtenerNombresConstancias() {
@@ -2269,13 +2270,33 @@ function cargarHashesValidacion() {
         try {
             const data = JSON.parse(fs.readFileSync(hashesTallPath, 'utf8'));
             data.forEach(item => {
-                hashes[item.hash] = {
+                const hashKey = String(item.hash || '').toUpperCase();
+                if (!hashKey) return;
+                hashes[hashKey] = {
                     ...item,
                     tipo: 'talleres'
                 };
             });
         } catch (error) {
             console.error('Error cargando hashes de talleres:', error);
+        }
+    }
+
+    // Cargar hashes de posters
+    const hashesPostersPath = path.join(constanciasPostersDir, 'hashes_validacion.json');
+    if (fs.existsSync(hashesPostersPath)) {
+        try {
+            const data = JSON.parse(fs.readFileSync(hashesPostersPath, 'utf8'));
+            data.forEach(item => {
+                const hashKey = String(item.hash || '').toUpperCase();
+                if (!hashKey) return;
+                hashes[hashKey] = {
+                    ...item,
+                    tipo: 'posters'
+                };
+            });
+        } catch (error) {
+            console.error('Error cargando hashes de posters:', error);
         }
     }
     

@@ -323,7 +323,12 @@
                     // Constancia válida
                     document.getElementById('nombre-valido').textContent = data.constancia.nombre || 'No disponible';
                     document.getElementById('actividad-valida').textContent = data.constancia.actividad || 'No especificada';
-                    document.getElementById('tipo-valido').textContent = data.constancia.tipo === 'conferencias' ? 'Conferencia' : 'Taller';
+                    const tipoLabel = ({
+                        conferencias: 'Conferencia',
+                        talleres: 'Taller',
+                        posters: 'Poster'
+                    }[data.constancia.tipo] || data.constancia.tipo || 'No especificado');
+                    document.getElementById('tipo-valido').textContent = tipoLabel;
                     resultadoValido.style.display = 'block';
                 } else {
                     // Constancia no válida
