@@ -1,0 +1,12 @@
+# Archivos que superan límites de GitHub (100 MB)
+Constancias/Conferencias/conferencias.pdf
+Constancias/Talleres/talleres ok.pdf
+
+# Binarios y builds (>50 MB recomendado)
+dist/
+build/
+*.exe
+*.pkg
+
+# PDFs grandes generados (opcional: descomenta si quieres ignorar todos los PDF de Constancias)
+# Constancias/**/*.pdf
